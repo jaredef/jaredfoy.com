@@ -3,13 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>__title__ — Jared Foy</title>
+  <title>RESOLVE — Jared Foy</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+  <div class="mobile-breadcrumb" id="breadcrumb">
+    <a href="/">RESOLVE</a> · <span id="breadcrumbTitle">Corpus</span>
+  </div>
   <button class="mobile-menu-btn" id="menuBtn">MENU</button>
+  <button class="mobile-top-btn hidden" id="topBtn">TOP</button>
   <div class="canvas">
-    <aside class="nav-col">
+    <aside class="nav-col" id="navCol">
       <header>
         <a href="/" class="logo">RESOLVE</a>
         <p class="tagline">Constraints induce properties</p>
@@ -70,21 +74,49 @@
 <script>
 (function() {
   var btn = document.getElementById('menuBtn');
-  var nav = document.querySelector('.nav-col');
+  var nav = document.getElementById('navCol');
+  var topBtn = document.getElementById('topBtn');
+  var crumbTitle = document.getElementById('breadcrumbTitle');
   if (!btn || !nav) return;
 
+  // M3: Menu toggle — instantaneous, reversible
   btn.addEventListener('click', function() {
     var isOpen = nav.classList.toggle('open');
     btn.textContent = isOpen ? 'CLOSE' : 'MENU';
   });
 
-  // Close menu when any nav link is clicked
+  // M3: Close menu on link click — single tap to content
   var links = nav.querySelectorAll('a');
   for (var i = 0; i < links.length; i++) {
     links[i].addEventListener('click', function() {
       nav.classList.remove('open');
       btn.textContent = 'MENU';
     });
+  }
+
+  // M4: Back to top — appears after scrolling down
+  var scrollTimer;
+  window.addEventListener('scroll', function() {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(function() {
+      if (window.scrollY > 300) {
+        topBtn.classList.remove('hidden');
+      } else {
+        topBtn.classList.add('hidden');
+      }
+    }, 50);
+  });
+
+  topBtn.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // M4: Breadcrumb — show current document title
+  var h1 = document.querySelector('.content-col h1');
+  if (h1 && crumbTitle) {
+    var title = h1.textContent;
+    if (title.length > 40) title = title.substring(0, 37) + '...';
+    crumbTitle.textContent = title;
   }
 })();
 </script>
