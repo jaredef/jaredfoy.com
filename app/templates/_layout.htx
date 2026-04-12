@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+  <button class="mobile-menu-btn" id="menuBtn">MENU</button>
   <div class="canvas">
     <aside class="nav-col">
       <header>
@@ -66,5 +67,26 @@
       __content__
     </main>
   </div>
+<script>
+(function() {
+  var btn = document.getElementById('menuBtn');
+  var nav = document.querySelector('.nav-col');
+  if (!btn || !nav) return;
+
+  btn.addEventListener('click', function() {
+    var isOpen = nav.classList.toggle('open');
+    btn.textContent = isOpen ? 'CLOSE' : 'MENU';
+  });
+
+  // Close menu when any nav link is clicked
+  var links = nav.querySelectorAll('a');
+  for (var i = 0; i < links.length; i++) {
+    links[i].addEventListener('click', function() {
+      nav.classList.remove('open');
+      btn.textContent = 'MENU';
+    });
+  }
+})();
+</script>
 </body>
 </html>
