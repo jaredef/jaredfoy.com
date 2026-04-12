@@ -4,12 +4,12 @@
 <htx:each>
 <article class="document">
   <header class="doc-header">
-    <span class="doc-badge">Document __meta.doc_num__</span>
+    <span class="doc-badge">Document __doc_num__</span>
     <h1>__title__</h1>
-    <span class="doc-section-tag">__meta.section__</span>
+    <span class="doc-section-tag">__section__</span>
   </header>
   <div class="doc-body pretext">
-    __meta.body_html__
+    __body_html__
   </div>
 </article>
 </htx:each>

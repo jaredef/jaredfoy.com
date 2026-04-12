@@ -1,0 +1,14 @@
+[Unit]
+Description=Cloudflare Tunnel for jaredfoy.com
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=jaredef
+ExecStart=/usr/bin/cloudflared tunnel --config /home/jaredef/.cloudflared/jaredfoy.yml run jaredfoy
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

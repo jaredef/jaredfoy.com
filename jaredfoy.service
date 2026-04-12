@@ -1,0 +1,16 @@
+[Unit]
+Description=jaredfoy.com — RESOLVE corpus site
+After=network.target
+
+[Service]
+Type=simple
+User=jaredef
+WorkingDirectory=/home/jaredef/jaredfoy
+Environment=HTX_HOST=0.0.0.0
+Environment=HTX_PORT=3001
+ExecStart=/home/jaredef/.bun/bin/bun app/public/index.ts
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -45,9 +45,9 @@
     <htx>
     <htx:each>
       <a href="/doc/__slug__" class="corpus-item">
-        <span class="doc-num">__meta.doc_num__</span>
+        <span class="doc-num">__doc_num__</span>
         <span class="doc-title">__title__</span>
-        <span class="doc-section">__meta.section__</span>
+        <span class="doc-section">__section__</span>
       </a>
     </htx:each>
     </htx>
