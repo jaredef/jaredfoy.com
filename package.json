@@ -1,0 +1,14 @@
+{
+  "name": "jaredfoy.com",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "HTX_HOST=0.0.0.0 HTX_PORT=3001 bun --watch app/public/index.ts",
+    "start": "HTX_HOST=0.0.0.0 HTX_PORT=3001 bun app/public/index.ts",
+    "seed": "bun app/seed-corpus.ts"
+  },
+  "dependencies": {
+    "@htx/engine": "file:../hypermedia-app/hypermedia-app-ts/packages/htx-engine",
+    "@htx/adapter-sqlite": "file:../hypermedia-app/hypermedia-app-ts/packages/htx-adapter-sqlite"
+  }
+}

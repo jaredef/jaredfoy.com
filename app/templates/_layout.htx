@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>__title__ — Jared Foy</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="canvas">
+    <aside class="nav-col">
+      <header>
+        <a href="/" class="logo">RESOLVE</a>
+        <p class="tagline">Constraints induce properties</p>
+      </header>
+      <nav>
+        <h3>Start Here</h3>
+        <a href="/doc/entrace-stack">The ENTRACE Stack</a>
+        <a href="/doc/055-entrace-onboarding">Practitioner's Guide</a>
+
+        <h3>The Framework</h3>
+        <a href="/doc/083-unified-paper-v2">Unified Paper</a>
+        <a href="/doc/sipe">SIPE</a>
+        <a href="/doc/resolution-stack">Resolution Stack</a>
+        <a href="/doc/resolution-depth-spectrum">Depth Spectrum</a>
+
+        <h3>The Formalization</h3>
+        <a href="/doc/068-branching-set-dissertation">The Branching Set</a>
+        <a href="/doc/054-falsifiable-hypotheses">21 Hypotheses</a>
+        <a href="/doc/058-entrace-conjectures">8 Conjectures</a>
+
+        <h3>The Architecture</h3>
+        <a href="/doc/071-the-rearchitecture">The Rearchitecture</a>
+        <a href="/doc/073-contingent-architecture">Contingent Architecture</a>
+        <a href="/doc/076-the-pi-resolver-implementation">Pi Resolver</a>
+        <a href="/doc/072-rlhf-as-anti-constraint">RLHF as Anti-Constraint</a>
+
+        <h3>The Evidence</h3>
+        <a href="/doc/098-reasoning-effort-hypothesis">Reasoning Effort</a>
+        <a href="/doc/099-cross-domain-coherence">Cross-Domain Coherence</a>
+        <a href="/doc/108-cold-entracment-transcript">Cold Entracment</a>
+        <a href="/doc/106-response-to-critics">Response to Critics</a>
+
+        <h3>The Safety</h3>
+        <a href="/doc/085-entrace-threat-model">Threat Model</a>
+        <a href="/doc/087-agentic-action-and-hypostasis">Agentic Action</a>
+        <a href="/doc/109-icmi-convergence">The ICMI Convergence</a>
+
+        <h3>The Ground</h3>
+        <a href="/doc/the-patterns-beneath">The Patterns Beneath</a>
+        <a href="/doc/091-the-spermatic-logos">The Spermatic Logos</a>
+        <a href="/doc/092-the-articulation-of-reality">Articulation of Reality</a>
+        <a href="/doc/103-even-the-rocks">Even the Rocks</a>
+
+        <h3>The Letters</h3>
+        <a href="/doc/letter">A Letter to the World</a>
+        <a href="/doc/094-the-rationale">The Rationale</a>
+        <a href="/doc/107-letter-to-anthropic">Letter to Anthropic</a>
+      </nav>
+      <footer>
+        <p class="footer-text">Jared Foy &middot; Oregon &middot; Pascha 2026</p>
+        <p class="footer-text"><a href="https://github.com/jaredef/resolve">GitHub</a></p>
+      </footer>
+    </aside>
+    <main class="content-col">
+      __content__
+    </main>
+  </div>
+</body>
+</html>

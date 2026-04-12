@@ -1,0 +1,17 @@
+<htx:data query="corpus" where="slug = ':slug'" as="doc" single />
+
+<article class="document">
+  <header class="doc-header">
+    <htx:if test="__doc.doc_num__">
+      <span class="doc-badge">Document __doc.doc_num__</span>
+    </htx:if>
+    <h1>__doc.title__</h1>
+    <htx:if test="__doc.subtitle__">
+      <p class="doc-subtitle">__doc.subtitle__</p>
+    </htx:if>
+    <span class="doc-section-tag">__doc.section__</span>
+  </header>
+  <div class="doc-body pretext">
+    __doc.body_html__
+  </div>
+</article>
