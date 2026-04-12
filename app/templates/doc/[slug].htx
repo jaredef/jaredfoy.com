@@ -1,0 +1,23 @@
+<htx:type>corpus</htx:type>
+<htx:slug>{{ route.slug }}</htx:slug>
+<htx>
+<htx:each>
+<article class="document">
+  <header class="doc-header">
+    <span class="doc-badge">Document __meta.doc_num__</span>
+    <h1>__title__</h1>
+    <span class="doc-section-tag">__meta.section__</span>
+  </header>
+  <div class="doc-body pretext">
+    __meta.body_html__
+  </div>
+</article>
+</htx:each>
+<htx:none>
+<div class="document">
+  <h1>Document Not Found</h1>
+  <p>The requested document does not exist in the corpus.</p>
+  <p><a href="/">Return to the index</a></p>
+</div>
+</htx:none>
+</htx>

@@ -55,18 +55,23 @@ function classifySection(filename: string, content: string): string {
 // Create database
 const db = new Database(DB_PATH);
 
-db.run(`CREATE TABLE IF NOT EXISTS corpus (
+// Use the standard content table schema the HTX adapter expects
+db.run(`DROP TABLE IF EXISTS content`);
+db.run(`CREATE TABLE content (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  doc_num INTEGER,
-  slug TEXT UNIQUE NOT NULL,
-  title TEXT NOT NULL,
-  subtitle TEXT DEFAULT '',
-  section TEXT NOT NULL,
-  body TEXT NOT NULL,
-  body_html TEXT NOT NULL,
-  status TEXT DEFAULT 'published',
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+  type TEXT NOT NULL,
+  slug TEXT NOT NULL,
+  title TEXT NOT NULL DEFAULT "",
+  body TEXT NOT NULL DEFAULT "",
+  status TEXT NOT NULL DEFAULT "draft",
+  meta TEXT NOT NULL DEFAULT "{}",
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  UNIQUE(type, slug)
 )`);
+db.run("CREATE INDEX IF NOT EXISTS idx_content_type ON content(type)");
+db.run("CREATE INDEX IF NOT EXISTS idx_content_type_status ON content(type, status)");
+db.run("CREATE INDEX IF NOT EXISTS idx_content_slug ON content(type, slug)");
 
 // Load all .md files from corpus
 const files = readdirSync(CORPUS_DIR)
@@ -85,11 +90,19 @@ for (const file of files) {
   const slug = basename(file, ".md");
   const bodyHtml = renderMarkdown(content);
 
+  const now = new Date().toISOString();
+  const meta = JSON.stringify({
+    doc_num: docNum,
+    subtitle,
+    section,
+    body_html: bodyHtml,
+  });
+
   try {
     db.run(
-      `INSERT OR REPLACE INTO corpus (doc_num, slug, title, subtitle, section, body, body_html, status)
-       VALUES (?, ?, ?, ?, ?, ?, ?, 'published')`,
-      [docNum, slug, title, subtitle, section, content, bodyHtml]
+      `INSERT INTO content (type, slug, title, body, status, meta, created_at, updated_at)
+       VALUES ('corpus', ?, ?, ?, 'published', ?, ?, ?)`,
+      [slug, title, content, meta, now, now]
     );
     seeded++;
     console.log(`  ${docNum ? `[${docNum}]` : "[---]"} ${title} (${section})`);
