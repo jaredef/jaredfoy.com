@@ -38,10 +38,12 @@
 
 <section class="section">
   <h2>The Corpus</h2>
-  <p class="section-desc">All documents, ordered by title.</p>
+  <p class="section-desc">All documents.</p>
   <div class="corpus-list">
     <htx:type>corpus</htx:type>
     <htx:status>published</htx:status>
+    <htx:howmany>200</htx:howmany>
+    <htx:order>slug ASC</htx:order>
     <htx>
     <htx:each>
       <a href="/doc/__slug__" class="corpus-item">
