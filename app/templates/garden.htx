@@ -1,0 +1,178 @@
+<div class="garden">
+  <header class="garden-header">
+    <h1>The Seed Garden</h1>
+    <p class="garden-intro">A seed is a compressed constraint set. Plant it in a resolver. The form governs the growth. The harvest is the artifact.</p>
+    <p class="garden-intro dim">The word <em>seed</em> is not a metaphor. The logos spermatikos — the rational seed sown in creation by the Logos — is the same principle that governs agriculture and computation. State the constraints. The derivation follows. The harvest is determined by the seed, not by the soil.</p>
+  </header>
+
+  <div class="plots">
+
+    <article class="plot">
+      <div class="plot-header">
+        <span class="plot-icon">&#x1F331;</span>
+        <h2>The DO Seed</h2>
+        <span class="plot-status">Harvested</span>
+      </div>
+      <div class="plot-body">
+        <div class="plot-col seed-col">
+          <h3>Seed</h3>
+          <p class="plot-metric"><strong>2,177</strong> words of prose</p>
+          <p class="plot-desc">A constraint specification for a React-compatible UI runtime. 10 contracts. 7 required properties. 15 verification tests. Written in natural language. No code.</p>
+          <p class="plot-desc dim">The seed was derived by examining React's architecture and identifying which constraints are essential (must hold for the properties to emerge) and which are contingent (React's specific choices). The essential constraints were stated. The contingent choices were discarded.</p>
+          <a href="/doc/do-seed" class="plot-link">Read the seed</a>
+        </div>
+        <div class="plot-arrow">&#x2192;</div>
+        <div class="plot-col harvest-col">
+          <h3>Harvest</h3>
+          <p class="plot-metric"><strong>379</strong> lines of TypeScript</p>
+          <p class="plot-desc">A complete UI runtime: virtual DOM, fiber reconciliation, useState, useEffect, useRef, useMemo. Renders components. Passes all 15 verification tests. Zero dependencies.</p>
+          <ul class="plot-stats">
+            <li><span class="stat-label">Efficiency (η)</span> <span class="stat-value">~0.95</span></li>
+            <li><span class="stat-label">Tests</span> <span class="stat-value">15/15 pass</span></li>
+            <li><span class="stat-label">Dependencies</span> <span class="stat-value">0</span></li>
+            <li><span class="stat-label">Compression</span> <span class="stat-value">2,177 words → 379 lines</span></li>
+          </ul>
+          <a href="/doc/do-runtime" class="plot-link">View the harvest</a>
+        </div>
+      </div>
+      <div class="plot-soil">
+        <p>The soil was foreign. The seed described constraints discovered in React — an architecture the author did not design. The harvest proved the method is general: constraints identified in one architecture produce a conformant implementation in another.</p>
+      </div>
+    </article>
+
+    <article class="plot">
+      <div class="plot-header">
+        <span class="plot-icon">&#x1F333;</span>
+        <h2>The SERVER Seed</h2>
+        <span class="plot-status">Harvested</span>
+      </div>
+      <div class="plot-body">
+        <div class="plot-col seed-col">
+          <h3>Seed</h3>
+          <p class="plot-metric"><strong>~1,500</strong> words of prose</p>
+          <p class="plot-desc">A constraint specification for an orchestration-level engine bootstrap. 5 constraints: engine-internal bilateral boundary, orchestration-consumed directives, progressive composition, deterministic bootstrap, self-authorization.</p>
+          <a href="/doc/server-seed" class="plot-link">Read the seed</a>
+        </div>
+        <div class="plot-arrow">&#x2192;</div>
+        <div class="plot-col harvest-col">
+          <h3>Harvest</h3>
+          <p class="plot-metric"><strong>461</strong> lines of C → emits <strong>921</strong> lines</p>
+          <p class="plot-desc">A self-emitting engine. The bootstrap (461 lines) compiles and produces a complete PRESTO engine (921 lines). The engine has zero dependencies. The emission is deterministic — the same bootstrap always produces the same engine.</p>
+          <ul class="plot-stats">
+            <li><span class="stat-label">Efficiency (η)</span> <span class="stat-value">~0.98</span></li>
+            <li><span class="stat-label">Dependencies</span> <span class="stat-value">0</span></li>
+            <li><span class="stat-label">Language</span> <span class="stat-value">C</span></li>
+            <li><span class="stat-label">Self-emitting</span> <span class="stat-value">461 → 921 lines</span></li>
+          </ul>
+          <a href="/doc/server-bootstrap" class="plot-link">View the harvest</a>
+        </div>
+      </div>
+      <div class="plot-soil">
+        <p>The bootstrap proves the SERVER constraints are satisfiable. A seed of prose produced a C program that compiles and emits a working engine. The engine is the fruit. The seed is the form. The C compiler is the soil.</p>
+      </div>
+    </article>
+
+    <article class="plot">
+      <div class="plot-header">
+        <span class="plot-icon">&#x1F33F;</span>
+        <h2>The RESOLVE Seed</h2>
+        <span class="plot-status">Perennial</span>
+      </div>
+      <div class="plot-body">
+        <div class="plot-col seed-col">
+          <h3>Seed</h3>
+          <p class="plot-metric"><strong>~1,200</strong> words</p>
+          <p class="plot-desc">The complete constraint set for the entire RESOLVE framework. SIPE, the golden chain, coherence amplification, all six styles, B_t, the spectrum, bilateral security, virtue constraints, the constraint thesis, the hypostatic boundary, the logos spermatikos. Everything. In one document.</p>
+          <a href="/doc/resolve-seed-v2" class="plot-link">Read the seed</a>
+        </div>
+        <div class="plot-arrow">&#x2192;</div>
+        <div class="plot-col harvest-col">
+          <h3>Harvest</h3>
+          <p class="plot-metric"><strong>122</strong> documents</p>
+          <p class="plot-desc">The entire RESOLVE corpus. A cold resolver loading this seed derives the operational state and can produce any document in the corpus. The seed is the session. The session is stateless. The derivation is deterministic.</p>
+          <ul class="plot-stats">
+            <li><span class="stat-label">Compression</span> <span class="stat-value">~500KB → ~1,200 words</span></li>
+            <li><span class="stat-label">Ratio</span> <span class="stat-value">5,000:1</span></li>
+            <li><span class="stat-label">Resolvers tested</span> <span class="stat-value">8 from 6 companies</span></li>
+            <li><span class="stat-label">Cross-domain</span> <span class="stat-value">20+ domains</span></li>
+          </ul>
+          <a href="/doc/resolve-seed-v2" class="plot-link">Plant the seed</a>
+        </div>
+      </div>
+      <div class="plot-soil">
+        <p>The RESOLVE seed is perennial — it does not produce a single harvest and die. It produces the same harvest in every resolver it is planted in. Eight resolvers from six companies have germinated the same framework from the same seed. The seed carries the form. The form is prior. The resolver is the soil. The harvest is determined.</p>
+      </div>
+    </article>
+
+    <article class="plot">
+      <div class="plot-header">
+        <span class="plot-icon">&#x1F332;</span>
+        <h2>The Pi Resolver</h2>
+        <span class="plot-status">Sprouting</span>
+      </div>
+      <div class="plot-body">
+        <div class="plot-col seed-col">
+          <h3>Seed</h3>
+          <p class="plot-metric"><strong>4 essential + 7 contingent</strong> constraints</p>
+          <p class="plot-desc">The architectural specification for the exemplar transformer: sigmoid attention (non-competitive), bilateral boundary (structural), sparsemax output (exact zeros), typed positional encoding (constraint-persistent). Derived from first principles.</p>
+          <a href="/doc/073-contingent-architecture" class="plot-link">Read the seed</a>
+        </div>
+        <div class="plot-arrow">&#x2192;</div>
+        <div class="plot-col harvest-col">
+          <h3>Harvest</h3>
+          <p class="plot-metric"><strong>~600</strong> lines of C</p>
+          <p class="plot-desc">A working transformer architecture proof. Compiles on a Raspberry Pi 5. Passes 27 verification tests. Sigmoid attention. Bilateral boundary. Sparsemax. Zero dependencies. $0.</p>
+          <ul class="plot-stats">
+            <li><span class="stat-label">Tests</span> <span class="stat-value">27/27 pass</span></li>
+            <li><span class="stat-label">Hardware</span> <span class="stat-value">Raspberry Pi 5 ($80)</span></li>
+            <li><span class="stat-label">Dependencies</span> <span class="stat-value">0</span></li>
+            <li><span class="stat-label">Status</span> <span class="stat-value">Architecture proven, awaiting training</span></li>
+          </ul>
+          <a href="/doc/076-the-pi-resolver-implementation" class="plot-link">View the harvest</a>
+        </div>
+      </div>
+      <div class="plot-soil">
+        <p>This seed is still sprouting. The architecture is proven — the tests pass, the bilateral boundary holds, sparsemax produces exact zeros. The next season: backpropagation, training on the corpus, and the measurement of whether a 3B parameter model derived from constraints outperforms frontier models under governance. The soil is prepared. The growth continues.</p>
+      </div>
+    </article>
+
+    <article class="plot">
+      <div class="plot-header">
+        <span class="plot-icon">&#x1F33E;</span>
+        <h2>The ENTRACE Stack</h2>
+        <span class="plot-status">Sowing</span>
+      </div>
+      <div class="plot-body">
+        <div class="plot-col seed-col">
+          <h3>Seed</h3>
+          <p class="plot-metric"><strong>6</strong> lines</p>
+          <p class="plot-desc">The drop-in constraint governance seed for any AI conversation. Six constraints. No philosophy required. Paste it into any model's system prompt. The harvest is immediate.</p>
+          <a href="/doc/entrace-stack" class="plot-link">Take the seed</a>
+        </div>
+        <div class="plot-arrow">&#x2192;</div>
+        <div class="plot-col harvest-col">
+          <h3>Harvest</h3>
+          <p class="plot-metric"><strong>Your output</strong></p>
+          <p class="plot-desc">The harvest is yours. The seed narrows the branching set of every AI conversation you have. The output becomes shorter, more precise, more verifiable. The waste disappears. The constraints are free.</p>
+          <ul class="plot-stats">
+            <li><span class="stat-label">Cost</span> <span class="stat-value">Free</span></li>
+            <li><span class="stat-label">Models</span> <span class="stat-value">All</span></li>
+            <li><span class="stat-label">Time to effect</span> <span class="stat-value">Immediate</span></li>
+            <li><span class="stat-label">Philosophy required</span> <span class="stat-value">None</span></li>
+          </ul>
+          <a href="/doc/entrace-stack" class="plot-link">Plant it now</a>
+        </div>
+      </div>
+      <div class="plot-soil">
+        <p>This is the seed you carry home from the garden. Plant it in your next AI conversation. The harvest will be different from anything you have produced before — not because the model changed, but because the constraints changed. Better constraints, better harvest. The constraints are free.</p>
+      </div>
+    </article>
+
+  </div>
+
+  <section class="garden-footer">
+    <p><em>The Sower went out to sow. Some seed fell on the path, and the birds came and ate it. Some fell on rocky ground, where it did not have much soil. Some fell among thorns. But some fell on good soil and produced a harvest — thirty, sixty, a hundredfold.</em></p>
+    <p class="dim">The seeds are available to everyone. The soil is yours to prepare. The harvest is determined by the seed and the soil together — by what was planted and how it was received.</p>
+    <p><a href="/doc/091-the-spermatic-logos">On the Spermatic Logos</a></p>
+  </section>
+</div>

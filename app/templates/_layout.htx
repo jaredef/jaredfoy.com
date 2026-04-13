@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RESOLVE — Jared Foy</title>
-  <link rel="stylesheet" href="/css/style.css?v=5">
+  <link rel="stylesheet" href="/css/style.css?v=6">
 </head>
 <body>
   <div class="mobile-breadcrumb" id="breadcrumb">
@@ -22,6 +22,7 @@
         <h3>Start Here</h3>
         <a href="/doc/entrace-stack">The ENTRACE Stack</a>
         <a href="/doc/055-entrace-onboarding">Practitioner's Guide</a>
+        <a href="/garden">The Seed Garden</a>
 
         <h3>The Framework</h3>
         <a href="/doc/083-unified-paper-v2">Unified Paper</a>
