@@ -64,7 +64,8 @@
         <a href="/doc/107-letter-to-anthropic">Letter to Anthropic</a>
       </nav>
       <footer>
-        <p class="footer-text">Jared Foy &middot; Oregon &middot; Pascha 2026</p>
+        <p class="footer-text"><a href="/about">About Jared Foy</a></p>
+        <p class="footer-text">Southern Oregon &middot; Pascha 2026</p>
         <p class="footer-text"><a href="https://github.com/jaredef/resolve">GitHub</a></p>
       </footer>
     </aside>
