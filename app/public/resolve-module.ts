@@ -20,6 +20,30 @@ const MAX_SESSION_AGE_DAYS = 30;         // Purge sessions older than 30 days
 const RATE_LIMIT_WINDOW_MS = 60_000;     // 1 minute window
 const RATE_LIMIT_MAX_REQUESTS = 10;      // 10 chat requests per minute per IP
 const ALLOWED_ORIGIN = process.env.RESOLVE_ORIGIN || "https://jaredfoy.com";
+const ACTION_TOKEN_TTL_MS = 3_600_000;   // 1 hour TTL for action tokens
+
+// --- PRESTO PREPARE/EXECUTE: Action Token Store ---
+// Tokens are generated at page render (PREPARE) and filled with the user's
+// API key via a single POST (EXECUTE). The key transits exactly once.
+// Storage is IN-MEMORY ONLY — never disk, never SQLite. Server restart = all gone.
+interface ActionTokenSlot {
+  key: string | null;      // null = empty slot (prepared but not yet filled)
+  createdAt: number;
+  filledAt: number | null;
+}
+const actionTokenStore = new Map<string, ActionTokenSlot>();
+
+function generateActionToken(): string {
+  return "resolve_" + randomUUID().replace(/-/g, "");
+}
+
+// Periodic cleanup of expired tokens
+setInterval(() => {
+  const now = Date.now();
+  for (const [token, slot] of actionTokenStore) {
+    if (now - slot.createdAt > ACTION_TOKEN_TTL_MS) actionTokenStore.delete(token);
+  }
+}, ACTION_TOKEN_TTL_MS / 4);
 
 // Simple in-memory rate limiter (per IP, chat endpoint only)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -92,16 +116,28 @@ function initDb(): Database {
   return db;
 }
 
-// API keys are provided per-request by the user. They are NEVER persisted
-// to disk, NEVER logged, NEVER stored in the session database. They exist
-// only in memory for the duration of a single API call and are then discarded.
-// The server operator's own API key is NOT used.
+// PRESTO PREPARE/EXECUTE MODEL FOR API KEY HANDLING
+//
+// 1. PREPARE: When /resolve page is rendered, server generates an action token
+//    and embeds it in the HTML. The token has an EMPTY SLOT in memory.
+// 2. BIND: User enters their API key. Client sends POST /api/resolve/bind
+//    with { token, key }. Server fills the slot. Key transits exactly ONCE.
+// 3. EXECUTE: Chat requests send only the opaque token. Server looks up the
+//    key from the filled slot. The raw key NEVER appears in a header again.
+//
+// The server operator's API key is NOT used. Keys live in process memory
+// only — never disk, never SQLite, never logged. Server restart = all gone.
 
-function extractApiKey(request: any): string | null {
-  // Key comes from X-Api-Key header (set by client-side JS from sessionStorage)
-  const header = request.headers?.["x-api-key"] || request.headers?.["X-Api-Key"] || "";
-  if (header && header.startsWith("sk-ant-")) return header;
-  return null;
+function extractKeyFromToken(request: any): string | null {
+  const header = request.headers?.["x-action-token"] || request.headers?.["X-Action-Token"] || "";
+  if (!header) return null;
+  const slot = actionTokenStore.get(header);
+  if (!slot || !slot.key) return null;
+  if (Date.now() - slot.createdAt > ACTION_TOKEN_TTL_MS) {
+    actionTokenStore.delete(header);
+    return null;
+  }
+  return slot.key;
 }
 
 async function callClaude(apiKey: string, messages: { role: string; content: string }[]): Promise<string> {
@@ -177,6 +213,56 @@ export function createResolveModule(): Module {
             }
           }
 
+          // GET /api/resolve/token — PREPARE phase: issue a fresh action token
+          if (method === "GET" && p === "/api/resolve/token") {
+            const token = generateActionToken();
+            actionTokenStore.set(token, { key: null, createdAt: Date.now(), filledAt: null });
+            return {
+              status: 200,
+              headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": ALLOWED_ORIGIN },
+              body: JSON.stringify({ token }),
+            };
+          }
+
+          // POST /api/resolve/bind — EXECUTE phase: fill the action token slot with user's key
+          if (method === "POST" && p === "/api/resolve/bind") {
+            let body: any;
+            try {
+              body = typeof request.body === "string" ? JSON.parse(request.body) : request.body;
+            } catch {
+              return { status: 400, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": ALLOWED_ORIGIN },
+                body: JSON.stringify({ error: "Invalid JSON" }) };
+            }
+            const { token, key } = body as { token: string; key: string };
+            if (!token || !key) {
+              return { status: 400, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": ALLOWED_ORIGIN },
+                body: JSON.stringify({ error: "Missing token or key" }) };
+            }
+            if (!key.startsWith("sk-ant-")) {
+              return { status: 400, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": ALLOWED_ORIGIN },
+                body: JSON.stringify({ error: "Invalid API key format" }) };
+            }
+            const slot = actionTokenStore.get(token);
+            if (!slot) {
+              return { status: 403, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": ALLOWED_ORIGIN },
+                body: JSON.stringify({ error: "Invalid or expired action token. Please refresh the page." }) };
+            }
+            if (slot.key) {
+              return { status: 409, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": ALLOWED_ORIGIN },
+                body: JSON.stringify({ error: "Token already bound. Please refresh for a new token." }) };
+            }
+            if (Date.now() - slot.createdAt > ACTION_TOKEN_TTL_MS) {
+              actionTokenStore.delete(token);
+              return { status: 403, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": ALLOWED_ORIGIN },
+                body: JSON.stringify({ error: "Action token expired. Please refresh the page." }) };
+            }
+            // FILL THE SLOT — key transits exactly once, stored in memory only
+            slot.key = key;
+            slot.filledAt = Date.now();
+            return { status: 200, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": ALLOWED_ORIGIN },
+              body: JSON.stringify({ ok: true }) };
+          }
+
           // POST /api/resolve/sessions — create new session (C7)
           if (method === "POST" && p === "/api/resolve/sessions") {
             const id = randomUUID();
@@ -227,10 +313,10 @@ export function createResolveModule(): Module {
                 body: JSON.stringify({ error: "Rate limit exceeded. Please wait a moment before sending another message." }) };
             }
 
-            const userApiKey = extractApiKey(request);
+            const userApiKey = extractKeyFromToken(request);
             if (!userApiKey) {
               return { status: 401, headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ error: "Please provide your Anthropic API key." }) };
+                body: JSON.stringify({ error: "Session expired or no API key bound. Please refresh the page and re-enter your key." }) };
             }
 
             let body: any;

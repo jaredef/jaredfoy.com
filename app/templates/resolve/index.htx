@@ -9,8 +9,8 @@
   <div id="keyEntry">
     <div class="key-notice">
       <h2>Bring Your Own Key</h2>
-      <p>This assistant runs on <strong>your</strong> Anthropic API key. Your key is stored only in your browser's session memory — it is <strong>never</strong> sent to or stored on this server. When you close this tab, the key is gone.</p>
-      <p style="color:#888;font-size:0.8rem;">The server operator's key is not used. Your key is passed directly to api.anthropic.com. <a href="https://console.anthropic.com/settings/keys" style="color:#ff8800;">Get an API key</a></p>
+      <p>This assistant runs on <strong>your</strong> Anthropic API key using a <strong>prepare/execute</strong> security model. When this page loaded, the server generated a unique action token. When you enter your key, it is sent <strong>exactly once</strong> to bind to that token. After binding, only the opaque token is used — your raw key never appears in a request header again.</p>
+      <p style="color:#888;font-size:0.8rem;">Your key is held in server memory only (never disk, never database, never logged). Server restart = key gone. The server operator's key is not used. <a href="https://console.anthropic.com/settings/keys" style="color:#ff8800;">Get an API key</a></p>
       <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." style="width:100%;padding:0.5rem;font-family:monospace;background:#111;color:#eee;border:1px solid #333;margin:1rem 0;">
       <button id="saveKey" class="resolve-btn">Enter</button>
       <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid #222;">
@@ -76,14 +76,16 @@
     <button id="hideCode" class="resolve-btn" style="background:#333;color:#aaa;">Close</button>
   </div>
   <div class="code-audit">
-    <h3>Security audit summary</h3>
+    <h3>Security audit summary — PRESTO Prepare/Execute Model</h3>
     <ul>
-      <li><strong>Line 52–55:</strong> Comment block explicitly states keys are NEVER persisted, NEVER logged, NEVER stored in the session database.</li>
-      <li><strong>Line 57–62:</strong> <code>extractApiKey()</code> reads the key from the <code>X-Api-Key</code> header. This is the ONLY place the server touches your key.</li>
-      <li><strong>Line 64–87:</strong> <code>callClaude()</code> passes the key directly to <code>api.anthropic.com</code> via fetch. The key exists in memory for this one request.</li>
-      <li><strong>Line 173:</strong> The key variable <code>userApiKey</code> is scoped to the request handler. When the response is sent, the variable is garbage-collected.</li>
-      <li><strong>Lines 31–50:</strong> The SQLite schema stores sessions (id, created_at, title) and messages (role, content). No key column exists.</li>
-      <li><strong>Client side:</strong> Your key lives in <code>sessionStorage</code> (not <code>localStorage</code>). It is deleted when you close the tab. It is never written to a cookie or sent as a URL parameter.</li>
+      <li><strong>PREPARE (page render):</strong> Server generates a unique action token and embeds it in this page. The token has an empty slot in server memory.</li>
+      <li><strong>BIND (one-time):</strong> When you enter your key, it is sent ONCE to <code>/api/resolve/bind</code> to fill the slot. After this, the raw key never appears in any request.</li>
+      <li><strong>EXECUTE (every chat):</strong> Chat requests send only the opaque action token in the <code>X-Action-Token</code> header. The server looks up your key from the in-memory slot.</li>
+      <li><strong>Memory only:</strong> The token→key mapping lives in server process memory. Never disk. Never SQLite. Never logged. Server restart = all keys gone.</li>
+      <li><strong>Token TTL:</strong> Action tokens expire after 1 hour. Expired tokens are automatically purged.</li>
+      <li><strong>One-time bind:</strong> Each token can be filled exactly once. A second bind attempt is rejected (409 Conflict).</li>
+      <li><strong>Client side:</strong> After binding, the key is cleared from the input field. Only the opaque token is stored in <code>sessionStorage</code>. The token is worthless outside this server.</li>
+      <li><strong>SQLite:</strong> Stores sessions and messages only. No key column. No token column.</li>
     </ul>
   </div>
   <pre class="code-source"><code id="sourceCode">Loading...</code></pre>
@@ -106,10 +108,15 @@
 (function() {
   var currentSession = null;
 
-  // API key lives ONLY in sessionStorage (cleared when tab closes)
-  function getKey() { return sessionStorage.getItem('resolve_api_key') || ''; }
-  function setKey(k) { sessionStorage.setItem('resolve_api_key', k); }
-  function clearKeyStore() { sessionStorage.removeItem('resolve_api_key'); }
+  // PRESTO Prepare/Execute: action token is fetched from the server on page load.
+  // The user's API key is sent ONCE to fill the token's slot, then only the
+  // opaque token is used. The key never appears in a header after binding.
+  var actionToken = '';
+  var tokenBound = false;
+
+  function getToken() { return sessionStorage.getItem('resolve_action_token') || actionToken; }
+  function setToken(t) { sessionStorage.setItem('resolve_action_token', t); actionToken = t; }
+  function clearTokenStore() { sessionStorage.removeItem('resolve_action_token'); sessionStorage.removeItem('resolve_token_bound'); tokenBound = false; actionToken = ''; }
 
   function showKeyEntry() {
     document.getElementById('keyEntry').style.display = 'block';
@@ -122,19 +129,56 @@
     loadSessions();
   }
 
-  // Check if key already in sessionStorage
-  if (getKey()) { showChat(); } else { showKeyEntry(); }
+  // On page load: check if already bound, otherwise fetch a fresh token
+  if (sessionStorage.getItem('resolve_token_bound') === 'true' && getToken()) {
+    tokenBound = true;
+    showChat();
+  } else {
+    // PREPARE phase: fetch a fresh action token from the server
+    fetch('/api/resolve/token').then(function(r) { return r.json(); }).then(function(data) {
+      if (data.token) {
+        setToken(data.token);
+        showKeyEntry();
+      }
+    }).catch(function() { showKeyEntry(); });
+  }
 
   document.getElementById('saveKey').addEventListener('click', function() {
     var key = document.getElementById('apiKeyInput').value.trim();
     if (!key.startsWith('sk-ant-')) { alert('Key should start with sk-ant-'); return; }
-    setKey(key);
-    showChat();
+    var btn = document.getElementById('saveKey');
+    btn.disabled = true;
+    btn.textContent = 'Binding...';
+    // EXECUTE phase: bind the key to the action token
+    fetch('/api/resolve/bind', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: getToken(), key: key })
+    }).then(function(r) { return r.json(); }).then(function(data) {
+      if (data.ok) {
+        tokenBound = true;
+        setToken(getToken());
+        sessionStorage.setItem('resolve_token_bound', 'true');
+        // Clear the key from the input — it's now in server memory only
+        document.getElementById('apiKeyInput').value = '';
+        showChat();
+      } else {
+        alert(data.error || 'Bind failed');
+      }
+      btn.disabled = false;
+      btn.textContent = 'Enter';
+    }).catch(function(err) {
+      alert('Error: ' + err);
+      btn.disabled = false;
+      btn.textContent = 'Enter';
+    });
   });
 
   document.getElementById('clearKey').addEventListener('click', function() {
-    clearKeyStore();
-    showKeyEntry();
+    clearTokenStore();
+    sessionStorage.removeItem('resolve_token_bound');
+    // Refresh to get a new action token from the server
+    window.location.reload();
   });
 
   function toggleCode() {
@@ -161,7 +205,7 @@
       method: method,
       headers: {
         'Content-Type': 'application/json',
-        'X-Api-Key': getKey()
+        'X-Action-Token': getToken()
       }
     };
     if (body) opts.body = JSON.stringify(body);
