@@ -10,7 +10,7 @@
     <div class="key-notice">
       <h2>Bring Your Own Key</h2>
       <p>This assistant runs on <strong>your</strong> Anthropic API key using a <strong>prepare/execute</strong> security model. When this page loaded, the server generated a unique action token. When you enter your key, it is sent <strong>exactly once</strong> to bind to that token. After binding, only the opaque token is used — your raw key never appears in a request header again.</p>
-      <p style="color:#888;font-size:0.8rem;">Your key is held in server memory only (never disk, never database, never logged). Server restart = key gone. The server operator's key is not used. <a href="https://console.anthropic.com/settings/keys" style="color:#ff8800;">Get an API key</a></p>
+      <p style="color:#888;font-size:0.8rem;">Your key AND your conversation are held in server memory only — never disk, never database, never logged. Server restart = everything gone. Sessions auto-expire after 1 hour. The server operator's key is not used. <a href="https://console.anthropic.com/settings/keys" style="color:#ff8800;">Get an API key</a></p>
       <div class="consent-warning" style="margin:1.5rem 0;padding:1rem;border:1px solid #a33;background:#1a0a0a;">
         <h3 style="color:#f66;font-size:0.9rem;margin:0 0 0.5rem;">Informed Consent Required</h3>
         <p style="font-size:0.8rem;color:#caa;line-height:1.5;">By entering your API key, you acknowledge that:</p>
@@ -107,11 +107,11 @@
       <li><strong>PREPARE (page render):</strong> Server generates a unique action token and embeds it in this page. The token has an empty slot in server memory.</li>
       <li><strong>BIND (one-time):</strong> When you enter your key, it is sent ONCE to <code>/api/resolve/bind</code> to fill the slot. After this, the raw key never appears in any request.</li>
       <li><strong>EXECUTE (every chat):</strong> Chat requests send only the opaque action token in the <code>X-Action-Token</code> header. The server looks up your key from the in-memory slot.</li>
-      <li><strong>Memory only:</strong> The token→key mapping lives in server process memory. Never disk. Never SQLite. Never logged. Server restart = all keys gone.</li>
-      <li><strong>Token TTL:</strong> Action tokens expire after 1 hour. Expired tokens are automatically purged.</li>
+      <li><strong>Memory only — everything:</strong> API keys, action tokens, AND chat messages all live in server process memory. Nothing is written to disk. No SQLite. No log files. Server restart = completely clean slate.</li>
+      <li><strong>TTL on everything:</strong> Action tokens expire after 1 hour. Chat sessions expire after 1 hour. Expired entries are automatically garbage-collected.</li>
       <li><strong>One-time bind:</strong> Each token can be filled exactly once. A second bind attempt is rejected (409 Conflict).</li>
       <li><strong>Client side:</strong> After binding, the key is cleared from the input field. Only the opaque token is stored in <code>sessionStorage</code>. The token is worthless outside this server.</li>
-      <li><strong>SQLite:</strong> Stores sessions and messages only. No key column. No token column.</li>
+      <li><strong>No database:</strong> There is no SQLite. No file-based storage of any kind for chat data. Everything is a JavaScript Map in process memory.</li>
     </ul>
   </div>
   <pre class="code-source"><code id="sourceCode">Loading...</code></pre>

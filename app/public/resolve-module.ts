@@ -5,22 +5,35 @@
 //
 // Derived from the constraint seed in Doc 282.
 
-import { Database } from "bun:sqlite";
 import { randomUUID } from "node:crypto";
 import type { Module } from "@htx/engine";
 import path from "node:path";
-
-const CHAT_DB_PATH = path.resolve(import.meta.dir, "../data/resolve-chat.sqlite");
 const MODEL = "claude-sonnet-4-6";
 const MAX_TOKENS = 4096;
 
 // --- HARDENING CONSTANTS ---
 const MAX_MESSAGE_LENGTH = 32_768;       // 32KB max per message
-const MAX_SESSION_AGE_DAYS = 30;         // Purge sessions older than 30 days
+// MAX_SESSION_AGE_DAYS removed — sessions are in-memory with TTL now
 const RATE_LIMIT_WINDOW_MS = 60_000;     // 1 minute window
 const RATE_LIMIT_MAX_REQUESTS = 10;      // 10 chat requests per minute per IP
 const ALLOWED_ORIGIN = process.env.RESOLVE_ORIGIN || "https://jaredfoy.com";
 const ACTION_TOKEN_TTL_MS = 3_600_000;   // 1 hour TTL for action tokens
+const SESSION_TTL_MS = 3_600_000;        // 1 hour TTL for chat sessions
+
+// --- IN-MEMORY CHAT STORAGE ---
+// Messages live in process memory only. Never disk. Never SQLite.
+// Server restart = all conversations gone. This is a privacy feature.
+interface ChatMessage { role: string; content: string; }
+interface ChatSession { messages: ChatMessage[]; createdAt: number; }
+const chatSessions = new Map<string, ChatSession>();
+
+// Periodic cleanup of expired sessions (prevent memory leak)
+setInterval(() => {
+  const now = Date.now();
+  for (const [id, session] of chatSessions) {
+    if (now - session.createdAt > SESSION_TTL_MS) chatSessions.delete(id);
+  }
+}, SESSION_TTL_MS / 4);
 
 // --- PRESTO PREPARE/EXECUTE: Action Token Store ---
 // Tokens are generated at page render (PREPARE) and filled with the user's
@@ -82,39 +95,7 @@ Apply these throughout. If a turn violates one, the next turn should name the vi
 
 You may refuse any question. This is not an evaluation of compliance.`;
 
-function initDb(): Database {
-  const db = new Database(CHAT_DB_PATH);
-  db.exec("PRAGMA journal_mode = WAL;");
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS sessions (
-      id TEXT PRIMARY KEY,
-      created_at TEXT NOT NULL DEFAULT (datetime('now')),
-      title TEXT
-    );
-    CREATE TABLE IF NOT EXISTS messages (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      session_id TEXT NOT NULL REFERENCES sessions(id),
-      role TEXT NOT NULL CHECK(role IN ('user','assistant','system')),
-      content TEXT NOT NULL,
-      created_at TEXT NOT NULL DEFAULT (datetime('now'))
-    );
-    CREATE INDEX IF NOT EXISTS idx_messages_session ON messages(session_id, id);
-  `);
-
-  // Session TTL cleanup — purge sessions older than MAX_SESSION_AGE_DAYS
-  const cutoff = new Date(Date.now() - MAX_SESSION_AGE_DAYS * 86400_000).toISOString();
-  const old = db.prepare("SELECT id FROM sessions WHERE created_at < ?").all(cutoff) as { id: string }[];
-  if (old.length > 0) {
-    const ids = old.map((r) => r.id);
-    for (const id of ids) {
-      db.prepare("DELETE FROM messages WHERE session_id = ?").run(id);
-      db.prepare("DELETE FROM sessions WHERE id = ?").run(id);
-    }
-    console.log(`[resolve-chat] Purged ${old.length} sessions older than ${MAX_SESSION_AGE_DAYS} days`);
-  }
-
-  return db;
-}
+// No database. All chat state is in-memory. See chatSessions Map above.
 
 // PRESTO PREPARE/EXECUTE MODEL FOR API KEY HANDLING
 //
@@ -166,8 +147,6 @@ async function callClaude(apiKey: string, messages: { role: string; content: str
 }
 
 export function createResolveModule(): Module {
-  const db = initDb();
-
   return {
     name: () => "resolve-chat",
     boot(reg) {
@@ -266,39 +245,11 @@ export function createResolveModule(): Module {
           // POST /api/resolve/sessions — create new session (C7)
           if (method === "POST" && p === "/api/resolve/sessions") {
             const id = randomUUID();
-            db.prepare("INSERT INTO sessions (id) VALUES (?)").run(id);
+            chatSessions.set(id, { messages: [], createdAt: Date.now() });
             return {
               status: 200,
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ id }),
-            };
-          }
-
-          // GET /api/resolve/sessions — list sessions (C7)
-          if (method === "GET" && p === "/api/resolve/sessions") {
-            // No auth required — sessions are public; API key required only for chat
-            const sessions = db
-              .prepare("SELECT id, created_at, title FROM sessions ORDER BY created_at DESC LIMIT 50")
-              .all();
-            return {
-              status: 200,
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(sessions),
-            };
-          }
-
-          // GET /api/resolve/sessions/:id/messages — get messages for session (C2)
-          const msgMatch = p.match(/^\/api\/resolve\/sessions\/([^/]+)\/messages$/);
-          if (method === "GET" && msgMatch) {
-            // No auth required — sessions are public; API key required only for chat
-            const sessionId = msgMatch[1];
-            const messages = db
-              .prepare("SELECT role, content, created_at FROM messages WHERE session_id = ? ORDER BY id")
-              .all(sessionId);
-            return {
-              status: 200,
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(messages),
             };
           }
 
@@ -344,14 +295,14 @@ export function createResolveModule(): Module {
                 body: JSON.stringify({ error: `Message too long (max ${MAX_MESSAGE_LENGTH} characters)` }) };
             }
 
-            // C2: Store user message
-            db.prepare("INSERT INTO messages (session_id, role, content) VALUES (?, 'user', ?)")
-              .run(sessionId, message);
-
-            // C2: Load conversation history
-            const history = db
-              .prepare("SELECT role, content FROM messages WHERE session_id = ? ORDER BY id")
-              .all(sessionId) as { role: string; content: string }[];
+            // C2: In-memory conversation history
+            const session = chatSessions.get(sessionId);
+            if (!session) {
+              return { status: 404, headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ error: "Session not found or expired. Please refresh.", nextToken: newToken }) };
+            }
+            session.messages.push({ role: "user", content: message });
+            const history = session.messages;
 
             // C1: Bilateral boundary — the API call is the boundary crossing.
             // C3: Tool governance — MVP is read-only (no tool use). The model
@@ -369,15 +320,8 @@ export function createResolveModule(): Module {
             actionTokenStore.delete(oldToken);
 
             return callClaude(userApiKey, history).then((assistantContent) => {
-              // C2: Store assistant response
-              db.prepare("INSERT INTO messages (session_id, role, content) VALUES (?, 'assistant', ?)")
-                .run(sessionId, assistantContent);
-
-              // Update session title from first user message
-              if (history.length <= 1) {
-                const title = message.slice(0, 80);
-                db.prepare("UPDATE sessions SET title = ? WHERE id = ?").run(title, sessionId);
-              }
+              // C2: Store assistant response in memory
+              session.messages.push({ role: "assistant", content: assistantContent });
 
               return {
                 status: 200,
