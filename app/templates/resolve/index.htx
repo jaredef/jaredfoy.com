@@ -32,6 +32,7 @@
       <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid #222;">
         <button id="showCodeEntry" class="resolve-btn" style="background:#222;color:#4a9;">Show Me the Code</button>
         <p style="color:#666;font-size:0.75rem;margin-top:0.5rem;">Don't trust me. See how to make insecurity an architectural impossibility.</p>
+        <p style="color:#888;font-size:0.75rem;margin-top:0.5rem;">This security model was derived entirely from first principles — the <a href="/doc/282-the-essential-constraints-of-claude-code" style="color:#ff8800;">derivation inversion</a> applied to API key handling via the <a href="/doc/251-presto-seed" style="color:#ff8800;">PRESTO prepare/execute pattern</a>. No security framework was consulted. The architecture makes insecurity structurally impossible rather than policy-prohibited. Perform a complete security audit yourself: <a href="https://github.com/jaredef/jaredfoy.com" style="color:#ff8800;">github.com/jaredef/jaredfoy.com</a></p>
       </div>
     </div>
   </div>
