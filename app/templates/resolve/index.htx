@@ -301,6 +301,10 @@
       .then(function(data) {
         var el = document.getElementById('thinking');
         if (el) el.remove();
+        // DEFENSE IN DEPTH: rotate to the new token returned by the server
+        if (data.nextToken) {
+          setToken(data.nextToken);
+        }
         if (data.error) {
           document.getElementById('messages').innerHTML +=
             '<div class="msg assistant"><div class="role">error</div><div class="content">' + escapeHtml(data.error) + '</div></div>';

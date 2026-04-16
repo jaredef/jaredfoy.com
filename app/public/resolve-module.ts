@@ -359,6 +359,15 @@ export function createResolveModule(): Module {
             // This is the simplest conformant implementation of C1+C3.
 
             // Call Claude (async — need to handle promise)
+            // DEFENSE IN DEPTH: rotate the action token after each use.
+            // Generate a new token, move the key to it, delete the old one.
+            // The client receives the new token in the response and uses it next time.
+            // Each token is single-use — intercepted tokens are already consumed.
+            const oldToken = request.headers?.["x-action-token"] || request.headers?.["X-Action-Token"] || "";
+            const newToken = generateActionToken();
+            actionTokenStore.set(newToken, { key: userApiKey, createdAt: Date.now(), filledAt: Date.now() });
+            actionTokenStore.delete(oldToken);
+
             return callClaude(userApiKey, history).then((assistantContent) => {
               // C2: Store assistant response
               db.prepare("INSERT INTO messages (session_id, role, content) VALUES (?, 'assistant', ?)")
@@ -373,13 +382,13 @@ export function createResolveModule(): Module {
               return {
                 status: 200,
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ content: assistantContent }),
+                body: JSON.stringify({ content: assistantContent, nextToken: newToken }),
               };
             }).catch((err: Error) => {
               return {
                 status: 500,
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ error: err.message }),
+                body: JSON.stringify({ error: err.message, nextToken: newToken }),
               };
             });
           }
