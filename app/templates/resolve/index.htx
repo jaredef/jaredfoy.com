@@ -81,6 +81,18 @@
 .resolve-send { background: #ff8800; color: #000; border: none; padding: 0.5rem 1.5rem; font-family: monospace; cursor: pointer; align-self: flex-end; }
 .resolve-send:disabled { opacity: 0.5; cursor: not-allowed; }
 .thinking { color: #666; font-style: italic; }
+.md-content { white-space: normal; }
+.md-content p { margin: 0.5rem 0; }
+.md-content h2, .md-content h3, .md-content h4 { margin: 1rem 0 0.5rem; color: #ff8800; }
+.md-content pre { background: #111; padding: 0.75rem; overflow-x: auto; margin: 0.5rem 0; border-left: 2px solid #333; }
+.md-content pre code { background: none; padding: 0; font-size: 0.8rem; }
+.md-content code { background: #1a1a1a; padding: 0.1rem 0.3rem; font-size: 0.85rem; color: #4a9; }
+.md-content strong { color: #eee; }
+.md-content em { color: #ccc; }
+.md-content ul, .md-content ol { margin: 0.5rem 0; padding-left: 1.5rem; }
+.md-content li { margin-bottom: 0.25rem; }
+.md-content hr { border: none; border-top: 1px solid #333; margin: 1rem 0; }
+.md-content blockquote { border-left: 2px solid #ff8800; padding-left: 0.75rem; margin: 0.5rem 0; color: #aaa; }
 </style>
 
 <!-- Code transparency panel -->
@@ -246,6 +258,50 @@
     return d.innerHTML;
   }
 
+  // Lightweight markdown → HTML for assistant responses
+  function renderMd(text) {
+    var html = escapeHtml(text);
+    // Code blocks (``` ... ```)
+    html = html.replace(/```(\w*)\n([\s\S]*?)```/g, function(m, lang, code) {
+      return '<pre><code>' + code + '</code></pre>';
+    });
+    // Inline code
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+    // Bold
+    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    // Italic
+    html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    // Headers
+    html = html.replace(/^### (.+)$/gm, '<h4>$1</h4>');
+    html = html.replace(/^## (.+)$/gm, '<h3>$1</h3>');
+    html = html.replace(/^# (.+)$/gm, '<h2>$1</h2>');
+    // Horizontal rules
+    html = html.replace(/^---$/gm, '<hr>');
+    // Unordered lists
+    html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+    html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+    // Ordered lists
+    html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+    // Blockquotes
+    html = html.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+    // Paragraphs (double newline)
+    html = html.replace(/\n\n/g, '</p><p>');
+    html = '<p>' + html + '</p>';
+    // Clean up empty paragraphs
+    html = html.replace(/<p>\s*<\/p>/g, '');
+    html = html.replace(/<p>\s*(<h[234]>)/g, '$1');
+    html = html.replace(/(<\/h[234]>)\s*<\/p>/g, '$1');
+    html = html.replace(/<p>\s*(<pre>)/g, '$1');
+    html = html.replace(/(<\/pre>)\s*<\/p>/g, '$1');
+    html = html.replace(/<p>\s*(<ul>)/g, '$1');
+    html = html.replace(/(<\/ul>)\s*<\/p>/g, '$1');
+    html = html.replace(/<p>\s*(<hr>)/g, '$1');
+    html = html.replace(/(<hr>)\s*<\/p>/g, '$1');
+    html = html.replace(/<p>\s*(<blockquote>)/g, '$1');
+    html = html.replace(/(<\/blockquote>)\s*<\/p>/g, '$1');
+    return html;
+  }
+
   function scrollToBottom() {
     var el = document.getElementById('messages');
     el.scrollTop = el.scrollHeight;
@@ -288,7 +344,7 @@
             '<div class="msg assistant"><div class="role">error</div><div class="content">' + escapeHtml(data.error) + '</div></div>';
         } else {
           document.getElementById('messages').innerHTML +=
-            '<div class="msg assistant"><div class="role">assistant</div><div class="content">' + escapeHtml(data.content || '') + '</div></div>';
+            '<div class="msg assistant"><div class="role">assistant</div><div class="content md-content">' + renderMd(data.content || '') + '</div></div>';
         }
         scrollToBottom();
         btn.disabled = false;
