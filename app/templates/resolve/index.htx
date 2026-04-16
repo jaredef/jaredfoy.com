@@ -100,7 +100,6 @@
   <div class="code-header">
     <h2>Full Server Source — resolve-module.ts</h2>
     <p>This is the complete server-side code that handles your API key and chat requests. Read it. Verify that your key is never stored.</p>
-    <button id="hideCode" class="resolve-btn" style="background:#333;color:#aaa;">Close</button>
   </div>
   <div class="code-audit">
     <h3>Security audit summary — PRESTO Prepare/Execute Model</h3>
@@ -119,7 +118,7 @@
 </div>
 
 <style>
-.code-panel { margin: 1rem 0; padding: 1rem; border: 1px solid #333; background: #0a0a0a; max-height: 80vh; overflow-y: auto; }
+.code-panel { position: fixed; bottom: 0; left: 0; right: 0; padding: 1rem; border-top: 2px solid #4a9; background: #0a0a0a; max-height: 75vh; overflow-y: auto; z-index: 200; }
 .code-header { margin-bottom: 1rem; }
 .code-header h2 { font-size: 1rem; margin: 0 0 0.5rem; color: #4a9; }
 .code-header p { font-size: 0.8rem; color: #888; }
@@ -221,24 +220,24 @@
     window.location.reload();
   });
 
-  function toggleCode() {
+  function toggleCode(btn) {
     var panel = document.getElementById('codePanel');
-    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-    if (panel.style.display === 'block' && document.getElementById('sourceCode').textContent === 'Loading...') {
+    var isOpen = panel.style.display !== 'none';
+    panel.style.display = isOpen ? 'none' : 'block';
+    // Update ALL show-code buttons' text
+    var buttons = [document.getElementById('showCode'), document.getElementById('showCodeEntry')];
+    buttons.forEach(function(b) { if (b) b.textContent = isOpen ? 'Show Me the Code' : 'Close'; });
+    if (!isOpen && document.getElementById('sourceCode').textContent === 'Loading...') {
       fetch('/api/resolve/source').then(function(r) { return r.text(); }).then(function(src) {
         document.getElementById('sourceCode').textContent = src;
       });
     }
   }
 
-  document.getElementById('showCode').addEventListener('click', toggleCode);
+  document.getElementById('showCode').addEventListener('click', function() { toggleCode(this); });
   if (document.getElementById('showCodeEntry')) {
-    document.getElementById('showCodeEntry').addEventListener('click', toggleCode);
+    document.getElementById('showCodeEntry').addEventListener('click', function() { toggleCode(this); });
   }
-
-  document.getElementById('hideCode').addEventListener('click', function() {
-    document.getElementById('codePanel').style.display = 'none';
-  });
 
   function api(method, path, body) {
     var opts = {
