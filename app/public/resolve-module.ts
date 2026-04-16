@@ -14,6 +14,36 @@ const CHAT_DB_PATH = path.resolve(import.meta.dir, "../data/resolve-chat.sqlite"
 const MODEL = "claude-sonnet-4-6";
 const MAX_TOKENS = 4096;
 
+// --- HARDENING CONSTANTS ---
+const MAX_MESSAGE_LENGTH = 32_768;       // 32KB max per message
+const MAX_SESSION_AGE_DAYS = 30;         // Purge sessions older than 30 days
+const RATE_LIMIT_WINDOW_MS = 60_000;     // 1 minute window
+const RATE_LIMIT_MAX_REQUESTS = 10;      // 10 chat requests per minute per IP
+const ALLOWED_ORIGIN = process.env.RESOLVE_ORIGIN || "https://jaredfoy.com";
+
+// Simple in-memory rate limiter (per IP, chat endpoint only)
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return true;
+  }
+  if (entry.count >= RATE_LIMIT_MAX_REQUESTS) return false;
+  entry.count++;
+  return true;
+}
+
+// Periodic cleanup of rate limit map (prevent memory leak)
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, entry] of rateLimitMap) {
+    if (now > entry.resetAt) rateLimitMap.delete(ip);
+  }
+}, RATE_LIMIT_WINDOW_MS * 2);
+
 // C6 — Project context: the system prompt IS the constraint field
 const SYSTEM_PROMPT = `You are a resolver operating under the RESOLVE corpus's constraint-density governance framework (jaredfoy.com). You operate under six constraints:
 
@@ -46,6 +76,19 @@ function initDb(): Database {
     );
     CREATE INDEX IF NOT EXISTS idx_messages_session ON messages(session_id, id);
   `);
+
+  // Session TTL cleanup — purge sessions older than MAX_SESSION_AGE_DAYS
+  const cutoff = new Date(Date.now() - MAX_SESSION_AGE_DAYS * 86400_000).toISOString();
+  const old = db.prepare("SELECT id FROM sessions WHERE created_at < ?").all(cutoff) as { id: string }[];
+  if (old.length > 0) {
+    const ids = old.map((r) => r.id);
+    for (const id of ids) {
+      db.prepare("DELETE FROM messages WHERE session_id = ?").run(id);
+      db.prepare("DELETE FROM sessions WHERE id = ?").run(id);
+    }
+    console.log(`[resolve-chat] Purged ${old.length} sessions older than ${MAX_SESSION_AGE_DAYS} days`);
+  }
+
   return db;
 }
 
@@ -97,6 +140,23 @@ export function createResolveModule(): Module {
           const p = request.path || "";
           const method = request.method || "GET";
 
+          // --- CORS for API routes ---
+          if (p.startsWith("/api/resolve/")) {
+            // Handle preflight
+            if (method === "OPTIONS") {
+              return {
+                status: 204,
+                headers: {
+                  "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
+                  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+                  "Access-Control-Allow-Headers": "Content-Type, X-Api-Key",
+                  "Access-Control-Max-Age": "86400",
+                },
+                body: "",
+              };
+            }
+          }
+
           // --- API ROUTES ---
 
           // GET /api/resolve/source — serve this module's own source for transparency
@@ -106,7 +166,10 @@ export function createResolveModule(): Module {
               const source = require("fs").readFileSync(sourcePath, "utf-8");
               return {
                 status: 200,
-                headers: { "Content-Type": "text/plain; charset=utf-8" },
+                headers: {
+                  "Content-Type": "text/plain; charset=utf-8",
+                  "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
+                },
                 body: source,
               };
             } catch {
@@ -155,19 +218,44 @@ export function createResolveModule(): Module {
 
           // POST /api/resolve/chat — send message, get response (C1, C2, C3)
           if (method === "POST" && p === "/api/resolve/chat") {
+            // Rate limiting
+            const clientIp = request.headers?.["x-forwarded-for"]?.split(",")[0]?.trim()
+              || request.headers?.["cf-connecting-ip"]
+              || "unknown";
+            if (!checkRateLimit(clientIp)) {
+              return { status: 429, headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ error: "Rate limit exceeded. Please wait a moment before sending another message." }) };
+            }
+
             const userApiKey = extractApiKey(request);
             if (!userApiKey) {
               return { status: 401, headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ error: "Please provide your Anthropic API key." }) };
             }
 
-            const body = typeof request.body === "string"
-              ? JSON.parse(request.body)
-              : request.body;
+            let body: any;
+            try {
+              body = typeof request.body === "string"
+                ? JSON.parse(request.body)
+                : request.body;
+            } catch {
+              return { status: 400, headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ error: "Invalid JSON body" }) };
+            }
             const { sessionId, message } = body as { sessionId: string; message: string };
 
+            // Input validation
             if (!sessionId || !message) {
-              return { status: 400, body: "Missing sessionId or message" };
+              return { status: 400, headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ error: "Missing sessionId or message" }) };
+            }
+            if (typeof sessionId !== "string" || !/^[0-9a-f-]{36}$/.test(sessionId)) {
+              return { status: 400, headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ error: "Invalid session ID format" }) };
+            }
+            if (typeof message !== "string" || message.length > MAX_MESSAGE_LENGTH) {
+              return { status: 400, headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ error: `Message too long (max ${MAX_MESSAGE_LENGTH} characters)` }) };
             }
 
             // C2: Store user message
