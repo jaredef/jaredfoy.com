@@ -13,6 +13,10 @@
       <p style="color:#888;font-size:0.8rem;">The server operator's key is not used. Your key is passed directly to api.anthropic.com. <a href="https://console.anthropic.com/settings/keys" style="color:#ff8800;">Get an API key</a></p>
       <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." style="width:100%;padding:0.5rem;font-family:monospace;background:#111;color:#eee;border:1px solid #333;margin:1rem 0;">
       <button id="saveKey" class="resolve-btn">Enter</button>
+      <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid #222;">
+        <button id="showCodeEntry" class="resolve-btn" style="background:#222;color:#4a9;">Show Me the Code</button>
+        <p style="color:#666;font-size:0.75rem;margin-top:0.5rem;">Don't trust me. See how to make insecurity an architectural impossibility.</p>
+      </div>
     </div>
   </div>
 
@@ -133,7 +137,7 @@
     showKeyEntry();
   });
 
-  document.getElementById('showCode').addEventListener('click', function() {
+  function toggleCode() {
     var panel = document.getElementById('codePanel');
     panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
     if (panel.style.display === 'block' && document.getElementById('sourceCode').textContent === 'Loading...') {
@@ -141,7 +145,12 @@
         document.getElementById('sourceCode').textContent = src;
       });
     }
-  });
+  }
+
+  document.getElementById('showCode').addEventListener('click', toggleCode);
+  if (document.getElementById('showCodeEntry')) {
+    document.getElementById('showCodeEntry').addEventListener('click', toggleCode);
+  }
 
   document.getElementById('hideCode').addEventListener('click', function() {
     document.getElementById('codePanel').style.display = 'none';
