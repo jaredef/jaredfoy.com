@@ -11,8 +11,22 @@
       <h2>Bring Your Own Key</h2>
       <p>This assistant runs on <strong>your</strong> Anthropic API key using a <strong>prepare/execute</strong> security model. When this page loaded, the server generated a unique action token. When you enter your key, it is sent <strong>exactly once</strong> to bind to that token. After binding, only the opaque token is used — your raw key never appears in a request header again.</p>
       <p style="color:#888;font-size:0.8rem;">Your key is held in server memory only (never disk, never database, never logged). Server restart = key gone. The server operator's key is not used. <a href="https://console.anthropic.com/settings/keys" style="color:#ff8800;">Get an API key</a></p>
-      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." style="width:100%;padding:0.5rem;font-family:monospace;background:#111;color:#eee;border:1px solid #333;margin:1rem 0;">
-      <button id="saveKey" class="resolve-btn">Enter</button>
+      <div class="consent-warning" style="margin:1.5rem 0;padding:1rem;border:1px solid #a33;background:#1a0a0a;">
+        <h3 style="color:#f66;font-size:0.9rem;margin:0 0 0.5rem;">Informed Consent Required</h3>
+        <p style="font-size:0.8rem;color:#caa;line-height:1.5;">By entering your API key, you acknowledge that:</p>
+        <ul style="font-size:0.78rem;color:#caa;line-height:1.6;padding-left:1.2rem;">
+          <li><strong>Anthropic advises against sharing your API key with third-party services.</strong> See <a href="https://docs.anthropic.com/en/docs/initial-setup#set-your-api-key" style="color:#ff8800;">Anthropic's documentation</a>: API keys should be kept secure and not exposed to untrusted parties.</li>
+          <li><strong>This is a third-party service</strong> operated by Jared Foy in southern Oregon, not by Anthropic. You are trusting this server's code with your key for the duration of your session.</li>
+          <li><strong>We mitigate this trust requirement architecturally</strong> using a prepare/execute security model where your key transits once and is held in server memory only (never disk). But architectural mitigation is not zero risk.</li>
+          <li><strong>You can verify the code yourself</strong> — click "Show Me the Code" below, or view the <a href="https://github.com/jaredef/jaredfoy.com" style="color:#ff8800;">public GitHub repo</a>. The code running on this server is the code in that repo.</li>
+          <li><strong>You accept this risk voluntarily.</strong> If you are not comfortable, do not enter your key. You can still read the entire <a href="/" style="color:#ff8800;">RESOLVE corpus</a> without it.</li>
+        </ul>
+        <label style="display:block;margin-top:0.75rem;font-size:0.8rem;color:#eee;cursor:pointer;">
+          <input type="checkbox" id="consentCheck"> I understand and accept the risks described above.
+        </label>
+      </div>
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." disabled style="width:100%;padding:0.5rem;font-family:monospace;background:#111;color:#eee;border:1px solid #333;margin:0 0 1rem;opacity:0.5;">
+      <button id="saveKey" class="resolve-btn" disabled style="opacity:0.5;">Enter</button>
       <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid #222;">
         <button id="showCodeEntry" class="resolve-btn" style="background:#222;color:#4a9;">Show Me the Code</button>
         <p style="color:#666;font-size:0.75rem;margin-top:0.5rem;">Don't trust me. See how to make insecurity an architectural impossibility.</p>
@@ -142,6 +156,14 @@
       }
     }).catch(function() { showKeyEntry(); });
   }
+
+  document.getElementById('consentCheck').addEventListener('change', function() {
+    var checked = this.checked;
+    document.getElementById('apiKeyInput').disabled = !checked;
+    document.getElementById('apiKeyInput').style.opacity = checked ? '1' : '0.5';
+    document.getElementById('saveKey').disabled = !checked;
+    document.getElementById('saveKey').style.opacity = checked ? '1' : '0.5';
+  });
 
   document.getElementById('saveKey').addEventListener('click', function() {
     var key = document.getElementById('apiKeyInput').value.trim();
