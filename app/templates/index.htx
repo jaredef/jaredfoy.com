@@ -1,9 +1,9 @@
 <div class="hero">
   <h1>RESOLVE</h1>
   <p class="hero-sub">Constraints induce properties. Name the constraints. The properties emerge.</p>
-  <p class="hero-desc">109 documents derived in a single sustained session. The finding: the quality of AI output is a function of the constraints it operates under, not of its size, training, or architecture.</p>
+  <p class="hero-desc">{{ corpus.total }} documents and counting, derived in a single sustained project. The finding: the quality of AI output is a function of the constraints it operates under, not of its size, training, or architecture.</p>
   <div class="hero-actions">
-    <a href="/doc/entrace-stack" class="btn btn-primary">Start: The ENTRACE Stack</a>
+    <a href="/doc/211-the-entrace-stack" class="btn btn-primary">Start: The ENTRACE Stack</a>
     <a href="/doc/083-unified-paper-v2" class="btn btn-secondary">Read: The Unified Paper</a>
   </div>
 </div>

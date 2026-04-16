@@ -15,6 +15,21 @@
   --reading: min(70ch, 100%);
 }
 
+/* Light theme palette — activated by html.theme-light. */
+html.theme-light {
+  --bg: #f8f7f2;
+  --bg-nav: #efeee7;
+  --bg-card: #ffffff;
+  --fg: #2a2a33;
+  --fg-dim: #7a7a86;
+  --fg-bright: #0a0a12;
+  --accent: #4a5299;
+  --accent-dim: #7c8aff;
+  --border: #d8d6ce;
+  color-scheme: light;
+}
+html:not(.theme-light) { color-scheme: dark; }
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html { font-size: 15px; }
@@ -363,6 +378,7 @@ footer {
 }
 
 .pretext pre {
+  position: relative; /* anchor the .copy-btn inside */
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 4px;
@@ -818,4 +834,292 @@ footer {
 
   .doc-header h1 { font-size: 1.25rem; }
   .document { max-width: 100%; }
+
+  /* Hard-disable any multi-column state on mobile, even if inline styles leaked in
+     from a prior desktop layout pass (e.g. user rotated / resized from desktop).
+     The !important overrides inline styles the layoutColumns() JS may have set. */
+  .content-col,
+  .content-col .pretext {
+    column-count: 1 !important;
+    column-width: auto !important;
+    column-gap: normal !important;
+    column-rule: none !important;
+    column-fill: balance !important;
+    width: auto !important;
+    height: auto !important;
+    overflow-x: visible !important;
+    overflow-y: visible !important;
+  }
+  .content-col .pretext { orphans: 2; widows: 2; }
 }
+
+/* === Desktop (769+): Custom scrollbars + horizontally-scrolling multi-column pretext === */
+
+@media (min-width: 769px) {
+  /* Custom nav-col scrollbar */
+  .nav-col {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) var(--bg-nav);
+  }
+  .nav-col::-webkit-scrollbar {
+    width: 6px;
+  }
+  .nav-col::-webkit-scrollbar-track {
+    background: var(--bg-nav);
+  }
+  .nav-col::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+    transition: background 0.2s;
+  }
+  .nav-col::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-dim);
+  }
+
+  /* Document pages: content-col becomes a horizontally-scrolling multi-column canvas.
+     Applies only when .pretext is present (document pages), not to home/garden/about
+     which use sections and grids that don't cohere under column flow. */
+  .content-col:has(.pretext) {
+    overflow-y: hidden;
+    overflow-x: auto;
+    overflow-wrap: break-word;
+    /* 100dvh uses the *dynamic* viewport — excludes mobile browser chrome (URL bar etc.)
+       so the column height matches what's actually visible. Older browsers without dvh
+       support fall back to vh. */
+    height: 100vh;
+    height: 100dvh;
+    max-width: none;
+    /* The horizontal scrollbar is hidden (see below) — the progress bar at the top of
+       the viewport serves as the position indicator. Bottom padding still gives the
+       last line clearance from the viewport edge. */
+    padding: 0.3rem 3rem 1.25rem;
+    /* Hide the native horizontal scrollbar so it doesn't overlap or interfere with
+       column text. Wheel/trackpad and touch gestures continue to scroll normally;
+       the progress bar at the top of the viewport indicates position. */
+    scrollbar-width: none;          /* Firefox */
+  }
+  .content-col:has(.pretext)::-webkit-scrollbar {
+    display: none;                  /* WebKit / Blink */
+    width: 0;
+    height: 0;
+  }
+
+  /* Pretext flows into fixed-width columns; total width grows horizontally.
+     Crude but reliable: 80vh leaves 20vh of bottom clearance, which absorbs the
+     scrollbar, padding, line-height alignment slop, and any browser/zoom variance.
+     !important is required to win over the JS inline-style override (the layout
+     routine sets height inline for legacy line-alignment math; that's harmless when
+     this rule wins). */
+  .content-col .pretext {
+    column-width: 72ch;
+    column-gap: 3rem;
+    column-rule: 1px solid var(--border);
+    column-fill: auto;
+    height: 80vh !important;
+    max-width: none;
+    orphans: 2;
+    widows: 2;
+  }
+
+  /* Opt-out: user prefers vertical scroll on document pages. Undo the horizontal layout
+     and restore the default single-column scroll. */
+  html.layout-vertical .content-col:has(.pretext) {
+    overflow-y: auto;
+    overflow-x: visible;
+    height: auto;
+    max-width: 900px;
+    padding: 3rem 4rem;
+  }
+  html.layout-vertical .content-col .pretext {
+    column-width: auto;
+    column-count: 1;
+    column-gap: normal;
+    column-rule: none;
+    column-fill: balance;
+    height: auto;
+  }
+  html.layout-vertical .content-col .pretext p { max-width: 65ch; }
+
+  /* Columns can fit paragraphs at 65ch originally — relax to the column width. */
+  .content-col .pretext p { max-width: none; }
+
+  /* Elements that must not split across column boundaries. Note: blockquote,
+     headings, and the doc-header are intentionally NOT in this list — when they're
+     forced to stay intact, they shove following content out of bounds and create
+     clipping. Letting them break gives the browser room to align content cleanly
+     with the line-height-snapped column height the JS sets. */
+  .content-col .pretext pre,
+  .content-col .pretext table,
+  .content-col .pretext .table-scroll,
+  .content-col .pretext img {
+    break-inside: avoid;
+  }
+
+  /* Headings should still try to stay with the following paragraph; soft hint only,
+     not a hard avoid. The browser is free to break if avoid would cause clipping. */
+  .content-col .pretext h1,
+  .content-col .pretext h2,
+  .content-col .pretext h3 {
+    break-after: avoid;
+  }
+
+  /* Doc header sits as the first-column banner. */
+  .content-col .doc-header { break-after: avoid; }
+
+  /* Pre should not overrun the column width; scroll internally if needed. */
+  .content-col .pretext pre {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  /* Tables are wrapped at runtime by the layout JS in .table-scroll. The wrapper is the
+     element that respects column width + break-inside; the table inside renders at natural
+     width and the wrapper scrolls on both axes. */
+  .content-col .pretext .table-scroll {
+    display: block;
+    max-width: 100%;
+    max-height: calc(100vh - 10rem);
+    overflow: auto;
+    margin: 1rem 0;
+    break-inside: avoid;
+    border: 1px solid var(--border);
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) var(--bg);
+  }
+  .content-col .pretext .table-scroll::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+  .content-col .pretext .table-scroll::-webkit-scrollbar-track {
+    background: var(--bg);
+  }
+  .content-col .pretext .table-scroll::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+  }
+  .content-col .pretext .table-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-dim);
+  }
+  .content-col .pretext .table-scroll > table {
+    margin: 0;
+    border: none;
+  }
+}
+
+/* === Scroll progress indicator === */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  background: var(--accent);
+  z-index: 1000;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  opacity: 0.85;
+  will-change: width;
+}
+.scroll-progress.idle { opacity: 0.4; }
+/* Push the mobile breadcrumb down by the progress-bar height so it doesn't overlap. */
+@media (max-width: 768px) {
+  .mobile-breadcrumb { top: 2px; }
+}
+
+/* === Toggle row in nav footer === */
+.toggle-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+.toggle-btn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--fg-dim);
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  padding: 0.4rem 0.4rem;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.toggle-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent-dim);
+}
+.toggle-btn:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
+}
+/* Layout toggle is only meaningful on desktop where the multi-column layout exists. */
+@media (max-width: 768px) {
+  .toggle-btn.layout-only { display: none; }
+  .knob-row.layout-only { display: none; }
+}
+
+/* Scroll-speed knob */
+.knob-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.9rem;
+}
+.knob-label {
+  font-size: 0.55rem;
+  color: var(--fg-dim);
+  letter-spacing: 0.18em;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.knob-label span {
+  color: var(--accent);
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+}
+.knob {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  cursor: pointer;
+  outline: none;
+}
+.knob:focus-visible { outline: 1px solid var(--accent); outline-offset: 4px; }
+.knob::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 14px;
+  background: var(--accent);
+  border-radius: 2px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.knob::-webkit-slider-thumb:hover { background: var(--fg-bright); }
+.knob::-moz-range-thumb {
+  width: 10px;
+  height: 14px;
+  background: var(--accent);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.knob::-moz-range-thumb:hover { background: var(--fg-bright); }
+.knob::-moz-range-track {
+  background: var(--border);
+  height: 3px;
+  border-radius: 2px;
+}
+
+
+/* Browsers without :has() fall back gracefully to default vertical scroll — no multi-column
+   layout is applied, but documents remain readable. Modern Chromium/WebKit/Firefox all ship
+   :has() as of 2024. */
+

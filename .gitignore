@@ -1,1 +1,8 @@
-node_modules\napp/data/*.sqlite\n.DS_Store
+node_modules/
+app/data/*.sqlite
+app/.env
+.env
+.DS_Store
+*.pem
+*.key
+credentials*

@@ -112,4 +112,39 @@ for (const file of files) {
 }
 
 console.log(`\nSeeded ${seeded} documents into ${DB_PATH}`);
+
+// Build the OG-image manifest from what we just inserted, then hand to the Python
+// renderer. PIL + DejaVu Sans Mono produce 1200×630 PNGs into public/og/<slug>.png.
+const totalRow = db.query("SELECT COUNT(*) as n FROM content WHERE type='corpus' AND status='published'").get() as { n: number } | null;
+const totalDocs = Number(totalRow?.n ?? 0);
+
+const manifest = (db.query("SELECT slug, title, meta FROM content WHERE type='corpus' AND status='published'").all() as Array<{
+  slug: string;
+  title: string;
+  meta: string;
+}>).map((row) => {
+  let m: any = {};
+  try { m = JSON.parse(row.meta); } catch {}
+  return { slug: row.slug, title: row.title, doc_num: m.doc_num ?? null, section: m.section ?? null };
+});
+
+// Synthetic home image — referenced by the layout's default pageMeta fallback.
+manifest.push({
+  slug: "home",
+  title: "RESOLVE",
+  doc_num: null,
+  section: `${totalDocs} documents`,
+});
+
 db.close();
+
+const OG_OUT = resolve(import.meta.dir, "public/og");
+console.log(`\nGenerating ${manifest.length} OG images into ${OG_OUT} ...`);
+const ogProc = spawnSync(
+  ["python3", resolve(import.meta.dir, "scripts/generate-og.py"), "--out", OG_OUT],
+  { stdin: Buffer.from(JSON.stringify(manifest)) },
+);
+const ogOut = ogProc.stdout?.toString() ?? "";
+const ogErr = ogProc.stderr?.toString() ?? "";
+if (ogOut.trim()) console.log(ogOut.trim());
+if (ogErr.trim()) console.error(ogErr.trim());

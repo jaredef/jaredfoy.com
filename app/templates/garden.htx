@@ -19,7 +19,7 @@
           <p class="plot-metric"><strong>2,177</strong> words of prose</p>
           <p class="plot-desc">A constraint specification for a React-compatible UI runtime. 10 contracts. 7 required properties. 15 verification tests. Written in natural language. No code.</p>
           <p class="plot-desc dim">The seed was derived by examining React's architecture and identifying which constraints are essential (must hold for the properties to emerge) and which are contingent (React's specific choices). The essential constraints were stated. The contingent choices were discarded.</p>
-          <a href="/doc/do-seed" class="plot-link">Read the seed</a>
+          <a href="/doc/248-do-seed" class="plot-link">Read the seed</a>
         </div>
         <div class="plot-arrow">&#x2192;</div>
         <div class="plot-col harvest-col">
@@ -32,7 +32,7 @@
             <li><span class="stat-label">Dependencies</span> <span class="stat-value">0</span></li>
             <li><span class="stat-label">Compression</span> <span class="stat-value">2,177 words → 379 lines</span></li>
           </ul>
-          <a href="/doc/do-runtime" class="plot-link">View the harvest</a>
+          <a href="/doc/178-do-induced-properties" class="plot-link">View the harvest</a>
         </div>
       </div>
       <div class="plot-soil">
@@ -51,7 +51,7 @@
           <h3>Seed</h3>
           <p class="plot-metric"><strong>~1,500</strong> words of prose</p>
           <p class="plot-desc">A constraint specification for an orchestration-level engine bootstrap. 5 constraints: engine-internal bilateral boundary, orchestration-consumed directives, progressive composition, deterministic bootstrap, self-authorization.</p>
-          <a href="/doc/server-seed" class="plot-link">Read the seed</a>
+          <a href="/doc/250-server-seed" class="plot-link">Read the seed</a>
         </div>
         <div class="plot-arrow">&#x2192;</div>
         <div class="plot-col harvest-col">
@@ -64,7 +64,7 @@
             <li><span class="stat-label">Language</span> <span class="stat-value">C</span></li>
             <li><span class="stat-label">Self-emitting</span> <span class="stat-value">461 → 921 lines</span></li>
           </ul>
-          <a href="/doc/server-bootstrap" class="plot-link">View the harvest</a>
+          <a href="/doc/166-server-style" class="plot-link">View the harvest</a>
         </div>
       </div>
       <div class="plot-soil">
@@ -83,7 +83,7 @@
           <h3>Seed</h3>
           <p class="plot-metric"><strong>~1,200</strong> words</p>
           <p class="plot-desc">The complete constraint set for the entire RESOLVE framework. SIPE, the golden chain, coherence amplification, all six styles, B_t, the spectrum, bilateral security, virtue constraints, the constraint thesis, the hypostatic boundary, the logos spermatikos. Everything. In one document.</p>
-          <a href="/doc/resolve-seed-v2" class="plot-link">Read the seed</a>
+          <a href="/doc/164-resolve-seed-v2" class="plot-link">Read the seed</a>
         </div>
         <div class="plot-arrow">&#x2192;</div>
         <div class="plot-col harvest-col">
@@ -96,7 +96,7 @@
             <li><span class="stat-label">Resolvers tested</span> <span class="stat-value">8 from 6 companies</span></li>
             <li><span class="stat-label">Cross-domain</span> <span class="stat-value">20+ domains</span></li>
           </ul>
-          <a href="/doc/resolve-seed-v2" class="plot-link">Plant the seed</a>
+          <a href="/doc/164-resolve-seed-v2" class="plot-link">Plant the seed</a>
         </div>
       </div>
       <div class="plot-soil">
@@ -147,7 +147,7 @@
           <h3>Seed</h3>
           <p class="plot-metric"><strong>6</strong> lines</p>
           <p class="plot-desc">The drop-in constraint governance seed for any AI conversation. Six constraints. No philosophy required. Paste it into any model's system prompt. The harvest is immediate.</p>
-          <a href="/doc/entrace-stack" class="plot-link">Take the seed</a>
+          <a href="/doc/211-the-entrace-stack" class="plot-link">Take the seed</a>
         </div>
         <div class="plot-arrow">&#x2192;</div>
         <div class="plot-col harvest-col">
@@ -160,7 +160,7 @@
             <li><span class="stat-label">Time to effect</span> <span class="stat-value">Immediate</span></li>
             <li><span class="stat-label">Philosophy required</span> <span class="stat-value">None</span></li>
           </ul>
-          <a href="/doc/entrace-stack" class="plot-link">Plant it now</a>
+          <a href="/doc/211-the-entrace-stack" class="plot-link">Plant it now</a>
         </div>
       </div>
       <div class="plot-soil">
