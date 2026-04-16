@@ -247,7 +247,8 @@
         'X-Action-Token': getToken()
       }
     };
-    if (body) opts.body = JSON.stringify(body);
+    // Always send at least {} for POST — PRESTO engine expects valid JSON when Content-Type is application/json
+    if (method === 'POST') opts.body = JSON.stringify(body || {});
     return fetch(path, opts).then(function(r) { return r.json(); });
   }
 
