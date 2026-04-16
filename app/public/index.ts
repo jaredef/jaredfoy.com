@@ -145,6 +145,17 @@ const pageMetaModule: Module = {
             return { ...meta, tags: metaTagsHtml(meta) };
           }
         }
+        // /resolve page meta
+        if (path.startsWith("/resolve")) {
+          const meta = {
+            title: "Governed Conversational Assistant — RESOLVE",
+            description: "Bring your own API key. ENTRACE Stack active. Prepare/execute security. In-memory only. The architecture makes insecurity structurally impossible.",
+            url: `${SITE_ORIGIN}/resolve`,
+            image: `${SITE_ORIGIN}/og/resolve.png`,
+            type: "website",
+          };
+          return { ...meta, tags: metaTagsHtml(meta) };
+        }
         // Fallback: site-wide defaults.
         const defaults = {
           ...PAGE_META_DEFAULTS,
