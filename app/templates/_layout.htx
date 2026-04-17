@@ -121,7 +121,8 @@
 
         <h3>Explore</h3>
         <a href="/search">Search</a>
-        <a href="/network">Coherence Network</a>
+        <a href="/sphere">Coherence Sphere</a>
+        <a href="/network">Coherence Network (2D)</a>
         <a href="/corpus/chronological">Chronological View</a>
       </nav>
       <footer>

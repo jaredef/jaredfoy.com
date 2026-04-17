@@ -1,0 +1,188 @@
+<div class="page-header">
+  <h1>Coherence Sphere</h1>
+  <p class="section-desc">The RESOLVE corpus as a 3D coherence field. 254 documents. 620 edges. Foundational documents near the center. Connections glow between related nodes. Drag to rotate. Scroll to zoom. Click to navigate.</p>
+</div>
+
+<div id="sphereContainer" style="width:100%;height:75vh;border:1px solid var(--border);border-radius:6px;position:relative;overflow:hidden;">
+  <div id="sphereTooltip" style="display:none;position:absolute;background:rgba(10,10,15,0.92);border:1px solid rgba(124,138,255,0.3);border-radius:4px;padding:0.5rem 0.7rem;font-size:0.75rem;color:#c8c8d4;max-width:320px;pointer-events:none;z-index:100;line-height:1.4;font-family:monospace;"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function() {
+  var container = document.getElementById('sphereContainer');
+  var tooltip = document.getElementById('sphereTooltip');
+  var width = container.clientWidth;
+  var height = container.clientHeight;
+
+  var scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0a0a0f);
+  scene.fog = new THREE.FogExp2(0x0a0a0f, 0.0008);
+
+  var camera = new THREE.PerspectiveCamera(55, width / height, 1, 5000);
+  camera.position.set(0, 0, 500);
+
+  var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setSize(width, height);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  container.appendChild(renderer.domElement);
+
+  var SECTION_COLORS = {
+    framework: 0x7c8aff, method: 0x2dd4bf, safety: 0xf87171, ground: 0xfbbf24,
+    letters: 0xa78bfa, architecture: 0x34d399, formalization: 0xfb923c,
+    evidence: 0x60a5fa, economics: 0xf472b6
+  };
+
+  var raycaster = new THREE.Raycaster();
+  raycaster.params.Points.threshold = 5;
+  var mouse = new THREE.Vector2();
+  var nodeGroup = new THREE.Group();
+  var edgeGroup = new THREE.Group();
+  scene.add(nodeGroup);
+  scene.add(edgeGroup);
+
+  var nodes = [], nodeData = [], positions = [];
+
+  // Mouse controls
+  var isDown = false, prevX = 0, prevY = 0, rotX = 0, rotY = 0, targetRotX = 0, targetRotY = 0;
+  var autoRotate = true;
+
+  container.addEventListener('mousedown', function(e) { isDown = true; autoRotate = false; prevX = e.clientX; prevY = e.clientY; });
+  container.addEventListener('mousemove', function(e) {
+    if (isDown) {
+      targetRotY += (e.clientX - prevX) * 0.005;
+      targetRotX += (e.clientY - prevY) * 0.005;
+      targetRotX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotX));
+      prevX = e.clientX; prevY = e.clientY;
+    }
+    // Tooltip
+    var rect = container.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / height) * 2 + 1;
+  });
+  container.addEventListener('mouseup', function() { isDown = false; });
+  container.addEventListener('mouseleave', function() { isDown = false; tooltip.style.display = 'none'; });
+  container.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    camera.position.z = Math.max(150, Math.min(1200, camera.position.z + e.deltaY * 0.5));
+  }, { passive: false });
+
+  container.addEventListener('click', function(e) {
+    var rect = container.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / height) * 2 + 1;
+    raycaster.setFromCamera(mouse, camera);
+    var intersects = raycaster.intersectObjects(nodeGroup.children);
+    if (intersects.length > 0) {
+      var idx = intersects[0].object.userData.index;
+      if (idx !== undefined && nodeData[idx]) {
+        window.location.href = '/doc/' + nodeData[idx].id;
+      }
+    }
+  });
+
+  fetch('/api/network').then(function(r) { return r.json(); }).then(function(data) {
+    nodeData = data.nodes;
+    var edgeData = data.edges;
+    var nodeIndex = {};
+
+    // Position nodes on/in a sphere
+    var RADIUS = 200;
+    for (var i = 0; i < nodeData.length; i++) {
+      var n = nodeData[i];
+      nodeIndex[n.id] = i;
+
+      // Importance determines distance from center
+      var imp = n.importance || 99;
+      var r = imp <= 1 ? RADIUS * 0.15 : imp <= 2 ? RADIUS * 0.4 : imp <= 3 ? RADIUS * 0.65 : RADIUS * (0.7 + Math.random() * 0.3);
+
+      // Fibonacci sphere distribution for even spacing
+      var phi = Math.acos(1 - 2 * (i + 0.5) / nodeData.length);
+      var theta = Math.PI * (1 + Math.sqrt(5)) * i;
+      var x = r * Math.sin(phi) * Math.cos(theta);
+      var y = r * Math.sin(phi) * Math.sin(theta);
+      var z = r * Math.cos(phi);
+
+      positions.push(new THREE.Vector3(x, y, z));
+
+      // Node sphere
+      var size = imp <= 1 ? 5 : imp <= 2 ? 3.5 : imp <= 3 ? 2.5 : 1.5;
+      var color = SECTION_COLORS[n.section] || 0x6b7280;
+      var geo = new THREE.SphereGeometry(size, 12, 12);
+      var mat = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: imp <= 2 ? 0.95 : 0.7 });
+      var mesh = new THREE.Mesh(geo, mat);
+      mesh.position.copy(positions[i]);
+      mesh.userData = { index: i };
+      nodeGroup.add(mesh);
+    }
+
+    // Edges as lines
+    var edgeMat = new THREE.LineBasicMaterial({ color: 0x3a3a5a, transparent: true, opacity: 0.15 });
+    for (var e = 0; e < edgeData.length; e++) {
+      var si = nodeIndex[edgeData[e].source];
+      var ti = nodeIndex[edgeData[e].target];
+      if (si === undefined || ti === undefined) continue;
+      var geo = new THREE.BufferGeometry().setFromPoints([positions[si], positions[ti]]);
+      var line = new THREE.Line(geo, edgeMat);
+      edgeGroup.add(line);
+    }
+
+    // Ambient glow sphere
+    var glowGeo = new THREE.SphereGeometry(RADIUS * 1.05, 32, 32);
+    var glowMat = new THREE.MeshBasicMaterial({ color: 0x1a1a3a, transparent: true, opacity: 0.06, side: THREE.BackSide });
+    scene.add(new THREE.Mesh(glowGeo, glowMat));
+
+    animate();
+  });
+
+  var hoveredIdx = -1;
+
+  function animate() {
+    requestAnimationFrame(animate);
+
+    if (autoRotate) targetRotY += 0.002;
+    rotX += (targetRotX - rotX) * 0.08;
+    rotY += (targetRotY - rotY) * 0.08;
+
+    nodeGroup.rotation.x = rotX;
+    nodeGroup.rotation.y = rotY;
+    edgeGroup.rotation.x = rotX;
+    edgeGroup.rotation.y = rotY;
+
+    // Tooltip raycasting
+    raycaster.setFromCamera(mouse, camera);
+    var intersects = raycaster.intersectObjects(nodeGroup.children);
+    if (intersects.length > 0) {
+      var idx = intersects[0].object.userData.index;
+      if (idx !== hoveredIdx) {
+        hoveredIdx = idx;
+        var n = nodeData[idx];
+        var rect = container.getBoundingClientRect();
+        var screenPos = positions[idx].clone();
+        screenPos.applyMatrix4(nodeGroup.matrixWorld);
+        screenPos.project(camera);
+        var sx = (screenPos.x * 0.5 + 0.5) * width;
+        var sy = (-screenPos.y * 0.5 + 0.5) * height;
+        tooltip.style.display = 'block';
+        tooltip.style.left = Math.min(sx + 15, width - 330) + 'px';
+        tooltip.style.top = Math.max(sy - 10, 10) + 'px';
+        tooltip.innerHTML = '<strong style="color:' + '#' + (SECTION_COLORS[n.section] || 0x888888).toString(16).padStart(6, '0') + '">' + n.doc_num + '</strong> ' + n.title + (n.intro ? '<br><small style="color:#888;">' + n.intro + '</small>' : '');
+      }
+      container.style.cursor = 'pointer';
+    } else {
+      if (hoveredIdx !== -1) { tooltip.style.display = 'none'; hoveredIdx = -1; }
+      container.style.cursor = isDown ? 'grabbing' : 'grab';
+    }
+
+    renderer.render(scene, camera);
+  }
+
+  window.addEventListener('resize', function() {
+    width = container.clientWidth;
+    height = container.clientHeight;
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    renderer.setSize(width, height);
+  });
+})();
+</script>
