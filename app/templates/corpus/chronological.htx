@@ -1,0 +1,22 @@
+<div class="page-header">
+  <h1>Corpus — Chronological</h1>
+  <p class="section-desc">All {{ corpus.total }} documents in the order they were written. This view preserves the chain of thought — each document builds on what came before. <a href="/">View by importance →</a></p>
+</div>
+
+<section class="section">
+  <div class="corpus-list">
+    <htx:type>corpus</htx:type>
+    <htx:status>published</htx:status>
+    <htx:howmany>500</htx:howmany>
+    <htx:order>slug ASC</htx:order>
+    <htx>
+    <htx:each>
+      <a href="/doc/__slug__" class="corpus-item">
+        <span class="doc-num">__doc_num__</span>
+        <span class="doc-title">__title__</span>
+        <span class="doc-section">__section__</span>
+      </a>
+    </htx:each>
+    </htx>
+  </div>
+</section>

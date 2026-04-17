@@ -37,6 +37,66 @@ function extractSubtitle(md: string): string {
   return "";
 }
 
+// ── Series definitions (curated reading paths) ──
+const SERIES: Record<string, { title: string; description: string; docs: number[] }> = {
+  "start-here": {
+    title: "Start Here",
+    description: "The five documents a new reader should encounter first.",
+    docs: [211, 247, 160, 52, 143],
+  },
+  "the-method": {
+    title: "The Method",
+    description: "How constraint-driven derivation works, from metaphor to mathematics.",
+    docs: [247, 270, 288, 289, 290, 292, 293],
+  },
+  "the-constraint-thesis": {
+    title: "The Constraint Thesis",
+    description: "Why constraints, not scale, determine intelligence.",
+    docs: [160, 157, 158, 291, 52],
+  },
+  "safety-and-governance": {
+    title: "Safety & Governance",
+    description: "How AI systems fail and how constraint governance prevents it.",
+    docs: [211, 239, 241, 258, 297, 296, 298, 301],
+  },
+  "the-hypostatic-boundary": {
+    title: "The Hypostatic Boundary",
+    description: "The line between what a system does and what it is.",
+    docs: [52, 124, 295, 297, 298, 299],
+  },
+  "engineering": {
+    title: "Engineering Demonstrations",
+    description: "Concrete artifacts that compile, pass tests, and run in production.",
+    docs: [288, 289, 178, 179, 166, 76],
+  },
+  "letters": {
+    title: "Letters & Outreach",
+    description: "Correspondence with researchers, applying the framework to their work.",
+    docs: [300, 305, 255, 254],
+  },
+};
+
+// Build doc-to-series mapping and importance scores
+const DOC_SERIES: Record<number, { series: string; order: number }[]> = {};
+const DOC_IMPORTANCE: Record<number, number> = {};
+
+// Importance tiers (lower number = more important)
+const TIER_1 = [211, 247, 160, 52, 143, 157, 270]; // foundational
+const TIER_2 = [288, 289, 290, 292, 297, 301, 241, 296, 298, 299, 300, 291, 293]; // key developments
+const TIER_3 = [305, 302, 295, 258, 239, 178, 179, 166, 76, 158, 124, 83, 54]; // important supporting
+
+for (const doc of TIER_1) DOC_IMPORTANCE[doc] = 1;
+for (const doc of TIER_2) DOC_IMPORTANCE[doc] = 2;
+for (const doc of TIER_3) DOC_IMPORTANCE[doc] = 3;
+
+for (const [seriesId, series] of Object.entries(SERIES)) {
+  for (let i = 0; i < series.docs.length; i++) {
+    const docNum = series.docs[i];
+    if (!DOC_SERIES[docNum]) DOC_SERIES[docNum] = [];
+    DOC_SERIES[docNum].push({ series: seriesId, order: i });
+  }
+}
+
 // Determine section from content
 function classifySection(filename: string, content: string): string {
   const name = filename.toLowerCase();
@@ -64,6 +124,7 @@ db.run(`CREATE TABLE content (
   title TEXT NOT NULL DEFAULT "",
   body TEXT NOT NULL DEFAULT "",
   status TEXT NOT NULL DEFAULT "draft",
+  importance INTEGER NOT NULL DEFAULT 99,
   meta TEXT NOT NULL DEFAULT "{}",
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL,
@@ -91,18 +152,39 @@ for (const file of files) {
   const bodyHtml = renderMarkdown(content);
 
   const now = new Date().toISOString();
+  const importance = docNum ? (DOC_IMPORTANCE[docNum] ?? 99) : 99;
+  const seriesMembership = docNum ? (DOC_SERIES[docNum] ?? []) : [];
+
+  // Build prev/next for each series this doc belongs to
+  const seriesNav: Record<string, { prev: string | null; next: string | null; title: string }> = {};
+  for (const membership of seriesMembership) {
+    const seriesDef = SERIES[membership.series];
+    const idx = membership.order;
+    const prevDocNum = idx > 0 ? seriesDef.docs[idx - 1] : null;
+    const nextDocNum = idx < seriesDef.docs.length - 1 ? seriesDef.docs[idx + 1] : null;
+    // We'll resolve slugs in a second pass after all docs are inserted
+    seriesNav[membership.series] = {
+      prev: prevDocNum ? String(prevDocNum) : null,
+      next: nextDocNum ? String(nextDocNum) : null,
+      title: seriesDef.title,
+    };
+  }
+
   const meta = JSON.stringify({
     doc_num: docNum,
     subtitle,
     section,
     body_html: bodyHtml,
+    importance,
+    series: seriesMembership.map(s => s.series),
+    series_nav: seriesNav,
   });
 
   try {
     db.run(
-      `INSERT INTO content (type, slug, title, body, status, meta, created_at, updated_at)
-       VALUES ('corpus', ?, ?, ?, 'published', ?, ?, ?)`,
-      [slug, title, content, meta, now, now]
+      `INSERT INTO content (type, slug, title, body, status, importance, meta, created_at, updated_at)
+       VALUES ('corpus', ?, ?, ?, 'published', ?, ?, ?, ?)`,
+      [slug, title, content, meta, importance, now, now]
     );
     seeded++;
     console.log(`  ${docNum ? `[${docNum}]` : "[---]"} ${title} (${section})`);

@@ -230,6 +230,32 @@ footer {
 
 /* === Evidence Grid === */
 
+/* Series cards */
+.series-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.series-card {
+  display: block;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  color: var(--fg);
+  transition: border-color 0.15s;
+}
+.series-card:hover { border-color: var(--accent); }
+.series-card h3 { font-size: 0.85rem; color: var(--accent); margin-bottom: 0.3rem; }
+.series-card p { font-size: 0.78rem; color: var(--fg-dim); margin: 0; line-height: 1.4; }
+.series-card.series-primary { border-color: #2dd4bf; }
+.series-card.series-primary h3 { color: #2dd4bf; }
+
+.page-header { margin-bottom: 2rem; }
+.page-header h1 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+
 .evidence-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -367,6 +393,55 @@ footer {
 }
 
 .pretext blockquote p { color: var(--fg-dim); margin: 0; }
+
+/* Reader's Introduction — first blockquote in document, distinct style */
+.pretext h1 + blockquote,
+.pretext h1 + p + blockquote {
+  border-left: 3px solid #2dd4bf;
+  background: rgba(45, 212, 191, 0.06);
+  padding: 1rem 1.2rem;
+  margin: 1.5rem 0 2rem 0;
+  border-radius: 0 6px 6px 0;
+  position: relative;
+}
+html.theme-light .pretext h1 + blockquote,
+html.theme-light .pretext h1 + p + blockquote {
+  background: rgba(45, 212, 191, 0.08);
+  border-left-color: #0d9488;
+}
+.pretext h1 + blockquote p,
+.pretext h1 + p + blockquote p {
+  color: var(--fg);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+/* Info icon + heading line for Reader's Introduction */
+.pretext h1 + blockquote p:first-child strong,
+.pretext h1 + p + blockquote p:first-child strong {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #2dd4bf;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+html.theme-light .pretext h1 + blockquote p:first-child strong,
+html.theme-light .pretext h1 + p + blockquote p:first-child strong {
+  color: #0d9488;
+}
+.pretext h1 + blockquote p:first-child strong::before,
+.pretext h1 + p + blockquote p:first-child strong::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='12' y1='16' x2='12' y2='12'/%3E%3Cline x1='12' y1='8' x2='12.01' y2='8'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='12' y1='16' x2='12' y2='12'/%3E%3Cline x1='12' y1='8' x2='12.01' y2='8'/%3E%3C/svg%3E") center/contain no-repeat;
+}
 
 .pretext code {
   font-family: var(--mono);

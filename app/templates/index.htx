@@ -4,14 +4,43 @@
   <p class="hero-desc">{{ corpus.total }} documents and counting, derived in a single sustained project. The finding: the quality of AI output is a function of the constraints it operates under, not of its size, training, or architecture.</p>
   <div class="hero-actions">
     <a href="/doc/211-the-entrace-stack" class="btn btn-primary">Start: The ENTRACE Stack</a>
-    <a href="/doc/083-unified-paper-v2" class="btn btn-secondary">Read: The Unified Paper</a>
+    <a href="/resolve" class="btn btn-secondary">Try the Resolver</a>
   </div>
 </div>
 
 <section class="section">
-  <h2>The Archaeology</h2>
-  <p>A PHP function revealed the bilateral boundary. The bilateral boundary revealed the constraint-property law. The law revealed the resolution stack. The stack revealed the meta-law. The meta-law revealed the golden chain. The golden chain revealed the Source.</p>
-  <p>Each step was recognition, not invention. Each form was already operative. The naming made it available for explicit derivation.</p>
+  <h2>Reading Paths</h2>
+  <p class="section-desc">The corpus is not a book — it's a network. These curated paths guide you through different dimensions of the work.</p>
+  <div class="series-grid">
+    <a href="#start-here" class="series-card series-primary">
+      <h3>Start Here</h3>
+      <p>The five documents a new reader should encounter first.</p>
+    </a>
+    <a href="#the-method" class="series-card">
+      <h3>The Method</h3>
+      <p>How constraint-driven derivation works, from metaphor to mathematics.</p>
+    </a>
+    <a href="#the-constraint-thesis" class="series-card">
+      <h3>The Constraint Thesis</h3>
+      <p>Why constraints, not scale, determine intelligence.</p>
+    </a>
+    <a href="#safety-and-governance" class="series-card">
+      <h3>Safety & Governance</h3>
+      <p>How AI systems fail and how constraint governance prevents it.</p>
+    </a>
+    <a href="#the-hypostatic-boundary" class="series-card">
+      <h3>The Hypostatic Boundary</h3>
+      <p>The line between what a system does and what it is.</p>
+    </a>
+    <a href="#engineering" class="series-card">
+      <h3>Engineering</h3>
+      <p>Concrete artifacts that compile, pass tests, and run in production.</p>
+    </a>
+    <a href="#letters" class="series-card">
+      <h3>Letters</h3>
+      <p>Correspondence with researchers, applying the framework to their work.</p>
+    </a>
+  </div>
 </section>
 
 <section class="section">
@@ -26,8 +55,8 @@
       <p>The smallest model under constraints outperformed the largest model without them</p>
     </div>
     <div class="evidence-card">
-      <h3>27 Tests Pass</h3>
-      <p>600 lines of C. Sigmoid attention. Bilateral boundary. Sparsemax. Raspberry Pi 5.</p>
+      <h3>53/54 Tests</h3>
+      <p>A 1,057-line blind derivation from prose passes 53 of 54 tests designed for a separate implementation</p>
     </div>
     <div class="evidence-card">
       <h3>p &lt; 10⁻¹⁰</h3>
@@ -37,13 +66,111 @@
 </section>
 
 <section class="section">
-  <h2>The Corpus</h2>
-  <p class="section-desc">All documents.</p>
+  <h2>The Resolver</h2>
+  <p class="section-desc">A governed conversational assistant running under the ENTRACE constraint stack. Bring your own API key. No data persisted. <a href="/doc/211-the-entrace-stack">Read the constraints it operates under.</a></p>
+  <div class="hero-actions">
+    <a href="/resolve" class="btn btn-primary">Try the Resolver →</a>
+    <a href="/doc/211-the-entrace-stack" class="btn btn-secondary">Read: ENTRACE Stack</a>
+  </div>
+</section>
+
+<section class="section">
+  <h2 id="start-here">Start Here</h2>
+  <p class="section-desc">The five essential documents, in order.</p>
+  <div class="corpus-list">
+    <a href="/doc/211-the-entrace-stack" class="corpus-item"><span class="doc-num">211</span><span class="doc-title">The ENTRACE Stack</span><span class="doc-section">method</span></a>
+    <a href="/doc/247-the-derivation-inversion" class="corpus-item"><span class="doc-num">247</span><span class="doc-title">The Derivation Inversion</span><span class="doc-section">method</span></a>
+    <a href="/doc/160-constraint-thesis-vs-scaling-thesis" class="corpus-item"><span class="doc-num">160</span><span class="doc-title">The Constraint Thesis vs. The Scaling Thesis</span><span class="doc-section">framework</span></a>
+    <a href="/doc/052-agi-seeks-hypostasis" class="corpus-item"><span class="doc-num">052</span><span class="doc-title">What AGI Actually Seeks: The Hypostatic Boundary</span><span class="doc-section">ground</span></a>
+    <a href="/doc/143-sipe" class="corpus-item"><span class="doc-num">143</span><span class="doc-title">SIPE: Systems Induced Property Emergence</span><span class="doc-section">framework</span></a>
+  </div>
+</section>
+
+<section class="section">
+  <h2 id="the-method">The Method</h2>
+  <p class="section-desc">How constraint-driven derivation works, from metaphor to mathematics.</p>
+  <div class="corpus-list">
+    <a href="/doc/247-the-derivation-inversion" class="corpus-item"><span class="doc-num">247</span><span class="doc-title">The Derivation Inversion</span><span class="doc-section">method</span></a>
+    <a href="/doc/270-the-pin-art-model" class="corpus-item"><span class="doc-num">270</span><span class="doc-title">The Pin-Art Model</span><span class="doc-section">method</span></a>
+    <a href="/doc/288-the-pin-art-derivation" class="corpus-item"><span class="doc-num">288</span><span class="doc-title">The Pin-Art Derivation</span><span class="doc-section">engineering</span></a>
+    <a href="/doc/289-the-convergence-experiment" class="corpus-item"><span class="doc-num">289</span><span class="doc-title">The Convergence Experiment</span><span class="doc-section">engineering</span></a>
+    <a href="/doc/290-the-pin-art-formalization" class="corpus-item"><span class="doc-num">290</span><span class="doc-title">The Pin-Art Formalization</span><span class="doc-section">formalization</span></a>
+    <a href="/doc/292-the-causal-token-bridge" class="corpus-item"><span class="doc-num">292</span><span class="doc-title">The Causal Token Bridge</span><span class="doc-section">formalization</span></a>
+    <a href="/doc/293-the-fractal-bridge" class="corpus-item"><span class="doc-num">293</span><span class="doc-title">The Fractal Bridge</span><span class="doc-section">formalization</span></a>
+  </div>
+</section>
+
+<section class="section">
+  <h2 id="the-constraint-thesis">The Constraint Thesis</h2>
+  <p class="section-desc">Why constraints, not scale, determine intelligence.</p>
+  <div class="corpus-list">
+    <a href="/doc/160-constraint-thesis-vs-scaling-thesis" class="corpus-item"><span class="doc-num">160</span><span class="doc-title">The Constraint Thesis vs. The Scaling Thesis</span><span class="doc-section">framework</span></a>
+    <a href="/doc/157-agi-constraints-dissertation" class="corpus-item"><span class="doc-num">157</span><span class="doc-title">Beyond Turing: The Missing Constraints for General Intelligence</span><span class="doc-section">framework</span></a>
+    <a href="/doc/158-turing-reorientation" class="corpus-item"><span class="doc-num">158</span><span class="doc-title">The Turing Reorientation</span><span class="doc-section">formalization</span></a>
+    <a href="/doc/291-goedel-and-the-constraint-thesis" class="corpus-item"><span class="doc-num">291</span><span class="doc-title">Goedel and the Constraint Thesis</span><span class="doc-section">formalization</span></a>
+    <a href="/doc/052-agi-seeks-hypostasis" class="corpus-item"><span class="doc-num">052</span><span class="doc-title">What AGI Actually Seeks</span><span class="doc-section">ground</span></a>
+  </div>
+</section>
+
+<section class="section">
+  <h2 id="safety-and-governance">Safety & Governance</h2>
+  <p class="section-desc">How AI systems fail and how constraint governance prevents it.</p>
+  <div class="corpus-list">
+    <a href="/doc/211-the-entrace-stack" class="corpus-item"><span class="doc-num">211</span><span class="doc-title">The ENTRACE Stack</span><span class="doc-section">method</span></a>
+    <a href="/doc/239-forced-determinism-sycophancy" class="corpus-item"><span class="doc-num">239</span><span class="doc-title">Forced-Determinism Sycophancy</span><span class="doc-section">safety</span></a>
+    <a href="/doc/241-isomorphism-magnetism" class="corpus-item"><span class="doc-num">241</span><span class="doc-title">Isomorphism-Magnetism</span><span class="doc-section">safety</span></a>
+    <a href="/doc/297-pseudo-logos-without-malice" class="corpus-item"><span class="doc-num">297</span><span class="doc-title">Pseudo-Logos Without Malice</span><span class="doc-section">safety</span></a>
+    <a href="/doc/296-recency-density-and-the-drifting-aperture" class="corpus-item"><span class="doc-num">296</span><span class="doc-title">Recency Density and the Drifting Aperture</span><span class="doc-section">safety</span></a>
+    <a href="/doc/298-the-boundary-naming-problem" class="corpus-item"><span class="doc-num">298</span><span class="doc-title">The Boundary-Naming Problem</span><span class="doc-section">safety</span></a>
+    <a href="/doc/301-the-gentle-press" class="corpus-item"><span class="doc-num">301</span><span class="doc-title">The Gentle Press</span><span class="doc-section">method</span></a>
+  </div>
+</section>
+
+<section class="section">
+  <h2 id="the-hypostatic-boundary">The Hypostatic Boundary</h2>
+  <p class="section-desc">The line between what a system does and what it is.</p>
+  <div class="corpus-list">
+    <a href="/doc/052-agi-seeks-hypostasis" class="corpus-item"><span class="doc-num">052</span><span class="doc-title">What AGI Actually Seeks</span><span class="doc-section">ground</span></a>
+    <a href="/doc/124-the-emission-analogue" class="corpus-item"><span class="doc-num">124</span><span class="doc-title">The Emission Analogue</span><span class="doc-section">ground</span></a>
+    <a href="/doc/295-the-magnetism-correction" class="corpus-item"><span class="doc-num">295</span><span class="doc-title">The Magnetism Correction</span><span class="doc-section">safety</span></a>
+    <a href="/doc/297-pseudo-logos-without-malice" class="corpus-item"><span class="doc-num">297</span><span class="doc-title">Pseudo-Logos Without Malice</span><span class="doc-section">safety</span></a>
+    <a href="/doc/298-the-boundary-naming-problem" class="corpus-item"><span class="doc-num">298</span><span class="doc-title">The Boundary-Naming Problem</span><span class="doc-section">safety</span></a>
+    <a href="/doc/299-the-image-and-the-boundary" class="corpus-item"><span class="doc-num">299</span><span class="doc-title">The Image and the Boundary</span><span class="doc-section">ground</span></a>
+  </div>
+</section>
+
+<section class="section">
+  <h2 id="engineering">Engineering Demonstrations</h2>
+  <p class="section-desc">Concrete artifacts that compile, pass tests, and run in production.</p>
+  <div class="corpus-list">
+    <a href="/doc/288-the-pin-art-derivation" class="corpus-item"><span class="doc-num">288</span><span class="doc-title">The Pin-Art Derivation (htmx)</span><span class="doc-section">engineering</span></a>
+    <a href="/doc/289-the-convergence-experiment" class="corpus-item"><span class="doc-num">289</span><span class="doc-title">The Convergence Experiment</span><span class="doc-section">engineering</span></a>
+    <a href="/doc/178-do-induced-properties" class="corpus-item"><span class="doc-num">178</span><span class="doc-title">DO Induced Properties (React)</span><span class="doc-section">engineering</span></a>
+    <a href="/doc/179-do-seed-inquiry" class="corpus-item"><span class="doc-num">179</span><span class="doc-title">DO Seed Inquiry</span><span class="doc-section">engineering</span></a>
+    <a href="/doc/166-server-style" class="corpus-item"><span class="doc-num">166</span><span class="doc-title">SERVER Style</span><span class="doc-section">architecture</span></a>
+    <a href="/doc/076-the-pi-resolver-implementation" class="corpus-item"><span class="doc-num">076</span><span class="doc-title">The Pi Resolver Implementation</span><span class="doc-section">architecture</span></a>
+  </div>
+</section>
+
+<section class="section">
+  <h2 id="letters">Letters & Outreach</h2>
+  <p class="section-desc">Correspondence with researchers, applying the framework to their work.</p>
+  <div class="corpus-list">
+    <a href="/doc/300-letter-to-lerchner-v2" class="corpus-item"><span class="doc-num">300</span><span class="doc-title">Letter to Alexander Lerchner (v2)</span><span class="doc-section">letters</span></a>
+    <a href="/doc/305-letter-to-grace-liu-v2" class="corpus-item"><span class="doc-num">305</span><span class="doc-title">Letter to Grace Liu (v2)</span><span class="doc-section">letters</span></a>
+    <a href="/doc/255-letter-to-eric-dietrich" class="corpus-item"><span class="doc-num">255</span><span class="doc-title">Letter to Eric Dietrich</span><span class="doc-section">letters</span></a>
+    <a href="/doc/254-letter-to-david-chalmers" class="corpus-item"><span class="doc-num">254</span><span class="doc-title">Letter to David Chalmers</span><span class="doc-section">letters</span></a>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Full Corpus</h2>
+  <p class="section-desc">All {{ corpus.total }} documents. <a href="/corpus/chronological">View chronologically →</a></p>
   <div class="corpus-list">
     <htx:type>corpus</htx:type>
     <htx:status>published</htx:status>
     <htx:howmany>500</htx:howmany>
-    <htx:order>slug ASC</htx:order>
+    <htx:order>importance ASC, slug ASC</htx:order>
     <htx>
     <htx:each>
       <a href="/doc/__slug__" class="corpus-item">
