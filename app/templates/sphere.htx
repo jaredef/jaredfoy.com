@@ -4,7 +4,7 @@
 </div>
 
 <div id="sphereContainer" style="width:100%;height:75vh;border:1px solid var(--border);border-radius:6px;position:relative;overflow:hidden;">
-  <div id="sphereTooltip" style="display:none;position:absolute;background:rgba(10,10,15,0.92);border:1px solid rgba(124,138,255,0.3);border-radius:4px;padding:0.5rem 0.7rem;font-size:0.75rem;color:#c8c8d4;max-width:320px;pointer-events:none;z-index:100;line-height:1.4;font-family:monospace;"></div>
+  <div id="sphereTooltip" class="network-tooltip"></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -16,8 +16,10 @@
   var height = container.clientHeight;
 
   var scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0a0a0f);
-  scene.fog = new THREE.FogExp2(0x0a0a0f, 0.0008);
+  var isLight = document.documentElement.classList.contains('theme-light');
+  var bgColor = isLight ? 0xf8f7f2 : 0x0a0a0f;
+  scene.background = new THREE.Color(bgColor);
+  scene.fog = new THREE.FogExp2(bgColor, 0.0006);
 
   var camera = new THREE.PerspectiveCamera(55, width / height, 1, 5000);
   camera.position.set(0, 0, 500);
@@ -117,7 +119,8 @@
     }
 
     // Edges as lines
-    var edgeMat = new THREE.LineBasicMaterial({ color: 0x3a3a5a, transparent: true, opacity: 0.15 });
+    var edgeColor = isLight ? 0x8888aa : 0x6a6a9a;
+    var edgeMat = new THREE.LineBasicMaterial({ color: edgeColor, transparent: true, opacity: isLight ? 0.25 : 0.35 });
     for (var e = 0; e < edgeData.length; e++) {
       var si = nodeIndex[edgeData[e].source];
       var ti = nodeIndex[edgeData[e].target];
@@ -129,7 +132,7 @@
 
     // Ambient glow sphere
     var glowGeo = new THREE.SphereGeometry(RADIUS * 1.05, 32, 32);
-    var glowMat = new THREE.MeshBasicMaterial({ color: 0x1a1a3a, transparent: true, opacity: 0.06, side: THREE.BackSide });
+    var glowMat = new THREE.MeshBasicMaterial({ color: isLight ? 0xd0d0e0 : 0x1a1a3a, transparent: true, opacity: isLight ? 0.08 : 0.06, side: THREE.BackSide });
     scene.add(new THREE.Mesh(glowGeo, glowMat));
 
     animate();
@@ -184,5 +187,22 @@
     camera.updateProjectionMatrix();
     renderer.setSize(width, height);
   });
+
+  // Watch for theme toggle
+  var themeBtn = document.getElementById('themeToggle');
+  if (themeBtn) {
+    themeBtn.addEventListener('click', function() {
+      setTimeout(function() {
+        var nowLight = document.documentElement.classList.contains('theme-light');
+        var newBg = nowLight ? 0xf8f7f2 : 0x0a0a0f;
+        scene.background = new THREE.Color(newBg);
+        scene.fog = new THREE.FogExp2(newBg, 0.0006);
+        edgeGroup.children.forEach(function(line) {
+          line.material.color.set(nowLight ? 0x8888aa : 0x6a6a9a);
+          line.material.opacity = nowLight ? 0.25 : 0.35;
+        });
+      }, 50);
+    });
+  }
 })();
 </script>
