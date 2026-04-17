@@ -35,8 +35,76 @@ const registry = new AdapterRegistry({ default: adapter });
 const getExecutor = new GetContentExecutor(parser, registry, hydrator, expressionEngine, { dev: false });
 
 import { createResolveModule } from "./resolve-module";
+import Database from "bun:sqlite";
 
 const SITE_ORIGIN = process.env.JAREDFOY_ORIGIN ?? "https://jaredfoy.com";
+
+// ── Search module (FTS5) ──
+const searchModule: Module = {
+  name: () => "search",
+  boot(reg) {
+    const searchDb = new Database(databasePath, { readonly: true });
+
+    reg.registerMiddleware({
+      handle(request, next) {
+        const p = request.path || "";
+        const method = request.method || "GET";
+        const json = (data: any) => ({ status: 200, headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+
+        if (method === "GET" && p === "/api/search") {
+          const q = request.query?.q?.trim();
+          if (!q || q.length < 2) return json({ results: [] });
+          try {
+            const results = searchDb.query(`
+              SELECT slug, title, introduction,
+                     snippet(corpus_fts, 3, '<mark>', '</mark>', '...', 30) as snippet,
+                     rank
+              FROM corpus_fts
+              WHERE corpus_fts MATCH ?
+              ORDER BY rank
+              LIMIT 20
+            `).all(q);
+            return json({ results });
+          } catch (e: any) {
+            return json({ results: [], error: e.message });
+          }
+        }
+
+        if (method === "GET" && p === "/api/related") {
+          const slug = request.query?.slug;
+          if (!slug) return json({ related: [] });
+          const row = searchDb.query("SELECT meta FROM content WHERE slug = ?").get(slug) as { meta: string } | null;
+          if (!row) return json({ related: [] });
+          const meta = JSON.parse(row.meta);
+          const relatedSlugs: string[] = meta.related || [];
+          const related = relatedSlugs.map((rs: string) => {
+            const r = searchDb.query("SELECT slug, title, json_extract(meta, '$.doc_num') as doc_num, json_extract(meta, '$.introduction') as introduction FROM content WHERE slug = ?").get(rs) as any;
+            return r ? { slug: r.slug, title: r.title, doc_num: r.doc_num, introduction: r.introduction } : null;
+          }).filter(Boolean);
+          return json({ related });
+        }
+
+        if (method === "GET" && p === "/api/network") {
+          const docs = searchDb.query(`
+            SELECT slug, title, importance, json_extract(meta, '$.doc_num') as doc_num,
+                   json_extract(meta, '$.section') as section, json_extract(meta, '$.related') as related,
+                   json_extract(meta, '$.introduction') as introduction
+            FROM content WHERE type='corpus' AND status='published' ORDER BY importance ASC, slug ASC
+          `).all() as any[];
+          const nodes = docs.map(d => ({ id: d.slug, title: d.title, doc_num: d.doc_num, section: d.section, importance: d.importance, intro: (d.introduction || "").slice(0, 120) }));
+          const edges: { source: string; target: string }[] = [];
+          for (const d of docs) {
+            const rel: string[] = d.related ? JSON.parse(d.related) : [];
+            for (const r of rel) { if (d.slug < r) edges.push({ source: d.slug, target: r }); }
+          }
+          return json({ nodes, edges });
+        }
+
+        return next(request);
+      },
+    });
+  },
+};
 
 const corpusStatsModule: Module = {
   name: () => "corpus-stats",
@@ -254,7 +322,7 @@ const handler = new RequestHandler(
   templatesDir,
   undefined, // no set executor (read-only site)
   undefined, // no delete executor
-  { dev: false, modules: [corpusStatsModule, sitemapModule, pageMetaModule, createResolveModule()] },
+  { dev: false, modules: [corpusStatsModule, sitemapModule, pageMetaModule, searchModule, createResolveModule()] },
 );
 
 const host = new HttpHost(handler, publicDir);

@@ -255,6 +255,108 @@ manifest.push({
   section: `${totalDocs} documents`,
 });
 
+// ── FTS5 full-text search index ──
+db.run(`DROP TABLE IF EXISTS corpus_fts`);
+db.run(`CREATE VIRTUAL TABLE corpus_fts USING fts5(slug, title, introduction, body, tokenize='porter unicode61')`);
+
+// Extract introduction text from each document and populate FTS
+const allDocs = db.query("SELECT id, slug, title, body FROM content WHERE type='corpus' AND status='published'").all() as Array<{ id: number; slug: string; title: string; body: string }>;
+
+function extractIntroduction(md: string): string {
+  const lines = md.split("\n");
+  let inIntro = false;
+  let intro: string[] = [];
+  for (const line of lines) {
+    if (line.includes("**Reader's Introduction**")) { inIntro = true; continue; }
+    if (inIntro) {
+      if (line.startsWith(">")) {
+        intro.push(line.replace(/^>\s*/, ""));
+      } else {
+        break;
+      }
+    }
+  }
+  return intro.join(" ").replace(/\*\*/g, "").trim();
+}
+
+const introductions: Record<string, { slug: string; title: string; intro: string; docNum: number | null }> = {};
+
+for (const doc of allDocs) {
+  const intro = extractIntroduction(doc.body);
+  const docNum = extractDocNum(doc.slug + ".md");
+  introductions[doc.slug] = { slug: doc.slug, title: doc.title, intro, docNum };
+  // Strip markdown for body search
+  const plainBody = doc.body.replace(/[#*>`\[\]()_~|]/g, " ").replace(/\s+/g, " ").trim();
+  db.run("INSERT INTO corpus_fts(slug, title, introduction, body) VALUES (?, ?, ?, ?)",
+    [doc.slug, doc.title, intro, plainBody]);
+}
+
+// ── Compute similarity matrix from introductions (TF-IDF keyword overlap) ──
+const stopwords = new Set(["the","a","an","is","are","was","were","be","been","being","have","has","had","do","does","did","will","would","shall","should","may","might","must","can","could","and","but","or","nor","for","yet","so","in","on","at","to","from","by","with","of","as","that","this","it","its","not","no","if","than","into","about","up","out","what","which","who","whom","when","where","how","all","each","every","both","few","more","most","other","some","such","only","own","same","also","just","then","very","too","here","there","these","those","their","they","them","we","our","us","he","she","him","her","his","you","your","i","my","me","one","two"]);
+
+function tokenize(text: string): string[] {
+  return text.toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(w => w.length > 2 && !stopwords.has(w));
+}
+
+// Build TF-IDF vectors
+const slugs = Object.keys(introductions);
+const docFreq: Record<string, number> = {};
+const tfVectors: Record<string, Record<string, number>> = {};
+
+for (const slug of slugs) {
+  const tokens = tokenize(introductions[slug].intro + " " + introductions[slug].title);
+  const tf: Record<string, number> = {};
+  for (const t of tokens) { tf[t] = (tf[t] || 0) + 1; }
+  tfVectors[slug] = tf;
+  const seen = new Set(Object.keys(tf));
+  for (const term of seen) { docFreq[term] = (docFreq[term] || 0) + 1; }
+}
+
+const N = slugs.length;
+
+function cosineSimilarity(a: string, b: string): number {
+  const va = tfVectors[a] || {};
+  const vb = tfVectors[b] || {};
+  const allTerms = new Set([...Object.keys(va), ...Object.keys(vb)]);
+  let dot = 0, magA = 0, magB = 0;
+  for (const term of allTerms) {
+    const df = docFreq[term] || 1;
+    const idf = Math.log(N / df);
+    const wa = (va[term] || 0) * idf;
+    const wb = (vb[term] || 0) * idf;
+    dot += wa * wb;
+    magA += wa * wa;
+    magB += wb * wb;
+  }
+  if (magA === 0 || magB === 0) return 0;
+  return dot / (Math.sqrt(magA) * Math.sqrt(magB));
+}
+
+// Compute top-5 related docs per document and store in meta
+const relatedMap: Record<string, string[]> = {};
+for (const slug of slugs) {
+  const scores: { slug: string; score: number }[] = [];
+  for (const other of slugs) {
+    if (other === slug) continue;
+    scores.push({ slug: other, score: cosineSimilarity(slug, other) });
+  }
+  scores.sort((a, b) => b.score - a.score);
+  relatedMap[slug] = scores.slice(0, 5).filter(s => s.score > 0.05).map(s => s.slug);
+}
+
+// Update meta with related docs
+for (const slug of slugs) {
+  const row = db.query("SELECT meta FROM content WHERE slug = ?").get(slug) as { meta: string } | null;
+  if (row) {
+    const meta = JSON.parse(row.meta);
+    meta.related = relatedMap[slug] || [];
+    meta.introduction = introductions[slug]?.intro || "";
+    db.run("UPDATE content SET meta = ? WHERE slug = ?", [JSON.stringify(meta), slug]);
+  }
+}
+
+console.log(`FTS5 index + similarity matrix built for ${slugs.length} documents`);
+
 db.close();
 
 const OG_OUT = resolve(import.meta.dir, "public/og");
