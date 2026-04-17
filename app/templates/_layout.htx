@@ -35,7 +35,7 @@
       } catch (e) { /* no-op: privacy modes without storage */ }
     })();
   </script>
-  <link rel="stylesheet" href="/css/style.css?v=27">
+  <link rel="stylesheet" href="/css/style.css?v=28">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" crossorigin="anonymous">
 </head>
 <body>
@@ -119,9 +119,10 @@
         <a href="/doc/196-letter-to-chris-olah">To Chris Olah</a>
         <a href="/doc/200-letter-to-paul-christiano">To Paul Christiano</a>
 
-        <h3>More</h3>
-        <a href="/corpus/chronological">Full Corpus (Chronological)</a>
-        <a href="/#">Full Corpus (By Importance)</a>
+        <h3>Explore</h3>
+        <a href="/search">Search</a>
+        <a href="/network">Coherence Network</a>
+        <a href="/corpus/chronological">Chronological View</a>
       </nav>
       <footer>
         <p class="footer-text"><a href="/about">About Jared Foy</a></p>

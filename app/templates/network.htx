@@ -1,0 +1,199 @@
+<div class="page-header">
+  <h1>Coherence Network</h1>
+  <p class="section-desc">254 documents. 620 edges. Each connection is a computed similarity between Reader's Introductions. Clusters reveal the coherence field — documents that share concepts even when they span different domains.</p>
+</div>
+
+<div class="network-controls">
+  <label><input type="checkbox" id="showLabels" checked> Labels</label>
+  <label><input type="checkbox" id="showEdges" checked> Edges</label>
+  <span class="network-legend">
+    <span class="legend-dot" style="background:#7c8aff;"></span> framework
+    <span class="legend-dot" style="background:#2dd4bf;"></span> method
+    <span class="legend-dot" style="background:#f87171;"></span> safety
+    <span class="legend-dot" style="background:#fbbf24;"></span> ground
+    <span class="legend-dot" style="background:#a78bfa;"></span> letters
+    <span class="legend-dot" style="background:#34d399;"></span> architecture
+    <span class="legend-dot" style="background:#fb923c;"></span> formalization
+    <span class="legend-dot" style="background:#6b7280;"></span> other
+  </span>
+</div>
+<canvas id="networkCanvas" style="width:100%;height:70vh;border:1px solid var(--border);border-radius:6px;cursor:grab;"></canvas>
+<div id="networkTooltip" class="network-tooltip" style="display:none;"></div>
+
+<script>
+(function() {
+  var canvas = document.getElementById('networkCanvas');
+  var ctx = canvas.getContext('2d');
+  var tooltip = document.getElementById('networkTooltip');
+  var showLabels = document.getElementById('showLabels');
+  var showEdges = document.getElementById('showEdges');
+
+  var dpr = window.devicePixelRatio || 1;
+  function resize() {
+    var rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var SECTION_COLORS = {
+    framework: '#7c8aff', method: '#2dd4bf', safety: '#f87171', ground: '#fbbf24',
+    letters: '#a78bfa', architecture: '#34d399', formalization: '#fb923c',
+    evidence: '#60a5fa', economics: '#f472b6'
+  };
+
+  var nodes = [], edges = [], positions = [];
+  var W, H, dragging = null, offsetX = 0, offsetY = 0, panX = 0, panY = 0, isPanning = false, panStartX, panStartY;
+
+  fetch('/api/network').then(function(r) { return r.json(); }).then(function(data) {
+    nodes = data.nodes;
+    edges = data.edges;
+    W = canvas.getBoundingClientRect().width;
+    H = canvas.getBoundingClientRect().height;
+
+    // Initialize positions — importance-based radius from center
+    var cx = W / 2, cy = H / 2;
+    for (var i = 0; i < nodes.length; i++) {
+      var angle = (i / nodes.length) * Math.PI * 2 + Math.random() * 0.3;
+      var r = 50 + (nodes[i].importance || 50) * 3 + Math.random() * 80;
+      positions.push({ x: cx + Math.cos(angle) * r, y: cy + Math.sin(angle) * r, vx: 0, vy: 0 });
+    }
+
+    // Build index for edge lookups
+    var nodeIndex = {};
+    for (var n = 0; n < nodes.length; n++) nodeIndex[nodes[n].id] = n;
+    for (var e = 0; e < edges.length; e++) {
+      edges[e].si = nodeIndex[edges[e].source];
+      edges[e].ti = nodeIndex[edges[e].target];
+    }
+
+    simulate();
+  });
+
+  function simulate() {
+    var iterations = 0;
+    function tick() {
+      iterations++;
+      // Repulsion
+      for (var i = 0; i < nodes.length; i++) {
+        positions[i].vx *= 0.85; positions[i].vy *= 0.85;
+        for (var j = i + 1; j < nodes.length; j++) {
+          var dx = positions[i].x - positions[j].x;
+          var dy = positions[i].y - positions[j].y;
+          var dist = Math.sqrt(dx * dx + dy * dy) || 1;
+          var force = 800 / (dist * dist);
+          positions[i].vx += dx / dist * force;
+          positions[i].vy += dy / dist * force;
+          positions[j].vx -= dx / dist * force;
+          positions[j].vy -= dy / dist * force;
+        }
+      }
+      // Attraction along edges
+      for (var e = 0; e < edges.length; e++) {
+        var si = edges[e].si, ti = edges[e].ti;
+        if (si === undefined || ti === undefined) continue;
+        var dx = positions[ti].x - positions[si].x;
+        var dy = positions[ti].y - positions[si].y;
+        var dist = Math.sqrt(dx * dx + dy * dy) || 1;
+        var force = (dist - 60) * 0.005;
+        positions[si].vx += dx / dist * force;
+        positions[si].vy += dy / dist * force;
+        positions[ti].vx -= dx / dist * force;
+        positions[ti].vy -= dy / dist * force;
+      }
+      // Center gravity
+      var cx = W / 2, cy = H / 2;
+      for (var i = 0; i < nodes.length; i++) {
+        positions[i].vx += (cx - positions[i].x) * 0.001;
+        positions[i].vy += (cy - positions[i].y) * 0.001;
+        positions[i].x += positions[i].vx;
+        positions[i].y += positions[i].vy;
+      }
+      draw();
+      if (iterations < 300) requestAnimationFrame(tick);
+    }
+    tick();
+  }
+
+  function draw() {
+    var rect = canvas.getBoundingClientRect();
+    ctx.clearRect(0, 0, rect.width, rect.height);
+    ctx.save();
+    ctx.translate(panX, panY);
+
+    // Edges
+    if (showEdges.checked) {
+      ctx.strokeStyle = 'rgba(100, 100, 120, 0.12)';
+      ctx.lineWidth = 0.5;
+      for (var e = 0; e < edges.length; e++) {
+        var si = edges[e].si, ti = edges[e].ti;
+        if (si === undefined || ti === undefined) continue;
+        ctx.beginPath();
+        ctx.moveTo(positions[si].x, positions[si].y);
+        ctx.lineTo(positions[ti].x, positions[ti].y);
+        ctx.stroke();
+      }
+    }
+
+    // Nodes
+    for (var i = 0; i < nodes.length; i++) {
+      var n = nodes[i], p = positions[i];
+      var r = n.importance <= 1 ? 6 : n.importance <= 2 ? 4.5 : n.importance <= 3 ? 3.5 : 2.5;
+      var color = SECTION_COLORS[n.section] || '#6b7280';
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+      ctx.fill();
+
+      if (showLabels.checked && (n.importance <= 2 || r > 3)) {
+        ctx.fillStyle = 'rgba(200,200,210,0.7)';
+        ctx.font = '8px monospace';
+        ctx.fillText(n.doc_num || '', p.x + r + 3, p.y + 3);
+      }
+    }
+    ctx.restore();
+  }
+
+  // Tooltip on hover
+  canvas.addEventListener('mousemove', function(e) {
+    var rect = canvas.getBoundingClientRect();
+    var mx = e.clientX - rect.left - panX, my = e.clientY - rect.top - panY;
+    var hit = null;
+    for (var i = 0; i < nodes.length; i++) {
+      var dx = positions[i].x - mx, dy = positions[i].y - my;
+      if (dx * dx + dy * dy < 100) { hit = i; break; }
+    }
+    if (hit !== null) {
+      var n = nodes[hit];
+      tooltip.style.display = 'block';
+      tooltip.style.left = (e.clientX - rect.left + 15) + 'px';
+      tooltip.style.top = (e.clientY - rect.top - 10) + 'px';
+      tooltip.innerHTML = '<strong>' + n.doc_num + ': ' + n.title + '</strong><br><span style="color:' + (SECTION_COLORS[n.section] || '#888') + '">' + (n.section || '') + '</span>' + (n.intro ? '<br><small>' + n.intro + '</small>' : '');
+      canvas.style.cursor = 'pointer';
+    } else {
+      tooltip.style.display = 'none';
+      canvas.style.cursor = isPanning ? 'grabbing' : 'grab';
+    }
+  });
+
+  canvas.addEventListener('click', function(e) {
+    var rect = canvas.getBoundingClientRect();
+    var mx = e.clientX - rect.left - panX, my = e.clientY - rect.top - panY;
+    for (var i = 0; i < nodes.length; i++) {
+      var dx = positions[i].x - mx, dy = positions[i].y - my;
+      if (dx * dx + dy * dy < 100) { window.location.href = '/doc/' + nodes[i].id; return; }
+    }
+  });
+
+  // Pan
+  canvas.addEventListener('mousedown', function(e) { isPanning = true; panStartX = e.clientX - panX; panStartY = e.clientY - panY; canvas.style.cursor = 'grabbing'; });
+  canvas.addEventListener('mousemove', function(e) { if (isPanning) { panX = e.clientX - panStartX; panY = e.clientY - panStartY; draw(); } });
+  canvas.addEventListener('mouseup', function() { isPanning = false; canvas.style.cursor = 'grab'; });
+  canvas.addEventListener('mouseleave', function() { isPanning = false; tooltip.style.display = 'none'; });
+
+  showLabels.addEventListener('change', draw);
+  showEdges.addEventListener('change', draw);
+})();
+</script>

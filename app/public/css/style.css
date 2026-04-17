@@ -253,6 +253,37 @@ footer {
 .series-card.series-primary { border-color: #2dd4bf; }
 .series-card.series-primary h3 { color: #2dd4bf; }
 
+/* Search */
+.search-container { margin: 1.5rem 0; }
+.search-input {
+  width: 100%; padding: 0.7rem 1rem; font-family: var(--mono); font-size: 0.9rem;
+  background: var(--bg-card); color: var(--fg); border: 1px solid var(--border); border-radius: 4px;
+}
+.search-input:focus { outline: none; border-color: var(--accent); }
+.search-results { margin-top: 1rem; }
+.search-result {
+  display: block; padding: 0.8rem; margin-bottom: 0.5rem; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: 4px; text-decoration: none; color: var(--fg);
+  transition: border-color 0.15s;
+}
+.search-result:hover { border-color: var(--accent); }
+.search-result-title { display: block; color: var(--accent); font-weight: 600; font-size: 0.85rem; margin-bottom: 0.3rem; }
+.search-result-intro { display: block; font-size: 0.78rem; color: var(--fg-dim); line-height: 1.4; margin-bottom: 0.3rem; }
+.search-result-snippet { display: block; font-size: 0.75rem; color: var(--fg-dim); }
+.search-result-snippet mark { background: rgba(124, 138, 255, 0.25); color: var(--fg); padding: 0 2px; border-radius: 2px; }
+.search-empty { color: var(--fg-dim); font-size: 0.85rem; }
+
+/* Network visualization */
+.network-controls { margin: 1rem 0; font-size: 0.8rem; color: var(--fg-dim); display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; }
+.network-controls label { display: flex; align-items: center; gap: 0.3rem; cursor: pointer; }
+.network-legend { display: flex; gap: 0.8rem; flex-wrap: wrap; font-size: 0.75rem; }
+.legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; vertical-align: middle; margin-right: 2px; }
+.network-tooltip {
+  position: absolute; background: var(--bg-nav); border: 1px solid var(--border); border-radius: 4px;
+  padding: 0.5rem 0.7rem; font-size: 0.75rem; color: var(--fg); max-width: 300px; pointer-events: none; z-index: 100;
+  line-height: 1.4;
+}
+
 .page-header { margin-bottom: 2rem; }
 .page-header h1 { font-size: 1.4rem; margin-bottom: 0.5rem; }
 

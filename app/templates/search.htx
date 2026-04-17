@@ -1,0 +1,46 @@
+<div class="page-header">
+  <h1>Search the Corpus</h1>
+  <p class="section-desc">Full-text search across {{ corpus.total }} documents.</p>
+</div>
+
+<div class="search-container">
+  <input type="text" id="searchInput" class="search-input" placeholder="Search documents..." autofocus>
+  <div id="searchResults" class="search-results"></div>
+</div>
+
+<script>
+(function() {
+  var input = document.getElementById('searchInput');
+  var results = document.getElementById('searchResults');
+  var timer = null;
+
+  input.addEventListener('input', function() {
+    clearTimeout(timer);
+    var q = input.value.trim();
+    if (q.length < 2) { results.innerHTML = ''; return; }
+    timer = setTimeout(function() {
+      fetch('/api/search?q=' + encodeURIComponent(q))
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (!data.results || data.results.length === 0) {
+            results.innerHTML = '<p class="search-empty">No results found.</p>';
+            return;
+          }
+          results.innerHTML = data.results.map(function(r) {
+            return '<a href="/doc/' + r.slug + '" class="search-result">' +
+              '<span class="search-result-title">' + (r.title || r.slug) + '</span>' +
+              (r.introduction ? '<span class="search-result-intro">' + r.introduction.slice(0, 160) + '...</span>' : '') +
+              (r.snippet ? '<span class="search-result-snippet">' + r.snippet + '</span>' : '') +
+              '</a>';
+          }).join('');
+        });
+    }, 200);
+  });
+
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('q')) {
+    input.value = params.get('q');
+    input.dispatchEvent(new Event('input'));
+  }
+})();
+</script>
