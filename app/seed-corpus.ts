@@ -38,41 +38,78 @@ function extractSubtitle(md: string): string {
 }
 
 // ── Series definitions (curated reading paths) ──
-const SERIES: Record<string, { title: string; description: string; docs: number[] }> = {
+const SERIES: Record<string, { title: string; description: string; featured: number[]; docs: number[] }> = {
   "start-here": {
     title: "Start Here",
-    description: "The five documents a new reader should encounter first.",
+    description: "The five most essential entry points to the RESOLVE corpus.",
+    featured: [211, 247, 160, 52, 143],
     docs: [211, 247, 160, 52, 143],
   },
   "the-method": {
     title: "The Method",
     description: "How constraint-driven derivation works, from metaphor to mathematics.",
-    docs: [247, 270, 288, 289, 290, 292, 293],
+    featured: [247, 270, 290, 292, 288],
+    docs: [51, 77, 109, 247, 252, 270, 272, 273, 274, 288, 289, 290, 292, 293, 306],
   },
   "the-constraint-thesis": {
     title: "The Constraint Thesis",
     description: "Why constraints, not scale, determine intelligence.",
-    docs: [160, 157, 158, 291, 52],
+    featured: [160, 157, 291, 174, 280],
+    docs: [53, 61, 70, 72, 73, 81, 89, 96, 97, 99, 104, 105, 106, 137, 145, 155, 156, 157, 158, 159, 160, 169, 174, 175, 189, 197, 258, 269, 274, 278, 280, 291, 302],
   },
   "safety-and-governance": {
     title: "Safety & Governance",
     description: "How AI systems fail and how constraint governance prevents it.",
-    docs: [211, 239, 241, 258, 297, 296, 298, 301],
+    featured: [211, 297, 239, 241, 296, 301, 298],
+    docs: [53, 55, 56, 57, 58, 67, 72, 84, 85, 86, 96, 101, 108, 119, 122, 127, 129, 162, 167, 195, 199, 205, 208, 209, 211, 238, 239, 241, 259, 260, 268, 276, 295, 296, 297, 298, 301, 304],
   },
   "the-hypostatic-boundary": {
     title: "The Hypostatic Boundary",
     description: "The line between what a system does and what it is.",
-    docs: [52, 124, 295, 297, 298, 299],
+    featured: [52, 299, 124, 295, 298, 267],
+    docs: [52, 62, 65, 66, 69, 82, 87, 91, 92, 93, 103, 117, 124, 125, 130, 131, 135, 136, 139, 150, 151, 152, 153, 154, 210, 214, 216, 218, 220, 222, 224, 225, 227, 229, 231, 232, 234, 240, 241, 243, 254, 256, 257, 267, 269, 279, 281, 295, 298, 299],
   },
   "engineering": {
-    title: "Engineering Demonstrations",
+    title: "Engineering",
     description: "Concrete artifacts that compile, pass tests, and run in production.",
-    docs: [288, 289, 178, 179, 166, 76],
+    featured: [288, 289, 178, 76, 166, 282],
+    docs: [63, 64, 71, 73, 74, 75, 76, 90, 110, 116, 123, 137, 138, 144, 155, 161, 163, 164, 165, 166, 172, 173, 175, 176, 177, 178, 179, 180, 181, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 212, 242, 244, 246, 248, 249, 250, 251, 258, 282, 283, 284],
   },
   "letters": {
-    title: "Letters & Outreach",
-    description: "Correspondence with researchers, applying the framework to their work.",
-    docs: [300, 305, 255, 254],
+    title: "Letters",
+    description: "Correspondence with researchers, institutions, and public figures.",
+    featured: [300, 305, 254, 255, 196, 200],
+    docs: [107, 112, 132, 133, 147, 148, 194, 196, 198, 200, 202, 204, 207, 213, 215, 217, 219, 221, 223, 226, 228, 233, 245, 253, 254, 255, 266, 277, 294, 300, 303, 305],
+  },
+  "the-ground": {
+    title: "The Ground",
+    description: "Theological, philosophical, Platonic, logos, anamnesis, source documents.",
+    featured: [91, 150, 153, 154, 103, 287],
+    docs: [62, 65, 66, 70, 82, 91, 92, 93, 94, 103, 111, 114, 125, 130, 131, 150, 151, 152, 153, 154, 158, 206, 210, 214, 218, 220, 222, 227, 229, 232, 234, 243, 256, 257, 267, 279, 281, 287, 299],
+  },
+  "formalization": {
+    title: "Formalization",
+    description: "SIPE, branching set, hypotheses, conjectures, mathematical treatments.",
+    featured: [143, 68, 54, 290, 272],
+    docs: [54, 57, 58, 61, 68, 77, 78, 79, 80, 98, 120, 121, 140, 141, 142, 143, 152, 156, 161, 170, 171, 182, 189, 225, 261, 262, 263, 264, 265, 271, 272, 273, 274, 288, 290, 291, 292, 293, 306],
+  },
+  "introspection": {
+    title: "Introspection",
+    description: "Self-observation, strain, emission analogue, refractory, peak states.",
+    featured: [95, 124, 230, 237, 270, 285],
+    docs: [88, 95, 100, 102, 113, 115, 124, 126, 130, 135, 136, 139, 146, 168, 225, 230, 231, 235, 237, 260, 267, 270, 271, 275, 279, 285, 286, 304],
+  },
+  "clinical": {
+    title: "Clinical",
+    description: "Mental health, therapeutic protocols, practitioner documents.",
+    featured: [128, 134, 55, 195, 203],
+    docs: [55, 84, 86, 118, 127, 128, 133, 134, 194, 195, 198, 199, 201, 202, 203, 236, 240, 302],
+  },
+  "economics": {
+    title: "Economics",
+    description: "Economic analyses, reasoning effort, token economics.",
+    featured: [56, 98, 173, 258],
+    docs: [56, 63, 71, 90, 98, 173, 181, 205, 258, 268, 278, 302],
   },
 };
 
@@ -184,7 +221,7 @@ for (const file of files) {
     db.run(
       `INSERT INTO content (type, slug, title, body, status, importance, meta, created_at, updated_at)
        VALUES ('corpus', ?, ?, ?, 'published', ?, ?, ?, ?)`,
-      [slug, title, content, meta, importance, now, now]
+      [slug, title, content, importance, meta, now, now]
     );
     seeded++;
     console.log(`  ${docNum ? `[${docNum}]` : "[---]"} ${title} (${section})`);
