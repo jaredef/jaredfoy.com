@@ -42,7 +42,7 @@
   <div class="corpus-list">
     <htx:type>corpus</htx:type>
     <htx:status>published</htx:status>
-    <htx:howmany>200</htx:howmany>
+    <htx:howmany>500</htx:howmany>
     <htx:order>slug ASC</htx:order>
     <htx>
     <htx:each>
