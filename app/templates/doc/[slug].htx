@@ -3,13 +3,20 @@
 <htx>
 <htx:each>
 <article class="document">
-  <header class="doc-header">
-    <span class="doc-badge">Document __doc_num__</span>
-    <h1>__title__</h1>
-    <span class="doc-section-tag">__section__</span>
-  </header>
-  <div class="doc-body pretext">
-    __body_html__
+  <div class="doc-body-wrapper">
+    <header class="doc-header">
+      <div class="doc-header-inner">
+        <span class="doc-badge">Document __doc_num__</span>
+        <h1>__title__</h1>
+        <span class="doc-section-tag">__section__</span>
+      </div>
+    </header>
+    <div class="doc-body pretext">
+      __body_html__
+    </div>
+    <footer class="doc-license">
+      <p>&copy; Jared Foy. Licensed under <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">CC BY 4.0</a>.</p>
+    </footer>
   </div>
 </article>
 </htx:each>

@@ -1,0 +1,78 @@
+<script>
+  window.COHERENCE_ROUTE = {
+    id: 'engineer',
+    featured: [
+      '288-the-pin-art-derivation',
+      '178-do-induced-properties',
+      '166-server-style',
+      '076-the-pi-resolver-implementation'
+    ]
+  };
+</script>
+
+<header class="coherence-pretext">
+  <p class="coherence-kicker">jaredfoy.com / coherence / engineer</p>
+  <h1>The Coherence Sphere</h1>
+  <p class="coherence-subtitle">A tour for engineers</p>
+  <p class="coherence-lede">Before the metaphysics, before the method, before the thesis &mdash; four artifacts the corpus has built. Things that compile, pass tests, run on real hardware. The amber constellation traces the path. Scroll to walk it.</p>
+  <nav class="coherence-routes" aria-label="Choose a route through the corpus">
+    <a href="/resolve/coherence" class="coherence-route-pill is-active">Engineer</a>
+    <a href="/resolve/coherence/alignment" class="coherence-route-pill">Alignment Researcher</a>
+    <a href="/resolve/coherence/philosopher" class="coherence-route-pill">Philosopher</a>
+    <a href="/resolve/glossary" class="coherence-route-pill">Glossary</a>
+  </nav>
+  <p class="coherence-scroll-hint" aria-hidden="true">&darr;</p>
+</header>
+
+<section class="coherence-scroll-section" data-aspect-index="0">
+  <article class="coherence-col">
+    <span class="coherence-ordinal">01 &middot; htmx, re-derived</span>
+    <h3>A prose seed produces a library</h3>
+    <p><em>htmx</em> is a hypermedia library &mdash; a few kilobytes of JavaScript that turns HTML attributes into reactive behavior. Most users know it as something they paste into a page and use.</p>
+    <p>Doc 288 treats htmx as an artifact and reverse-engineers the constraints that make it what it is. A 19-item prose seed, handed to a resolver with no htmx source in context.</p>
+    <p>The harvest: 1,318 lines of TypeScript. 53 of 54 tests pass. Four iterations of seed refinement brought structural divergence from 64% to 4%. The derivation is measurable, not metaphorical.</p>
+    <a class="coherence-featured-doc" href="/resolve/doc/288-the-pin-art-derivation">Doc 288 &rarr; The Pin-Art Derivation</a>
+  </article>
+</section>
+
+<section class="coherence-scroll-section" data-aspect-index="1">
+  <article class="coherence-col">
+    <span class="coherence-ordinal">02 &middot; A React runtime from prose</span>
+    <h3>The method on foreign ground</h3>
+    <p>React is hundreds of thousands of lines of code. The DO seed is 2,177 words &mdash; ten contracts, seven required properties, fifteen verification tests.</p>
+    <p>From that seed, the method produced a 379-line TypeScript runtime: virtual DOM, fiber reconciliation, hooks, zero dependencies. All fifteen verification tests pass.</p>
+    <p>The significance isn't that the derived runtime is novel. It's that the runtime is <em>conformant</em>, on an architecture the author did not design. The method generalizes past its own tradition.</p>
+    <a class="coherence-featured-doc" href="/resolve/doc/178-do-induced-properties">Doc 178 &rarr; DO Induced Properties</a>
+  </article>
+</section>
+
+<section class="coherence-scroll-section" data-aspect-index="2">
+  <article class="coherence-col">
+    <span class="coherence-ordinal">03 &middot; How derivations stack</span>
+    <h3>Composition, one level deeper</h3>
+    <p>Write constraints for how a web response is constructed: you get PRESTO. Write constraints for how the <em>engine</em> that constructs responses is itself constructed: you get SERVER. Same method, recursive application.</p>
+    <p>SERVER's ~1,500-word specification produces a 461-line C bootstrap that emits a 921-line PRESTO engine. The same bootstrap always produces the same engine. Zero dependencies.</p>
+    <p>PRESTO's induced properties become constraints on SERVER. This is the composition law at work &mdash; the recursive case that makes the method scale beyond a single level.</p>
+    <a class="coherence-featured-doc" href="/resolve/doc/166-server-style">Doc 166 &rarr; SERVER Style</a>
+  </article>
+</section>
+
+<section class="coherence-scroll-section" data-aspect-index="3">
+  <article class="coherence-col">
+    <span class="coherence-ordinal">04 &middot; The Pi Resolver</span>
+    <h3>A transformer substrate, from first principles</h3>
+    <p>The most ambitious artifact the method has produced. Four essential constraints plus seven contingent choices: sigmoid attention (non-competitive), bilateral boundary (structural), sparsemax output (exact zeros), typed positional encoding.</p>
+    <p>Approximately 600 lines of C. Compiles on a Raspberry Pi 5. Passes 27 verification tests. Zero dependencies.</p>
+    <p>Not a toy. A working proof that a transformer's architectural character can be derived from a prose specification rather than scaled into from the field's existing architectures.</p>
+    <a class="coherence-featured-doc" href="/resolve/doc/076-the-pi-resolver-implementation">Doc 076 &rarr; The Pi Resolver Implementation</a>
+  </article>
+</section>
+
+<section class="coherence-scroll-section coherence-coda" aria-hidden="true">
+  <div class="coherence-coda-hint">scroll to enter the sphere &darr;</div>
+</section>
+
+<footer class="coherence-epilogue">
+  <p>This is the engineer's route &mdash; the artifacts first. The other routes take different paths through the same sphere. The constellation changes; the corpus stays.</p>
+  <p class="coherence-epilogue-note">Each route is its own URL, server-rendered, stateless. The sphere reads <code>window.COHERENCE_ROUTE</code> on boot and draws the amber constellation connecting the route's four featured documents. Bookmarkable, shareable, no client-side route state.</p>
+</footer>

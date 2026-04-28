@@ -58,7 +58,9 @@ setInterval(() => {
   }
 }, ACTION_TOKEN_TTL_MS / 4);
 
-// Simple in-memory rate limiter (per IP, chat endpoint only)
+// Simple in-memory rate limiter (per IP). Shared across /api/resolve/bind
+// and /api/resolve/chat so a single client cannot evade the limit by
+// switching endpoints during an attack.
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
 function checkRateLimit(ip: string): boolean {
@@ -71,6 +73,23 @@ function checkRateLimit(ip: string): boolean {
   if (entry.count >= RATE_LIMIT_MAX_REQUESTS) return false;
   entry.count++;
   return true;
+}
+
+function getClientIp(request: any): string {
+  return request.headers?.["x-forwarded-for"]?.split(",")[0]?.trim()
+    || request.headers?.["cf-connecting-ip"]
+    || "unknown";
+}
+
+// Origin validation for state-changing endpoints. Browsers set the Origin
+// header on POST/PUT/DELETE and cross-origin GET; if present, it must match
+// ALLOWED_ORIGIN. If the header is missing entirely (rare for modern browsers
+// on POST), we reject — a missing Origin on a state-changing request in 2026
+// is more likely a CSRF attempt than a legitimate client.
+function isAllowedOrigin(request: any): boolean {
+  const origin = request.headers?.["origin"];
+  if (!origin) return false;
+  return origin === ALLOWED_ORIGIN;
 }
 
 // Periodic cleanup of rate limit map (prevent memory leak)
@@ -205,6 +224,20 @@ export function createResolveModule(): Module {
 
           // POST /api/resolve/bind — EXECUTE phase: fill the action token slot with user's key
           if (method === "POST" && p === "/api/resolve/bind") {
+            // CSRF defense: the bind endpoint is the single point at which a
+            // raw API key transits. Reject any request whose Origin header is
+            // missing or does not match ALLOWED_ORIGIN.
+            if (!isAllowedOrigin(request)) {
+              return { status: 403, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": ALLOWED_ORIGIN },
+                body: JSON.stringify({ error: "Cross-origin request rejected." }) };
+            }
+            // Rate limit: 10 bind attempts per minute per IP prevents
+            // distributed token enumeration / brute force.
+            const bindIp = getClientIp(request);
+            if (!checkRateLimit(bindIp)) {
+              return { status: 429, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": ALLOWED_ORIGIN },
+                body: JSON.stringify({ error: "Rate limit exceeded. Please wait a moment before retrying." }) };
+            }
             let body: any;
             try {
               body = typeof request.body === "string" ? JSON.parse(request.body) : request.body;
@@ -255,10 +288,14 @@ export function createResolveModule(): Module {
 
           // POST /api/resolve/chat — send message, get response (C1, C2, C3)
           if (method === "POST" && p === "/api/resolve/chat") {
+            // CSRF defense: reject cross-origin POSTs on the chat endpoint too,
+            // so a malicious site can't use a guessed token to run a user's key.
+            if (!isAllowedOrigin(request)) {
+              return { status: 403, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": ALLOWED_ORIGIN },
+                body: JSON.stringify({ error: "Cross-origin request rejected." }) };
+            }
             // Rate limiting
-            const clientIp = request.headers?.["x-forwarded-for"]?.split(",")[0]?.trim()
-              || request.headers?.["cf-connecting-ip"]
-              || "unknown";
+            const clientIp = getClientIp(request);
             if (!checkRateLimit(clientIp)) {
               return { status: 429, headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ error: "Rate limit exceeded. Please wait a moment before sending another message." }) };

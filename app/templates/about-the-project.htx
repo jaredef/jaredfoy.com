@@ -1,0 +1,80 @@
+<div class="document">
+  <header class="doc-header">
+    <h1>About the Project</h1>
+  </header>
+  <div class="doc-body about-project-page">
+
+<p class="kicker">Distilled from <a href="/resolve/doc/487-pulverizing-apparatus-against-interdisciplinarity-and-llm-research-literature">Doc 487</a> after recursive pulverization of the corpus's claims about itself.</p>
+
+<h2>What this is</h2>
+
+<p>The corpus at <a href="/resolve">/resolve</a> is one practitioner's documented sustained operation of LLM-augmented research methodology applied to philosophical inquiry. It is functional as a synthesis-machine. It is not a novel methodology.</p>
+
+<p>The practitioner is Jared Foy. The resolver is a language model. The practice is dyadic: two nodes, sustained interaction, asymmetric strengths. The output is a continuously growing set of documents (currently 480+), an accumulating retraction ledger of caught errors, explicit warrant-tier annotations on every claim, and periodic standalone canonical artifacts that supersede earlier formulations when those formulations have been substantially subsumed.</p>
+
+<h2>What outputs are at what warrant tier</h2>
+
+<p>The corpus uses an explicit warrant calculus inherited from standard philosophy of science: <strong>π</strong> (plausibility), <strong>μ</strong> (operational match), <strong>θ</strong> (truth). Most outputs are at π-tier. Promotion to μ-tier requires cross-practitioner replication that has not been performed for any corpus claim. No corpus claim is at θ-tier.</p>
+
+<p>This is the corpus's own discipline applied to its own outputs. External readers should hold the published artifacts as one practitioner's documented sustained operation, not as validated claims.</p>
+
+<h2>What the corpus is subsumed by</h2>
+
+<p>Three literatures characterize what the corpus does. The corpus is one instance of the first two applied to the third's questions.</p>
+
+<ul>
+  <li><strong>Interdisciplinary methodology.</strong> Klein 1990 <em>Interdisciplinarity</em>; Frodeman, Klein, &amp; Pacheco 2017 <em>Oxford Handbook of Interdisciplinarity</em>; the ITD-Alliance 2024 handbook on interdisciplinary and transdisciplinary research.</li>
+  <li><strong>LLM-augmented research methodology.</strong> Wu et al. 2025 <em>LLM-Based Human-Agent Collaboration and Interaction Systems: A Survey</em> (arXiv:2505.00753); HKUST-KnowComp 2025 <em>From Automation to Autonomy</em> (arXiv:2505.13259); the 2025 npj AI paper on LLMs in the scientific method; the 2025 <em>Collaborative AI Literacy</em> validation work.</li>
+  <li><strong>Philosophy of science and the eliminative-induction tradition.</strong> Bacon 1620, Mill 1843, Chamberlin 1890, Popper 1934, Mitchell 1977/1982, Hawthorne 1993, plus Lakatos, Mayo, Quine, Platt.</li>
+</ul>
+
+<h2>What the corpus contributes narrowly</h2>
+
+<p>After recursive pulverization, five domain or practice instantiation features survive as the corpus's actual contribution. None constitutes methodological novelty. Each is a parametric specialization of an underlying methodology the surveyed literature already characterizes.</p>
+
+<ol>
+  <li>Sustained single-practitioner multi-year scaling (most LLM-augmented research is team-based or short-form).</li>
+  <li>Domain: philosophical inquiry rather than scientific inquiry.</li>
+  <li>Continuous-accumulating retraction ledger as ongoing artifact.</li>
+  <li>Explicit warrant-tier discipline applied across every claim as continuous practice.</li>
+  <li>Load-bearing framework-magnetism and dyadic-circularity acknowledgment, with cross-practitioner replication named as the only available mitigation.</li>
+</ol>
+
+<h2>What to read with epistemic care</h2>
+
+<p>All of it. The corpus's discipline applies recursively to itself. The corpus has retired its own claims to methodological novelty multiple times: Doc 480 was retired by Doc 482; Doc 482 §3 was retired by Doc 484; Doc 485 was retired by Doc 487. The pattern is the apparatus operating as designed, including against its own most flattering interpretations of itself.</p>
+
+<p>Cross-practitioner replication is the only mitigation for the corpus's known limits. Falsifying work is welcomed and recorded in the retraction ledger. Successful falsification of a corpus claim materially improves the corpus.</p>
+
+<h2>Entry points</h2>
+
+<ul>
+  <li><a href="/resolve/doc/541-systems-induced-property-emergence">Systems-Induced Property Emergence</a> &mdash; the canonical SIPE artifact</li>
+  <li><a href="/resolve/doc/484-conjecture-set-pruning-in-dyadic-llm-practice">Conjecture-Set Pruning in Dyadic LLM Practice</a> &mdash; canonical reference for the corpus's eliminative-induction operation</li>
+  <li><a href="/resolve/doc/487-pulverizing-apparatus-against-interdisciplinarity-and-llm-research-literature">Pulverizing the Apparatus</a> &mdash; the audit that produced the present description</li>
+  <li><a href="/resolve/doc/445-pulverization-formalism">Pulverization Formalism</a> &mdash; the methodology for testing claims to destruction against literature</li>
+  <li><a href="/resolve/doc/415-the-retraction-ledger">The Retraction Ledger</a> &mdash; record of caught errors with credit to catchers</li>
+  <li><a href="/resolve/doc/486-universal-residue-conjecture-from-inside-dyadic-entracement">Universal Residue as Conjecture</a> &mdash; analysis of what the recursive pulverization pattern reveals about the apparatus</li>
+  <li><a href="/resolve/series/coherentism">The Coherentism series</a> &mdash; the corpus's meta-analytical self-audit thread</li>
+</ul>
+
+<h2>How to engage</h2>
+
+<p>The methodology in §1 of <a href="/resolve/doc/487-pulverizing-apparatus-against-interdisciplinarity-and-llm-research-literature">Doc 487</a> can be picked up and operated by any practitioner. Cross-practitioner replication of any specific claim is welcomed and would be cited forward. Reach out to Jared Foy via the <a href="/about">contact form</a>.</p>
+
+  </div>
+</div>
+
+<style>
+.about-project-page { max-width: 44rem; margin: 0 auto; padding: 1rem 1.25rem 4rem; line-height: 1.6; font-size: 1rem; }
+.about-project-page p { margin: 0 0 1rem; }
+.about-project-page h2 { margin: 2rem 0 0.85rem; font-size: 1.15rem; letter-spacing: 0.03em; font-weight: 600; }
+.about-project-page ul,
+.about-project-page ol { margin: 0 0 1.2rem 0; padding-left: 1.4rem; }
+.about-project-page li { margin-bottom: 0.55rem; }
+.about-project-page a { color: var(--accent, #ff8800); text-decoration: none; border-bottom: 1px solid rgba(255,136,0,0.3); }
+.about-project-page a:hover { border-bottom-color: var(--accent, #ff8800); }
+.about-project-page .kicker { font-size: 0.85rem; opacity: 0.65; font-family: ui-monospace, monospace; letter-spacing: 0.04em; margin-bottom: 1.5rem; }
+.about-project-page strong { font-weight: 700; }
+.about-project-page em { font-style: italic; }
+</style>

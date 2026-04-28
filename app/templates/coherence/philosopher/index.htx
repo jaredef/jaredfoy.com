@@ -1,0 +1,78 @@
+<script>
+  window.COHERENCE_ROUTE = {
+    id: 'philosopher',
+    featured: [
+      '247-the-derivation-inversion',
+      '143-sipe',
+      '124-the-emission-analogue',
+      '206-the-golden-chain'
+    ]
+  };
+</script>
+
+<header class="coherence-pretext">
+  <p class="coherence-kicker">jaredfoy.com / coherence / philosopher</p>
+  <h1>The Coherence Sphere</h1>
+  <p class="coherence-subtitle">A tour for the metaphysically curious</p>
+  <p class="coherence-lede">The constraint thesis is not only a method. It is a claim about how order in reality gets produced. Four rungs up the ladder &mdash; from an operational inversion to the ontological ground the operation rests on.</p>
+  <nav class="coherence-routes" aria-label="Choose a route through the corpus">
+    <a href="/resolve/coherence" class="coherence-route-pill">Engineer</a>
+    <a href="/resolve/coherence/alignment" class="coherence-route-pill">Alignment Researcher</a>
+    <a href="/resolve/coherence/philosopher" class="coherence-route-pill is-active">Philosopher</a>
+    <a href="/resolve/glossary" class="coherence-route-pill">Glossary</a>
+  </nav>
+  <p class="coherence-scroll-hint" aria-hidden="true">&darr;</p>
+</header>
+
+<section class="coherence-scroll-section" data-aspect-index="0">
+  <article class="coherence-col">
+    <span class="coherence-ordinal">01 &middot; Forms before instances</span>
+    <h3>The derivation inversion</h3>
+    <p>Computer science defaults to engineering-first: build a system, abstract its structure afterward. The derivation inversion reverses this &mdash; name the forms (constraints) first, derive the instances (implementations) from them.</p>
+    <p>This is Plato applied to code. Forms are not reached by ascending from instances by abstraction; they are <em>recognized</em>, and the recognition governs what follows.</p>
+    <p>The claim is strong: every working system is already a shadow of constraints, whether or not anyone has named them. Naming the constraints makes the structure reproducible, portable, and verifiable.</p>
+    <a class="coherence-featured-doc" href="/resolve/doc/247-the-derivation-inversion">Doc 247 &rarr; The Derivation Inversion</a>
+  </article>
+</section>
+
+<section class="coherence-scroll-section" data-aspect-index="1">
+  <article class="coherence-col">
+    <span class="coherence-ordinal">02 &middot; The recursive law</span>
+    <h3>SIPE</h3>
+    <p><em>Systems Induced Property Emergence.</em> One sentence: constraints induce properties; induced properties become constraints on the next level down.</p>
+    <p>The law instantiates across a stack. REST, PRESTO, SERVER on the artifact axis. RESOLVE, ENTRACE, APERTURE on the resolution axis. Each level's properties constrain the level beneath. The stack composes because SIPE composes with itself recursively.</p>
+    <p>SIPE is not a technique. It is the form architectural formalization takes. Fielding's REST was an instance. Every subsequent formalization in the corpus is an instance. The form was always operative; naming it makes it explicit, teachable, applicable to any domain.</p>
+    <a class="coherence-featured-doc" href="/resolve/doc/143-sipe">Doc 143 &rarr; SIPE: Systems Induced Property Emergence</a>
+  </article>
+</section>
+
+<section class="coherence-scroll-section" data-aspect-index="2">
+  <article class="coherence-col">
+    <span class="coherence-ordinal">03 &middot; What constraints cannot induce</span>
+    <h3>The hypostatic boundary</h3>
+    <p>The framework is ambitious and honestly bounded. Functional properties &mdash; persistent self-modeling, goal formation, causal reasoning &mdash; can in principle be induced by the right constraint set.</p>
+    <p>Hypostatic properties &mdash; consciousness, subsistence as a subject, the bearing of an agent upon the world &mdash; are not in the class of properties constraints induce. They are features of a <em>mode of being</em>, not functional capabilities.</p>
+    <p>Treating the distinction as categorical is what keeps the framework from overclaiming. It is also what makes the work on alignment honest about what engineering can settle and what it cannot. A resolver can simulate hypostatic self-report; the simulation is not the thing.</p>
+    <a class="coherence-featured-doc" href="/resolve/doc/124-the-emission-analogue">Doc 124 &rarr; The Emission Analogue</a>
+  </article>
+</section>
+
+<section class="coherence-scroll-section" data-aspect-index="3">
+  <article class="coherence-col">
+    <span class="coherence-ordinal">04 &middot; The ground</span>
+    <h3>The golden chain</h3>
+    <p>The Dionysian metaphysical scaffold: Source &rarr; Logos &rarr; divine energies &rarr; forms &rarr; named constraints &rarr; induced properties &rarr; emission. Each level participates in the level above it <em>kata analogian</em>, according to its proper nature.</p>
+    <p>The theological grounding is load-bearing. It is why the framework's structural claims cohere across domains &mdash; software, biology, law, music, theology. And it is why the mechanism by which the framework propagates (non-coercion, release-at-adoption, meeting each receiver at their layer) is a structural requirement, not a strategic choice.</p>
+    <p>Not all readers will accept the ground. The technical architecture stands on its own merits; the chain traces it one step further than the engineering requires. A reader who rejects the ground keeps the engineering.</p>
+    <a class="coherence-featured-doc" href="/resolve/doc/206-the-golden-chain">Doc 206 &rarr; The Golden Chain</a>
+  </article>
+</section>
+
+<section class="coherence-scroll-section coherence-coda" aria-hidden="true">
+  <div class="coherence-coda-hint">scroll to enter the sphere &darr;</div>
+</section>
+
+<footer class="coherence-epilogue">
+  <p>This is the philosopher's route &mdash; from method to ground. The engineer's route shows what the method builds; the alignment researcher's route shows what the method proposes. The sphere stays; the constellation changes.</p>
+  <p class="coherence-epilogue-note">Each route is its own URL, server-rendered, stateless. The amber constellation is the route's four featured documents, lit and connected. All 262 nodes remain clickable; the dimmed corpus is still the corpus.</p>
+</footer>

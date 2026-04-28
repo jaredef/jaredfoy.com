@@ -183,7 +183,7 @@
     var mx = e.clientX - rect.left - panX, my = e.clientY - rect.top - panY;
     for (var i = 0; i < nodes.length; i++) {
       var dx = positions[i].x - mx, dy = positions[i].y - my;
-      if (dx * dx + dy * dy < 100) { window.location.href = '/doc/' + nodes[i].id; return; }
+      if (dx * dx + dy * dy < 100) { window.location.href = '/resolve/doc/' + nodes[i].id; return; }
     }
   });
 

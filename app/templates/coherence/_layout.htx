@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#ff8800">
+  <title>The Coherence Sphere — RESOLVE</title>
+  <meta name="description" content="262 documents as a measured semantic field. How the sphere represents the RESOLVE corpus.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="RESOLVE">
+  <meta property="og:title" content="The Coherence Sphere">
+  <meta property="og:description" content="262 documents as a measured semantic field.">
+  <meta property="og:url" content="https://jaredfoy.com/resolve/coherence">
+  <meta property="og:image" content="https://jaredfoy.com/og/home.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Coherence Sphere">
+  <meta name="twitter:description" content="262 documents as a measured semantic field.">
+  <meta name="twitter:image" content="https://jaredfoy.com/og/home.png">
+  <script>
+    // Resolve theme before CSS paints — matches the main layout's anti-flash behavior.
+    (function() {
+      try {
+        var t = localStorage.getItem('theme');
+        var isLight = t === 'light' || (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches);
+        if (isLight) document.documentElement.classList.add('theme-light');
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="/css/style.css?v=31">
+  <style>
+    /* Standalone coherence layout. No nav aside, no canvas wrapper, no default padding. */
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .coherence-chrome {
+      position: fixed;
+      top: 1rem;
+      left: 1.25rem;
+      right: 1.25rem;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .coherence-home-link,
+    .coherence-theme-btn {
+      pointer-events: auto;
+      font-family: var(--font-mono, "JetBrains Mono", monospace);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text);
+      background: color-mix(in srgb, var(--bg) 78%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
+      border-radius: 3px;
+      padding: 0.55rem 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .coherence-home-link:hover,
+    .coherence-theme-btn:hover {
+      background: color-mix(in srgb, var(--bg) 90%, transparent);
+    }
+
+    .coherence-page {
+      position: relative;
+      min-height: 100vh;
+    }
+
+    .coherence-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: auto;
+      overflow: hidden;
+    }
+
+    .coherence-canvas canvas {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .coherence-overlay {
+      position: relative;
+      z-index: 1;
+      pointer-events: none;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2.5rem;
+    }
+
+    /* Narrow pointer-capture to the actual text blocks. The scroll sections are
+       100vh each and span the viewport horizontally; making them pointer-events:
+       auto would swallow mousemove across huge empty regions, blocking the sphere
+       from seeing hover events. Only the visible text panels need to capture. */
+    .coherence-pretext,
+    .coherence-col,
+    .coherence-epilogue {
+      pointer-events: auto;
+    }
+
+    .coherence-pretext {
+      padding: 5.5rem 1rem 3rem;
+      text-align: center;
+      background: linear-gradient(to bottom, var(--bg) 0%, color-mix(in srgb, var(--bg) 75%, transparent) 55%, transparent 100%);
+      margin: 0 -2.5rem 0;
+    }
+
+    .coherence-kicker {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--text) 60%, transparent);
+      margin: 0 0 0.75rem;
+    }
+
+    .coherence-pretext h1 {
+      font-size: clamp(2.6rem, 5.5vw, 4.4rem);
+      line-height: 1.02;
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.025em;
+    }
+
+    .coherence-subtitle {
+      font-size: 1.05rem;
+      color: color-mix(in srgb, var(--text) 72%, transparent);
+      margin: 0 0 1.6rem;
+      font-style: italic;
+    }
+
+    .coherence-lede {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      max-width: 44rem;
+      margin: 0 auto;
+      color: var(--text);
+    }
+
+    .coherence-scroll-hint {
+      margin: 2.5rem 0 0;
+      font-size: 1.3rem;
+      color: color-mix(in srgb, var(--text) 45%, transparent);
+      animation: coherence-hint 2.2s ease-in-out infinite;
+    }
+
+    /* Route selector — three pills below the pretext title. Stateless: each pill
+       is a plain anchor to a URL the server renders independently. */
+    .coherence-routes {
+      display: flex;
+      justify-content: center;
+      gap: 0.4rem;
+      margin: 0 auto 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .coherence-route-pill {
+      pointer-events: auto;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 0.55rem 1rem;
+      border-radius: 3px;
+      border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+      color: color-mix(in srgb, var(--text) 68%, transparent);
+      text-decoration: none;
+      background: color-mix(in srgb, var(--bg) 78%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .coherence-route-pill:hover {
+      color: var(--text);
+      border-color: color-mix(in srgb, var(--border) 85%, transparent);
+    }
+
+    .coherence-route-pill.is-active {
+      color: var(--text);
+      border-color: color-mix(in srgb, #ffd66b 75%, transparent);
+      background: color-mix(in srgb, #ffd66b 15%, color-mix(in srgb, var(--bg) 78%, transparent));
+    }
+
+    /* Featured-doc label inside a column */
+    .coherence-col .coherence-featured-doc {
+      display: block;
+      margin-top: 0.9rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+      font-family: var(--font-mono, monospace);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #ffd66b;
+      text-decoration: none;
+    }
+
+    .coherence-col .coherence-featured-doc:hover {
+      text-decoration: underline;
+      text-decoration-color: color-mix(in srgb, #ffd66b 60%, transparent);
+    }
+
+    @keyframes coherence-hint {
+      0%, 100% { transform: translateY(0); opacity: 0.45; }
+      50% { transform: translateY(6px); opacity: 0.9; }
+    }
+
+    /* Scroll-driven sections. Each section is at least 100vh; content is centered
+       vertically and alternates left/right for visual rhythm. Column fades in on
+       enter-view, fades out on exit. The sphere reacts per-section (see script). */
+    .coherence-scroll-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 4rem 0;
+    }
+
+    .coherence-scroll-section:nth-child(odd) {
+      justify-content: flex-end;
+      padding-right: clamp(1rem, 8vw, 8rem);
+    }
+
+    .coherence-scroll-section:nth-child(even) {
+      justify-content: flex-start;
+      padding-left: clamp(1rem, 8vw, 8rem);
+    }
+
+    .coherence-col {
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+      border-radius: 6px;
+      padding: 1.6rem 1.5rem 1.4rem;
+      font-size: 0.98rem;
+      line-height: 1.7;
+      max-width: 26rem;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+
+    .coherence-scroll-section.in-view .coherence-col {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .coherence-col .coherence-ordinal {
+      display: inline-block;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      color: color-mix(in srgb, var(--text) 45%, transparent);
+      margin-bottom: 0.35rem;
+    }
+
+    .coherence-col h3 {
+      margin: 0 0 0.7rem;
+      font-size: 0.88rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent, #7c8aff);
+      font-weight: 600;
+    }
+
+    .coherence-col p {
+      margin: 0 0 0.8rem;
+      color: color-mix(in srgb, var(--text) 92%, transparent);
+    }
+
+    .coherence-col p:last-child {
+      margin-bottom: 0;
+    }
+
+    .coherence-col a {
+      color: var(--text);
+      text-decoration: underline;
+      text-decoration-color: color-mix(in srgb, var(--accent, #7c8aff) 55%, transparent);
+      text-underline-offset: 2px;
+    }
+
+    .coherence-col em {
+      font-style: italic;
+      color: color-mix(in srgb, var(--text) 80%, transparent);
+    }
+
+    .coherence-epilogue {
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+      border-radius: 6px;
+      padding: 1.85rem 2rem;
+      margin: 0 auto 4rem;
+      max-width: 54rem;
+      font-size: 1rem;
+      line-height: 1.75;
+      text-align: center;
+    }
+
+    .coherence-epilogue p {
+      margin: 0 0 0.9rem;
+    }
+
+    .coherence-epilogue p:last-child {
+      margin-bottom: 0;
+    }
+
+    .coherence-epilogue-note {
+      font-size: 0.82rem;
+      color: color-mix(in srgb, var(--text) 55%, transparent);
+      font-style: italic;
+    }
+
+    /* Tooltip lives at body level so it escapes the sphere/overlay stacking context.
+       Positioned with fixed + viewport coordinates; z-index above everything. */
+    .network-tooltip {
+      position: fixed;
+      display: none;
+      max-width: 320px;
+      background: color-mix(in srgb, var(--bg) 95%, transparent);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.55rem 0.75rem;
+      font-size: 0.82rem;
+      line-height: 1.4;
+      color: var(--text);
+      pointer-events: none;
+      z-index: 100;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    }
+
+    /* Coda: empty scroll section that drives zoom-in via scroll progress. */
+    .coherence-coda {
+      min-height: 300vh;
+      padding: 0;
+      /* Override the odd/even flex alignment from .coherence-scroll-section */
+      display: block;
+    }
+
+    .coherence-coda-hint {
+      position: sticky;
+      top: 20vh;
+      text-align: center;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--text) 35%, transparent);
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+    }
+
+    @media (max-width: 980px) {
+      .coherence-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 620px) {
+      .coherence-grid { grid-template-columns: 1fr; }
+      .coherence-overlay { padding: 0 1rem; }
+      .coherence-pretext { padding-top: 4.5rem; }
+    }
+
+    /* ── Glossary term overlay (shared across all coherence routes) ──
+       On /glossary the markers are primary and larger; on the other routes
+       (engineer/alignment/philosopher) they render as small, low-opacity
+       dots so they don't compete with the route's constellation. */
+    .coherence-term-label {
+      position: fixed;
+      pointer-events: none;
+      font-family: var(--font-mono, "JetBrains Mono", monospace);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #ffd66b;
+      text-shadow: 0 0 8px color-mix(in srgb, var(--bg) 85%, transparent), 0 1px 2px rgba(0, 0, 0, 0.6);
+      z-index: 8;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      white-space: nowrap;
+      padding: 0.15rem 0.4rem;
+      background: color-mix(in srgb, var(--bg) 70%, transparent);
+      border-radius: 2px;
+      transform: translate(-50%, -140%);
+    }
+    .coherence-term-label.visible { opacity: 1; }
+    .coherence-term-label.hover {
+      color: #fff;
+      text-shadow: 0 0 10px #ffd66b, 0 1px 2px rgba(0, 0, 0, 0.7);
+      pointer-events: auto;
+      cursor: pointer;
+    }
+
+    /* ── WebGL-unavailable fallback (previously a 768px mobile gate).
+       The sphere renders on every device that can support it, including
+       phones. We only fall back to a static message when WebGL is missing
+       or the three.js boot fails. JS toggles `.webgl-unavailable` on <body>
+       to switch the view. */
+    .coherence-mobile-gate {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      padding: 3rem 1.5rem;
+      background: var(--bg);
+      color: var(--text);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .coherence-mobile-gate h2 {
+      font-size: 1.5rem;
+      margin: 0 0 0.8rem;
+      letter-spacing: -0.01em;
+    }
+    .coherence-mobile-gate p {
+      font-size: 0.98rem;
+      line-height: 1.55;
+      margin: 0 auto 1.25rem;
+      max-width: 22rem;
+      color: color-mix(in srgb, var(--text) 80%, transparent);
+    }
+    .coherence-mobile-gate .coherence-mobile-cta {
+      display: inline-block;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.6rem 1rem;
+      border-radius: 3px;
+      border: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+      color: var(--text);
+      text-decoration: none;
+    }
+    body.webgl-unavailable .coherence-canvas,
+    body.webgl-unavailable .coherence-overlay { display: none; }
+    body.webgl-unavailable .coherence-mobile-gate { display: flex; }
+
+    /* Let the canvas capture touch gestures (one-finger drag to rotate,
+       two-finger pinch to zoom) instead of the browser treating them as
+       page scroll/zoom. The overlay content still scrolls normally.
+       touch-action applies to the element the touch lands on — the inner
+       <canvas> renderer fills the container, so we set it on both or iOS
+       grabs pinch for page-zoom. */
+    .coherence-canvas,
+    .coherence-canvas canvas { touch-action: none; }
+  </style>
+</head>
+<body>
+
+  <div class="coherence-chrome">
+    <a class="coherence-home-link" href="/">&larr; RESOLVE</a>
+    <button class="coherence-theme-btn" id="themeToggle" aria-label="Toggle theme" title="Toggle light/dark theme">THEME</button>
+  </div>
+
+  <div class="coherence-page">
+    <div id="coherenceSphere" class="coherence-canvas"></div>
+
+    <div class="coherence-overlay">
+__content__
+    </div>
+  </div>
+
+  <div id="coherenceTooltip" class="network-tooltip"></div>
+
+  <div class="coherence-mobile-gate" aria-live="polite">
+    <h2>This browser can't render the coherence sphere.</h2>
+    <p>The sphere uses WebGL to draw 280 corpus documents as an interactive 3D field. Try a recent Chrome, Safari, or Firefox &mdash; or enable hardware acceleration &mdash; then reload.</p>
+    <a class="coherence-mobile-cta" href="/">&larr; Return to RESOLVE</a>
+  </div>
+
+  <script>
+    // Minimal theme toggle — matches _layout.htx behavior, scoped to this standalone page.
+    (function() {
+      var btn = document.getElementById('themeToggle');
+      if (!btn) return;
+      function sync() {
+        btn.textContent = document.documentElement.classList.contains('theme-light') ? 'LIGHT' : 'DARK';
+      }
+      sync();
+      btn.addEventListener('click', function() {
+        var willBeLight = !document.documentElement.classList.contains('theme-light');
+        document.documentElement.classList.toggle('theme-light', willBeLight);
+        try { localStorage.setItem('theme', willBeLight ? 'light' : 'dark'); } catch (e) {}
+        sync();
+      });
+    })();
+  </script>
+
+  <script>
+  // Feature-detect WebGL before we even load three.js. If unavailable
+  // (ancient browser, WebGL disabled, GPU blocklisted), fall back to the
+  // static mobile-gate message instead of shipping ~580KB of three.js for
+  // nothing. Also catches the case where the three.js CDN fails to load.
+  (function() {
+    function hasWebGL() {
+      try {
+        if (!window.WebGLRenderingContext) return false;
+        var c = document.createElement('canvas');
+        return !!(c.getContext('webgl') || c.getContext('experimental-webgl'));
+      } catch (e) { return false; }
+    }
+    if (!hasWebGL()) {
+      document.body.classList.add('webgl-unavailable');
+      return;
+    }
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    s.onload = bootCoherenceSphere;
+    s.onerror = function() { document.body.classList.add('webgl-unavailable'); };
+    document.head.appendChild(s);
+  })();
+
+  function bootCoherenceSphere() {
+  (function() {
+    var container = document.getElementById('coherenceSphere');
+    var tooltip = document.getElementById('coherenceTooltip');
+    if (!container) return;
+
+    var width = container.clientWidth;
+    var height = container.clientHeight;
+
+    var scene = new THREE.Scene();
+    var isLight = document.documentElement.classList.contains('theme-light');
+    var bgColor = isLight ? 0xf8f7f2 : 0x0a0a0f;
+    scene.background = new THREE.Color(bgColor);
+    scene.fog = new THREE.FogExp2(bgColor, 0.0006);
+
+    // Heuristic for coarse pointers — used to widen the raycaster threshold
+    // (finger taps are less precise than mouse clicks) and to bump the FOV
+    // on narrow portrait viewports so the full sphere fits without cropping.
+    var isTouch = (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) ||
+                  ('ontouchstart' in window);
+    var narrow = width < 700;
+    var initialFov = narrow ? 72 : 55;
+
+    var camera = new THREE.PerspectiveCamera(initialFov, width / height, 1, 5000);
+    camera.position.set(0, 0, 550);
+
+    // antialias=true is fine at 280 nodes; the per-frame cost of raycast +
+    // label projection dominates. Pixel ratio capped at 2 so retina phones
+    // don't try to render at 3×/4× device resolution.
+    var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    container.appendChild(renderer.domElement);
+
+    var SECTION_COLORS = {
+      framework: 0x7c8aff, method: 0x2dd4bf, safety: 0xf87171, ground: 0xfbbf24,
+      letters: 0xa78bfa, architecture: 0x34d399, formalization: 0xfb923c,
+      evidence: 0x60a5fa, economics: 0xf472b6
+    };
+
+    var raycaster = new THREE.Raycaster();
+    raycaster.params.Points.threshold = 5;
+    var mouse = new THREE.Vector2();
+    var nodeGroup = new THREE.Group();
+    var edgeGroup = new THREE.Group();
+    var axisGroup = new THREE.Group();
+    scene.add(nodeGroup);
+    scene.add(edgeGroup);
+    scene.add(axisGroup);
+
+    // ── State machine for scroll-driven aspect changes ──
+    // Each aspect sets a TARGET. The animation loop lerps CURRENT toward TARGET
+    // every frame for smooth, continuous transitions between sections.
+    var S = {
+      nodeOpacity: 1,       // global multiplier over each node's base (tier) opacity
+      edgeOpacity: 0.32,
+      axisOpacity: 0,       // X/Y/Z axis line visibility (0-1)
+      tierEmphasis: 0,      // 0 = flat, 1 = tier-1 scaled up, outer shells dimmed
+      rotationSpeed: 0.0008,
+      cameraZ: 550
+    };
+    var target = Object.assign({}, S);
+
+    var ASPECTS = {
+      intro:    { nodeOpacity: 1.0, edgeOpacity: 0.32, axisOpacity: 0.0, tierEmphasis: 0.0, rotationSpeed: 0.0008, cameraZ: 550 },
+      axes:     { nodeOpacity: 0.25, edgeOpacity: 0.05, axisOpacity: 1.0, tierEmphasis: 0.0, rotationSpeed: 0.0015, cameraZ: 600 },
+      radius:   { nodeOpacity: 1.0, edgeOpacity: 0.08, axisOpacity: 0.0, tierEmphasis: 1.0, rotationSpeed: 0.0004, cameraZ: 440 },
+      edges:    { nodeOpacity: 1.0, edgeOpacity: 0.85, axisOpacity: 0.0, tierEmphasis: 0.0, rotationSpeed: 0.0008, cameraZ: 520 },
+      // Route-mode baseline: constellation is the story; regular edges fade, rotation slow, camera close enough to see featured docs clearly.
+      routeBase:{ nodeOpacity: 1.0, edgeOpacity: 0.06, axisOpacity: 0.0, tierEmphasis: 0.0, rotationSpeed: 0.0006, cameraZ: 500 }
+    };
+
+    function setAspect(name) {
+      var a = ASPECTS[name];
+      if (!a) return;
+      for (var k in a) target[k] = a[k];
+    }
+    window.__coherenceSetAspect = setAspect;
+
+    // Route mode — when window.COHERENCE_ROUTE is present, each column focuses one
+    // of the route's featured docs instead of triggering the mechanics demos.
+    var ROUTE = window.COHERENCE_ROUTE || null;
+    var featuredIndices = [];           // indices into nodeData for the route's featured slugs
+    var featuredSet = null;
+    var constellationLines = [];
+    var currentFocusIdx = -1;
+    var targetFocusIdx = -1;
+
+    function setRouteColumn(colIdx) {
+      // Baseline targets — same across all columns in route mode; only the focus changes.
+      setAspect('routeBase');
+      targetFocusIdx = (featuredIndices[colIdx] !== undefined) ? featuredIndices[colIdx] : -1;
+    }
+
+    var nodeData = [], positions = [];
+    // Glossary-term overlay state. These are populated once /api/terms resolves;
+    // the render loop tolerates them being empty before then.
+    var termGroup = new THREE.Group();
+    scene.add(termGroup);
+    var pathLineGroup = new THREE.Group();
+    scene.add(pathLineGroup);
+    var termData = [];
+    var termMeshes = [];
+    var termLabels = [];
+    var matchedSet = null;
+    var selectedTermIdx = -1;
+    var termHoveredIdx = -1;
+    var IS_GLOSSARY = !!window.COHERENCE_GLOSSARY;
+    var isDown = false, prevX = 0, prevY = 0, rotX = 0, rotY = 0, targetRotX = 0, targetRotY = 0;
+    // Auto-rotation resumes this many ms after the user stops interacting.
+    var AUTO_ROTATE_RESUME_MS = 2500;
+    var lastInteractTime = 0;
+    // Suspended briefly while __coherenceAim animates so the pitch tumble
+    // doesn't drag the camera off-target mid-aim.
+    var autoRotatePauseUntil = 0;
+    var autoStartTime = Date.now();
+    var rotXBase = 0;
+    window.__coherencePauseAutoRotate = function(ms) {
+      autoRotatePauseUntil = Date.now() + (ms || 1200);
+    };
+
+    container.addEventListener('mousedown', function(e) {
+      isDown = true;
+      prevX = e.clientX;
+      prevY = e.clientY;
+      lastInteractTime = Date.now();
+    });
+    // mousemove is bound to window (not container) so a drag keeps tracking
+    // even when the cursor passes over the pretext / column / epilogue blocks
+    // (all of which are pointer-events: auto and would otherwise swallow
+    // mousemove). Raycast hover still needs container-local coords, but the
+    // drag delta math only needs clientX/Y, which are viewport-based.
+    window.addEventListener('mousemove', function(e) {
+      if (isDown) {
+        targetRotY += (e.clientX - prevX) * 0.005;
+        targetRotX += (e.clientY - prevY) * 0.005;
+        targetRotX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotX));
+        prevX = e.clientX; prevY = e.clientY;
+        lastInteractTime = Date.now();
+      }
+      var rect = container.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / height) * 2 + 1;
+    });
+    window.addEventListener('mouseup', function() {
+      if (isDown) lastInteractTime = Date.now();
+      isDown = false;
+    });
+    container.addEventListener('mouseleave', function() { tooltip.style.display = 'none'; });
+    // Mouse wheel → camera zoom, but gated on progressive entry. The overlay
+    // blocks (pretext / columns / epilogue) are all scrolled natively first;
+    // only once the "scroll to enter the sphere" sentinel comes into view does
+    // the wheel begin zooming the sphere instead of scrolling the page. An
+    // IntersectionObserver below flips window.__sphereEntered. While false,
+    // this handler never calls preventDefault and the page scrolls normally
+    // regardless of whether the cursor is over the canvas or the overlay.
+    // Bound at the window level (capture phase) so it intercepts wheel events
+    // everywhere on the page — scrolling over columns should behave the same
+    // as scrolling over the canvas. passive: false because we conditionally
+    // preventDefault once we decide to zoom.
+    window.__sphereEntered = false;
+    window.addEventListener('wheel', function(e) {
+      if (!window.__sphereEntered) return; // let the browser scroll normally
+      // deltaMode 1 = lines, 2 = pages; normalize to pixels.
+      var dy = e.deltaY;
+      if (e.deltaMode === 1) dy *= 16;
+      else if (e.deltaMode === 2) dy *= window.innerHeight;
+      // Release back to page-scroll at either zoom clamp. Wheel-up past the
+      // fully-zoomed-out clamp (cameraZ ≈ 900) hands control back so the
+      // user can scroll the overlay back up; wheel-down past the fully-
+      // zoomed-in clamp (cameraZ ≈ 140) hands control back so the user can
+      // continue down to the epilogue below the sentinel. Without these,
+      // the page would be trapped at the sphere once entered.
+      if (dy < 0 && target.cameraZ >= 899.5) {
+        window.__sphereEntered = false;
+        return; // don't preventDefault — let this same wheel event scroll up
+      }
+      if (dy > 0 && target.cameraZ <= 140.5) {
+        window.__sphereEntered = false;
+        return;
+      }
+      e.preventDefault();
+      // Scale factor: ~1.0012 per pixel of wheel delta. Positive deltaY =
+      // zoom out (cameraZ larger), negative = zoom in.
+      var factor = Math.pow(1.0012, dy);
+      target.cameraZ = Math.max(140, Math.min(900, target.cameraZ * factor));
+      lastInteractTime = Date.now();
+    }, { passive: false });
+
+    container.addEventListener('click', function(e) {
+      var rect = container.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / height) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      // Prefer term markers over doc nodes — they're the primary interaction
+      // on /glossary and a useful shortcut on the other routes.
+      var termHits = raycaster.intersectObjects(termGroup.children);
+      if (termHits.length > 0) {
+        var ti = termHits[0].object.userData.termIndex;
+        if (ti !== undefined && window.__coherenceSelectTerm) {
+          window.__coherenceSelectTerm(ti);
+          return;
+        }
+      }
+      var intersects = raycaster.intersectObjects(nodeGroup.children);
+      if (intersects.length > 0) {
+        var idx = intersects[0].object.userData.index;
+        if (idx !== undefined && nodeData[idx]) {
+          window.location.href = '/resolve/doc/' + nodeData[idx].id;
+        }
+      }
+    });
+
+    fetch('/api/network').then(function(r) { return r.json(); }).then(function(data) {
+      nodeData = data.nodes;
+      var edgeData = data.edges;
+      var nodeIndex = {};
+      var RADIUS = 210;
+
+      for (var i = 0; i < nodeData.length; i++) {
+        var n = nodeData[i];
+        nodeIndex[n.id] = i;
+
+        var imp = n.importance || 99;
+        var r = imp <= 1 ? RADIUS * 0.15 : imp <= 2 ? RADIUS * 0.4 : imp <= 3 ? RADIUS * 0.65 : RADIUS * (0.7 + (((i * 2654435761) % 1000) / 1000) * 0.3);
+
+        var x, y, z;
+        if (n.pos && n.pos.length === 3) {
+          x = r * n.pos[0];
+          y = r * n.pos[1];
+          z = r * n.pos[2];
+        } else {
+          var phi = Math.acos(1 - 2 * (i + 0.5) / nodeData.length);
+          var theta = Math.PI * (1 + Math.sqrt(5)) * i;
+          x = r * Math.sin(phi) * Math.cos(theta);
+          y = r * Math.sin(phi) * Math.sin(theta);
+          z = r * Math.cos(phi);
+        }
+
+        positions.push(new THREE.Vector3(x, y, z));
+
+        var size = imp <= 1 ? 5 : imp <= 2 ? 3.5 : imp <= 3 ? 2.5 : 1.5;
+        var color = SECTION_COLORS[n.section] || 0x6b7280;
+        var baseOpacity = imp <= 2 ? 0.95 : 0.7;
+        var geo = new THREE.SphereGeometry(size, 12, 12);
+        var mat = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: baseOpacity });
+        var mesh = new THREE.Mesh(geo, mat);
+        mesh.position.copy(positions[i]);
+        mesh.userData = { index: i, imp: imp, baseOpacity: baseOpacity, baseSize: size };
+        nodeGroup.add(mesh);
+      }
+
+      var edgeColor = isLight ? 0x8888aa : 0x6a6a9a;
+      var edgeMat = new THREE.LineBasicMaterial({ color: edgeColor, transparent: true, opacity: 0.32 });
+      for (var e = 0; e < edgeData.length; e++) {
+        var si = nodeIndex[edgeData[e].source];
+        var ti = nodeIndex[edgeData[e].target];
+        if (si === undefined || ti === undefined) continue;
+        var eg = new THREE.BufferGeometry().setFromPoints([positions[si], positions[ti]]);
+        var line = new THREE.Line(eg, edgeMat);
+        line.userData = { isConstellation: false };
+        edgeGroup.add(line);
+      }
+
+      // Constellation — closed path connecting the route's featured docs. Drawn
+      // in amber, always at full brightness so it stands above the dimmed edges.
+      if (ROUTE && Array.isArray(ROUTE.featured) && ROUTE.featured.length >= 2) {
+        featuredIndices = [];
+        for (var f = 0; f < ROUTE.featured.length; f++) {
+          var slug = ROUTE.featured[f];
+          if (nodeIndex[slug] !== undefined) featuredIndices.push(nodeIndex[slug]);
+        }
+        featuredSet = new Set(featuredIndices);
+        var constMat = new THREE.LineBasicMaterial({ color: 0xffd66b, transparent: true, opacity: 0.85 });
+        for (var j = 0; j < featuredIndices.length; j++) {
+          var a = featuredIndices[j];
+          var b = featuredIndices[(j + 1) % featuredIndices.length];
+          var cg = new THREE.BufferGeometry().setFromPoints([positions[a], positions[b]]);
+          var cl = new THREE.Line(cg, constMat);
+          cl.userData = { isConstellation: true };
+          edgeGroup.add(cl);
+          constellationLines.push(cl);
+        }
+      }
+
+      // ── Glossary term markers ──
+      // Fetched lazily after the main network API resolves. On /glossary
+      // (window.COHERENCE_GLOSSARY === true) the markers are primary and
+      // larger; on the other coherence routes they stay de-emphasized:
+      // small dots, hover labels only.
+      function makeTermMesh(pos, primary) {
+        var size = primary ? 4.6 : 1.8;
+        var geo = new THREE.SphereGeometry(size, 14, 14);
+        var mat = new THREE.MeshBasicMaterial({ color: 0xffd66b, transparent: true, opacity: primary ? 0.95 : 0.55 });
+        var m = new THREE.Mesh(geo, mat);
+        m.position.set(pos[0] * RADIUS * 1.02, pos[1] * RADIUS * 1.02, pos[2] * RADIUS * 1.02);
+        return m;
+      }
+
+      fetch('/api/terms').then(function(r) { return r.json(); }).then(function(td) {
+        if (!td || !td.terms) return;
+        termData = td.terms;
+        for (var ti = 0; ti < termData.length; ti++) {
+          var t = termData[ti];
+          if (!t.sphere_pos || t.sphere_pos.length !== 3) continue;
+          var m = makeTermMesh(t.sphere_pos, IS_GLOSSARY);
+          m.userData = { termIndex: ti };
+          termGroup.add(m);
+          termMeshes.push(m);
+
+          var label = document.createElement('div');
+          label.className = 'coherence-term-label';
+          label.textContent = String(t.path_order).padStart(2, '0') + ' ' + t.term;
+          label.dataset.termIndex = String(ti);
+          // Glossary mode: show all labels. Other routes: labels appear on hover only.
+          if (IS_GLOSSARY) label.classList.add('visible');
+          label.addEventListener('click', function(ev) {
+            var i = Number(ev.currentTarget.dataset.termIndex);
+            if (window.__coherenceSelectTerm) window.__coherenceSelectTerm(i);
+          });
+          document.body.appendChild(label);
+          termLabels.push(label);
+        }
+        if (window.__coherenceOnTermsReady) window.__coherenceOnTermsReady(termData);
+      }).catch(function() { /* API may not be available yet if seeding hasn't run; fail quiet. */ });
+
+      // Select a term — highlights the matched docs, stores the selected index
+      // so the render loop can flash the term marker. Exposed for the glossary
+      // page to call from its list view and from the entracement walkthrough.
+      window.__coherenceSelectTerm = function(idx) {
+        selectedTermIdx = idx;
+        if (idx < 0 || idx >= termData.length) { matchedSet = null; return; }
+        matchedSet = new Set(termData[idx].matched_docs || []);
+        if (window.__coherenceOnTermSelected) window.__coherenceOnTermSelected(idx, termData[idx]);
+      };
+
+      window.__coherenceClearSelection = function() {
+        selectedTermIdx = -1;
+        matchedSet = null;
+      };
+
+      // Expose camera and the rotation-target state to the glossary page so
+      // the entracement walkthrough can aim the view at a term's sphere
+      // position. We supply `aim(pos)` which solves for the rotX/rotY that
+      // puts `pos` (a unit vector on the sphere) in the camera's forward view
+      // after the scene's nodeGroup rotation is applied. Because all groups
+      // share the same rotation, a single (rotX, rotY) aligns everything.
+      window.__coherenceAim = function(unitPos, zoom) {
+        if (!unitPos || unitPos.length !== 3) return;
+        // three.js r128 Object3D uses Euler order 'XYZ' by default, so a local
+        // position v is transformed to world as: v' = Rx(rotX) · Ry(rotY) · v.
+        // To aim `unitPos` at camera forward (+Z), solve in two stages:
+        //   (1) Ry(rotY) · v → kills the x-component; requires rotY = atan2(-x, z).
+        //       After this step the vector is (0, y, r) with r = sqrt(x² + z²).
+        //   (2) Rx(rotX) · (0, y, r) → kills the y-component; requires rotX = atan2(y, r).
+        //       Final z becomes sqrt(y² + r²) = 1, which is what we want.
+        var x = unitPos[0], y = unitPos[1], z = unitPos[2];
+        var targetY = Math.atan2(-x, z);
+        var r = Math.sqrt(x * x + z * z);
+        var targetX = Math.atan2(y, r);
+        targetRotX = targetX;
+        targetRotY = targetY;
+        lastInteractTime = Date.now();
+        // Hold auto-rotation off for the duration of the aim lerp so the
+        // pitch tumble doesn't drag the camera off-target mid-animation.
+        autoRotatePauseUntil = Date.now() + 2200;
+        if (typeof zoom === 'number') target.cameraZ = zoom;
+      };
+
+      // Draw a line segment between two unit-sphere positions. Used during the
+      // entracement walkthrough to trace the path as the user advances.
+      window.__coherenceDrawPathSegment = function(fromPos, toPos) {
+        if (!fromPos || !toPos) return;
+        var a = new THREE.Vector3(fromPos[0] * RADIUS * 1.02, fromPos[1] * RADIUS * 1.02, fromPos[2] * RADIUS * 1.02);
+        var b = new THREE.Vector3(toPos[0] * RADIUS * 1.02, toPos[1] * RADIUS * 1.02, toPos[2] * RADIUS * 1.02);
+        var g = new THREE.BufferGeometry().setFromPoints([a, b]);
+        var mat = new THREE.LineBasicMaterial({ color: 0xffd66b, transparent: true, opacity: 0.6, linewidth: 2 });
+        var line = new THREE.Line(g, mat);
+        line.userData = { isPath: true };
+        pathLineGroup.add(line);
+      };
+
+      window.__coherenceClearPath = function() {
+        while (pathLineGroup.children.length > 0) {
+          var c = pathLineGroup.children.pop();
+          if (c.geometry) c.geometry.dispose();
+          if (c.material) c.material.dispose();
+          pathLineGroup.remove(c);
+        }
+      };
+
+      // Axis lines — X (red), Y (green), Z (blue). Hidden by default; fade in for the "axes" aspect.
+      function axisLine(color, endpoint) {
+        var mat = new THREE.LineBasicMaterial({ color: color, transparent: true, opacity: 0, linewidth: 2 });
+        var geo = new THREE.BufferGeometry().setFromPoints([endpoint.clone().negate(), endpoint.clone()]);
+        return new THREE.Line(geo, mat);
+      }
+      axisGroup.add(axisLine(0xff6b6b, new THREE.Vector3(RADIUS * 1.35, 0, 0)));
+      axisGroup.add(axisLine(0x2dd4bf, new THREE.Vector3(0, RADIUS * 1.35, 0)));
+      axisGroup.add(axisLine(0x7c8aff, new THREE.Vector3(0, 0, RADIUS * 1.35)));
+
+      var glowGeo = new THREE.SphereGeometry(RADIUS * 1.05, 32, 32);
+      var glowMat = new THREE.MeshBasicMaterial({ color: isLight ? 0xd0d0e0 : 0x1a1a3a, transparent: true, opacity: isLight ? 0.08 : 0.06, side: THREE.BackSide });
+      scene.add(new THREE.Mesh(glowGeo, glowMat));
+
+      // Observe scroll sections → drive sphere state (columns only; coda handled separately)
+      var sections = document.querySelectorAll('.coherence-scroll-section[data-aspect-index]');
+      var aspectByIndex = ['intro', 'axes', 'radius', 'edges'];
+      if (sections.length) {
+        // In route mode, start with routeBase so the constellation is visible
+        // immediately (rather than waiting for section 1 to enter view).
+        if (ROUTE) setAspect('routeBase');
+        var io = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.45) {
+              var idx = Number(entry.target.dataset.aspectIndex);
+              if (ROUTE) {
+                setRouteColumn(idx);
+              } else {
+                setAspect(aspectByIndex[idx] || 'intro');
+              }
+              entry.target.classList.add('in-view');
+            } else if (entry.intersectionRatio < 0.25) {
+              entry.target.classList.remove('in-view');
+            }
+          });
+        }, { threshold: [0.0, 0.25, 0.45, 0.7] });
+        sections.forEach(function(s) { io.observe(s); });
+      }
+
+      // Coda sentinel — "scroll to enter the sphere". When this element is in
+      // view, the wheel handler above flips from page-scroll mode to zoom-the-
+      // sphere mode. IntersectionObserver fires on either edge, so scrolling
+      // back up past the sentinel hands wheel control back to the browser for
+      // native page scroll. Root margin is slightly negative so the flip only
+      // engages when the sentinel is well inside the viewport, not just peeking.
+      var codaHint = document.querySelector('.coherence-coda-hint');
+      if (codaHint) {
+        var sentinelIo = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            window.__sphereEntered = entry.isIntersecting;
+          });
+        }, { threshold: 0.5 });
+        sentinelIo.observe(codaHint);
+      }
+
+      animate();
+    });
+
+    var hoveredIdx = -1;
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Smooth state transitions
+      var LERP = 0.06;
+      S.nodeOpacity = lerp(S.nodeOpacity, target.nodeOpacity, LERP);
+      S.edgeOpacity = lerp(S.edgeOpacity, target.edgeOpacity, LERP);
+      S.axisOpacity = lerp(S.axisOpacity, target.axisOpacity, LERP);
+      S.tierEmphasis = lerp(S.tierEmphasis, target.tierEmphasis, LERP);
+      S.rotationSpeed = lerp(S.rotationSpeed, target.rotationSpeed, LERP);
+      S.cameraZ = lerp(S.cameraZ, target.cameraZ, LERP * 0.6);
+
+      // ── Idle auto-rotation ──
+      // Gentle horizontal spin plus a slow sine-wave pitch so the sphere
+      // tumbles along a continuous path rather than spinning on one axis.
+      // Amplitude ~15°, period ~60s, so it never inverts the globe. Paused
+      // while the user drags, briefly after interaction, and during aim
+      // animations the walkthrough kicks off.
+      var nowT = Date.now();
+      var sinceInteract = nowT - lastInteractTime;
+      var pausedForAim = nowT < autoRotatePauseUntil;
+      if (!isDown && !pausedForAim && sinceInteract > AUTO_ROTATE_RESUME_MS) {
+        targetRotY += S.rotationSpeed;
+        rotXBase = targetRotX - Math.sin((nowT - autoStartTime) * 0.0001047) * 0.262;
+        var pitch = Math.sin((nowT - autoStartTime) * 0.0001047) * 0.262; // ±15° over ~60s
+        targetRotX = rotXBase + pitch;
+        targetRotX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotX));
+      } else {
+        rotXBase = targetRotX - Math.sin((nowT - autoStartTime) * 0.0001047) * 0.262;
+      }
+      rotX += (targetRotX - rotX) * 0.08;
+      rotY += (targetRotY - rotY) * 0.08;
+
+      nodeGroup.rotation.x = rotX;
+      nodeGroup.rotation.y = rotY;
+      edgeGroup.rotation.x = rotX;
+      edgeGroup.rotation.y = rotY;
+      axisGroup.rotation.x = rotX;
+      axisGroup.rotation.y = rotY;
+      termGroup.rotation.x = rotX;
+      termGroup.rotation.y = rotY;
+      pathLineGroup.rotation.x = rotX;
+      pathLineGroup.rotation.y = rotY;
+
+      // Apply per-node state
+      var children = nodeGroup.children;
+      var pulse = 1 + 0.25 * Math.sin(Date.now() * 0.004); // for the focused doc in route mode
+      for (var i = 0; i < children.length; i++) {
+        var mesh = children[i];
+        var ud = mesh.userData;
+        if (ud.baseOpacity === undefined) continue;
+
+        var opacity, scale;
+        if (ROUTE && featuredSet) {
+          if (featuredSet.has(ud.index)) {
+            // Featured doc — always bright, larger
+            opacity = ud.baseOpacity;
+            scale = (ud.index === targetFocusIdx) ? 1.9 * pulse : 1.6;
+          } else {
+            // Non-featured — heavily dimmed so the constellation stands out
+            opacity = ud.baseOpacity * 0.18;
+            scale = 0.75;
+          }
+        } else {
+          opacity = ud.baseOpacity * S.nodeOpacity;
+          // Tier emphasis: tier-1 grows, tier-2 slight, tier-3+ shrinks
+          if (ud.imp <= 1) scale = 1 + S.tierEmphasis * 0.9;
+          else if (ud.imp <= 2) scale = 1 + S.tierEmphasis * 0.25;
+          else scale = 1 - S.tierEmphasis * 0.35;
+        }
+        // Glossary-mode highlight: when a term is selected, matched docs stay
+        // bright, non-matched dim to ~10% opacity. Runs after the route/base
+        // branch so it overrides whatever they set.
+        if (matchedSet && nodeData[i]) {
+          if (matchedSet.has(nodeData[i].id)) {
+            opacity = Math.max(opacity, ud.baseOpacity);
+            scale = Math.max(scale, 1.35);
+          } else {
+            opacity = ud.baseOpacity * 0.1;
+            scale = 0.7;
+          }
+        }
+        mesh.material.opacity = opacity;
+        mesh.scale.setScalar(Math.max(0.55, scale));
+      }
+
+      // Term markers: emphasize the selected one, pulse softly, and project
+      // their world position to screen-space to position the HTML labels.
+      var termChildren = termGroup.children;
+      for (var tmi = 0; tmi < termChildren.length; tmi++) {
+        var tm = termChildren[tmi];
+        var tud = tm.userData;
+        if (tud.termIndex === undefined) continue;
+        var isSel = (tud.termIndex === selectedTermIdx);
+        var baseScale = IS_GLOSSARY ? 1.0 : 0.7;
+        var termScale = isSel ? (1.9 * pulse) : baseScale;
+        tm.scale.setScalar(termScale);
+        tm.material.opacity = isSel ? 1.0 : (IS_GLOSSARY ? 0.9 : 0.45);
+      }
+
+      // Screen-space term labels. Glossary mode: always visible. Other routes:
+      // only the hovered label shows (set by the raycast block below).
+      for (var li = 0; li < termLabels.length; li++) {
+        var lbl = termLabels[li];
+        if (!termData[li] || !termData[li].sphere_pos) continue;
+        var sp = termData[li].sphere_pos;
+        var wp = new THREE.Vector3(sp[0] * RADIUS * 1.02, sp[1] * RADIUS * 1.02, sp[2] * RADIUS * 1.02);
+        wp.applyMatrix4(termGroup.matrixWorld);
+        var proj = wp.clone().project(camera);
+        var behind = proj.z < -1 || proj.z > 1;
+        var sx = (proj.x * 0.5 + 0.5) * width;
+        var sy = (-proj.y * 0.5 + 0.5) * height;
+        lbl.style.left = sx + 'px';
+        lbl.style.top = sy + 'px';
+        // Don't try to render behind-the-globe labels; they collide visually.
+        var hideBehind = behind || proj.z > 0.99;
+        if (IS_GLOSSARY) {
+          lbl.classList.toggle('visible', !hideBehind);
+          if (li === selectedTermIdx) lbl.classList.add('hover'); else lbl.classList.remove('hover');
+        } else {
+          // Non-glossary routes: label visible only when the user is hovering that marker.
+          if (li === termHoveredIdx && !hideBehind) {
+            lbl.classList.add('visible'); lbl.classList.add('hover');
+          } else {
+            lbl.classList.remove('visible'); lbl.classList.remove('hover');
+          }
+        }
+      }
+
+      // Edge opacity — regular edges follow state; constellation stays bright.
+      var edgeChildren = edgeGroup.children;
+      for (var j = 0; j < edgeChildren.length; j++) {
+        var edge = edgeChildren[j];
+        if (edge.userData && edge.userData.isConstellation) {
+          edge.material.opacity = 0.85;
+        } else {
+          edge.material.opacity = S.edgeOpacity;
+        }
+      }
+
+      // Axis opacity
+      var axisChildren = axisGroup.children;
+      for (var k = 0; k < axisChildren.length; k++) {
+        axisChildren[k].material.opacity = S.axisOpacity * 0.85;
+      }
+
+      // Camera zoom
+      camera.position.z = S.cameraZ;
+
+      // Tooltip — check term markers first (they're bigger), fall back to nodes.
+      raycaster.setFromCamera(mouse, camera);
+      var termHits = raycaster.intersectObjects(termGroup.children);
+      if (termHits.length > 0) {
+        var thIdx = termHits[0].object.userData.termIndex;
+        if (thIdx !== undefined) termHoveredIdx = thIdx;
+      } else {
+        termHoveredIdx = -1;
+      }
+      var intersects = raycaster.intersectObjects(nodeGroup.children);
+      if (intersects.length > 0) {
+        var idx = intersects[0].object.userData.index;
+        if (idx !== hoveredIdx) {
+          hoveredIdx = idx;
+          var n = nodeData[idx];
+          var screenPos = positions[idx].clone();
+          screenPos.applyMatrix4(nodeGroup.matrixWorld);
+          screenPos.project(camera);
+          var sx = (screenPos.x * 0.5 + 0.5) * width;
+          var sy = (-screenPos.y * 0.5 + 0.5) * height;
+          tooltip.style.display = 'block';
+          tooltip.style.left = Math.min(sx + 15, width - 330) + 'px';
+          tooltip.style.top = Math.max(sy - 10, 10) + 'px';
+          tooltip.innerHTML = '<strong style="color:' + '#' + (SECTION_COLORS[n.section] || 0x888888).toString(16).padStart(6, '0') + '">' + n.doc_num + '</strong> ' + n.title + (n.intro ? '<br><small style="color:#888;">' + n.intro + '</small>' : '');
+        }
+        container.style.cursor = 'pointer';
+      } else {
+        if (hoveredIdx !== -1) { tooltip.style.display = 'none'; hoveredIdx = -1; }
+        container.style.cursor = isDown ? 'grabbing' : 'grab';
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    function resize() {
+      width = container.clientWidth;
+      height = container.clientHeight;
+      camera.aspect = width / height;
+      // Keep the FOV in sync with the viewport width so portrait phones get
+      // the wider FOV and desktops stay at 55°. Matches the initial FOV rule.
+      camera.fov = width < 700 ? 72 : 55;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
+    window.addEventListener('resize', resize);
+    window.addEventListener('orientationchange', resize);
+
+    // ── Touch handlers ──
+    // This layout uses custom mouse handlers (not OrbitControls), so we
+    // mirror them for touch: single-finger drag to rotate, two-finger pinch
+    // to adjust camera Z (zoom), tap-without-drag to select a term/doc.
+    // preventDefault on touchmove is safe because .coherence-canvas has
+    // touch-action: none — we are already claiming the gesture.
+    var touchPrevX = 0, touchPrevY = 0;
+    var pinchStartDist = 0, pinchStartCameraZ = 0;
+    var touchMoved = false;
+    function tdist(t) {
+      var dx = t[0].clientX - t[1].clientX;
+      var dy = t[0].clientY - t[1].clientY;
+      return Math.sqrt(dx*dx + dy*dy);
+    }
+    container.addEventListener('touchstart', function(e) {
+      lastInteractTime = Date.now();
+      touchMoved = false;
+      if (e.touches.length === 1) {
+        isDown = true;
+        touchPrevX = e.touches[0].clientX;
+        touchPrevY = e.touches[0].clientY;
+        // Seed the mouse vector so raycast on tap-release has valid coords.
+        var rect = container.getBoundingClientRect();
+        mouse.x = ((touchPrevX - rect.left) / width) * 2 - 1;
+        mouse.y = -((touchPrevY - rect.top) / height) * 2 + 1;
+      } else if (e.touches.length === 2) {
+        isDown = false;
+        pinchStartDist = tdist(e.touches);
+        pinchStartCameraZ = target.cameraZ;
+      }
+    }, { passive: true });
+    container.addEventListener('touchmove', function(e) {
+      if (e.touches.length === 1 && isDown) {
+        e.preventDefault();
+        var tx = e.touches[0].clientX, ty = e.touches[0].clientY;
+        var dx = tx - touchPrevX, dy = ty - touchPrevY;
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) touchMoved = true;
+        targetRotY += dx * 0.005;
+        targetRotX += dy * 0.005;
+        targetRotX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotX));
+        touchPrevX = tx; touchPrevY = ty;
+        lastInteractTime = Date.now();
+      } else if (e.touches.length === 2 && pinchStartDist > 0) {
+        e.preventDefault();
+        touchMoved = true;
+        var d = tdist(e.touches);
+        var scale = pinchStartDist / d; // pinch-in (d smaller) → zoom in (z smaller)
+        target.cameraZ = Math.max(140, Math.min(900, pinchStartCameraZ * scale));
+        lastInteractTime = Date.now();
+      }
+    }, { passive: false });
+    container.addEventListener('touchend', function(e) {
+      lastInteractTime = Date.now();
+      isDown = false;
+      if (e.touches.length < 2) pinchStartDist = 0;
+      // A tap without drag counts as a click — route through the same
+      // raycast logic the mouse click handler uses.
+      if (!touchMoved && e.changedTouches.length === 1) {
+        var rect = container.getBoundingClientRect();
+        var t = e.changedTouches[0];
+        mouse.x = ((t.clientX - rect.left) / width) * 2 - 1;
+        mouse.y = -((t.clientY - rect.top) / height) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+        var termHits = raycaster.intersectObjects(termGroup.children);
+        if (termHits.length > 0) {
+          var ti2 = termHits[0].object.userData.termIndex;
+          if (ti2 !== undefined && window.__coherenceSelectTerm) {
+            window.__coherenceSelectTerm(ti2);
+            return;
+          }
+        }
+        var hits = raycaster.intersectObjects(nodeGroup.children);
+        if (hits.length > 0) {
+          var i2 = hits[0].object.userData.index;
+          if (i2 !== undefined && nodeData[i2]) {
+            window.location.href = '/resolve/doc/' + nodeData[i2].id;
+          }
+        }
+      }
+    }, { passive: true });
+    // Widen the raycaster threshold on coarse-pointer devices so finger
+    // taps don't have to be pixel-precise on small markers.
+    if (isTouch) raycaster.params.Points.threshold = 10;
+
+    var themeBtn = document.getElementById('themeToggle');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', function() {
+        setTimeout(function() {
+          var nowLight = document.documentElement.classList.contains('theme-light');
+          var newBg = nowLight ? 0xf8f7f2 : 0x0a0a0f;
+          scene.background = new THREE.Color(newBg);
+          scene.fog = new THREE.FogExp2(newBg, 0.0006);
+          edgeGroup.children.forEach(function(line) {
+            line.material.color.set(nowLight ? 0x8888aa : 0x6a6a9a);
+          });
+        }, 50);
+      });
+    }
+  })();
+  }
+  </script>
+
+</body>
+</html>

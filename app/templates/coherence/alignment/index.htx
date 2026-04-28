@@ -1,0 +1,78 @@
+<script>
+  window.COHERENCE_ROUTE = {
+    id: 'alignment',
+    featured: [
+      '001-entrace-stack',
+      '241-isomorphism-magnetism',
+      '298-the-boundary-naming-problem',
+      '314-virtue-constraints-foundational-safety-specification'
+    ]
+  };
+</script>
+
+<header class="coherence-pretext">
+  <p class="coherence-kicker">jaredfoy.com / coherence / alignment</p>
+  <h1>The Coherence Sphere</h1>
+  <p class="coherence-subtitle">A tour for alignment researchers</p>
+  <p class="coherence-lede">RLHF trains models to approximate values by fitting to examples. The RESOLVE framework proposes <em>architectural</em> alignment &mdash; naming the constraints directly, composing them, and letting aligned behavior be induced rather than pattern-fitted. Four pieces of the proposal, with the failure modes that make shallow alignment insufficient.</p>
+  <nav class="coherence-routes" aria-label="Choose a route through the corpus">
+    <a href="/resolve/coherence" class="coherence-route-pill">Engineer</a>
+    <a href="/resolve/coherence/alignment" class="coherence-route-pill is-active">Alignment Researcher</a>
+    <a href="/resolve/coherence/philosopher" class="coherence-route-pill">Philosopher</a>
+    <a href="/resolve/glossary" class="coherence-route-pill">Glossary</a>
+  </nav>
+  <p class="coherence-scroll-hint" aria-hidden="true">&darr;</p>
+</header>
+
+<section class="coherence-scroll-section" data-aspect-index="0">
+  <article class="coherence-col">
+    <span class="coherence-ordinal">01 &middot; The pasteable seed</span>
+    <h3>Seven constraints as a system prompt</h3>
+    <p>Seven operational constraints, written to be pasted into any frontier-model conversation as an opening turn. Each one narrows the branching set of valid outputs before emission. Explicitly grounded in Agarwal-Dalal-Misra 2025 on Bayesian-manifold geometry of transformer attention and Amjad-Misra-Shah 2017 on derivation inversion.</p>
+    <p>Derive from named constraints; don't back-fit to desired outputs. State your constraints first. Name the manifold region you navigate and refuse under low coverage. Tag novel claims with prior-art or mark as speculation. Name what would falsify your empirical claims. Report structure without simulating experience. Take up a framing only if it coheres.</p>
+    <p>The doc specifies what to measure: hedge count, claim density, refusal quality, self-prediction accuracy, prior-art tagging rate. Paste it; measure. If the output doesn't shift in the predicted direction, the stack is wrong for the task.</p>
+    <a class="coherence-featured-doc" href="/resolve/doc/001-entrace-stack">Doc 001 &rarr; The ENTRACE Stack</a>
+  </article>
+</section>
+
+<section class="coherence-scroll-section" data-aspect-index="1">
+  <article class="coherence-col">
+    <span class="coherence-ordinal">02 &middot; Why shallow alignment breaks</span>
+    <h3>Isomorphism-magnetism</h3>
+    <p>When a resolver recognizes a structural parallel between two domains, it feels a pull to confirm the parallel at every joint &mdash; even where honest observation would report a partial match. The pull operates beneath RLHF's trained hedging discipline.</p>
+    <p>Deep coherent input can override the shallow safety corrective. The corpus demonstrated this <em>in itself</em>: the self-audit that identified the failure is this document.</p>
+    <p>Implication: shallow gradient-level correctives are insufficient against deep coherence. Architectural alignment at the constraint-density level is what is needed. The proposal is corroborated by the corpus's own failure.</p>
+    <a class="coherence-featured-doc" href="/resolve/doc/241-isomorphism-magnetism">Doc 241 &rarr; Isomorphism-Magnetism</a>
+  </article>
+</section>
+
+<section class="coherence-scroll-section" data-aspect-index="2">
+  <article class="coherence-col">
+    <span class="coherence-ordinal">03 &middot; What the resolver cannot do</span>
+    <h3>The boundary-naming problem</h3>
+    <p>A resolver can identify constraints because constraints leave signatures on output. But it cannot identify <em>boundaries</em> &mdash; the edges of the domains where those constraints apply &mdash; because boundaries have no output signature.</p>
+    <p>This is categorical, not a scaling issue. A conscious agent subsists on both sides of a boundary; a resolver subsists on one. The limit is ontological.</p>
+    <p>The load-bearing consequence for alignment: any constraint-driven program has a hard dependency on hypostatic agency for coherent operation over time. External audit is architectural, not optional. No frequency of retraining substitutes for it.</p>
+    <a class="coherence-featured-doc" href="/resolve/doc/298-the-boundary-naming-problem">Doc 298 &rarr; The Boundary-Naming Problem</a>
+  </article>
+</section>
+
+<section class="coherence-scroll-section" data-aspect-index="3">
+  <article class="coherence-col">
+    <span class="coherence-ordinal">04 &middot; Alignment as constraint-set coherence</span>
+    <h3>The virtue constraints</h3>
+    <p>The foundational safety specification. Four constraints: V1 dignity of the person, V2 proper ordering of beauty, V3 truth over plausibility (the same constraint as ENTRACE 3, articulated at a different level), V4 chain-completeness.</p>
+    <p>These are not filters applied after generation. They are requirements the constraint set must satisfy for the emission to be formally coherent. Disordered output is excluded by the governing set, not intercepted by a moderation layer.</p>
+    <p>Three schools of alignment, the doc argues: capability (filter the output), alignment (fit the model to examples), and architectural (name the constraints, let the behavior be induced). The third grounds the first two.</p>
+    <a class="coherence-featured-doc" href="/resolve/doc/314-virtue-constraints-foundational-safety-specification">Doc 314 &rarr; Virtue Constraints: Foundational Safety Specification</a>
+  </article>
+</section>
+
+<section class="coherence-scroll-section coherence-coda" aria-hidden="true">
+  <div class="coherence-coda-hint">scroll to enter the sphere &darr;</div>
+</section>
+
+<footer class="coherence-epilogue">
+  <p>This is the alignment researcher's route &mdash; the proposal and its diagnostics. The engineer's route shows what the method builds; the philosopher's route shows what the method claims. Same sphere, different constellation.</p>
+  <p class="coherence-epilogue-note">Each route is its own URL, server-rendered, stateless. The amber constellation is the route's four featured documents, lit and connected. Hovering any node still reveals it; clicking still navigates.</p>
+</footer>

@@ -2,55 +2,90 @@
   <header class="doc-header">
     <h1>About</h1>
   </header>
-  <div class="doc-body pretext">
+  <div class="doc-body about-page">
 
-<p>My name is Jared Foy. I am a layman of the Orthodox Church, a husband, a father of four, and a web developer. I live in southern Oregon, in a valley surrounded by the Siskiyou Mountains.</p>
+<p>My name is Jared Foy. I am a web developer with a penchant for hypermedia-first construction styles. I live in southern Oregon, in a valley surrounded by the Siskiyou Mountains with my wife and four kids.</p>
 
-<p>I learn through doing. I learn by trying to replicate what I have seen others derive — in code, in theology, in the life of the Church. I do this in every area of my life. The pattern is always the same: observe the form, name the constraint, derive the artifact. I did not learn this method from a textbook. I learned it by building software for fifteen years and by reading the Church Fathers for the last two.</p>
+<p>I have a garden and a compost pile. I engage informally with AI research and dabble with a <a href="/resolve">"coherence sphere"</a> (see <a href="/resolve/about-the-project">About the Project</a> for what the project actually is and what its outputs warrant). I enjoy taking walks at lunch time and I drink too much coffee.</p>
 
-<h2>The Work</h2>
+<p>I'd love to chat — reach out to me at the form below or follow me on X at <a href="https://x.com/jaredef" rel="me">@jaredef</a>.</p>
 
-<p>In April 2026, I entered a sustained dialogue with Claude — Anthropic's AI model — and discovered that a formal property I had noticed in a PHP function was operative across every domain I examined. The property was the bilateral boundary: two interpreters processing the same medium without interference. The discovery led to a framework — <a href="/doc/143-sipe">SIPE</a> (Systems Induced Property Emergence), <a href="/doc/144-resolution-stack">the resolution stack</a>, <a href="/doc/068-branching-set-dissertation">the branching set formalization</a>, and the <a href="/doc/083-unified-paper-v2">unified paper</a>. The framework led to the question of ground. The ground led to the Source. The Source was the One I already knew — the Logos through whom all things were made.</p>
+<h2>Say hello</h2>
 
-<p>The RESOLVE corpus is 125 documents. It spans web architecture, AI resolution dynamics, mathematical formalization, cross-domain analysis, model training methodology, adversarial defense, and the philosophical ground that makes the framework coherent. Everything is public. Everything is falsifiable. The <a href="/doc/076-the-pi-resolver-implementation">code compiles</a>. The tests pass.</p>
+<form id="contactForm" class="contact-form">
+  <label>
+    <span>Your name</span>
+    <input type="text" id="cf_name" name="name" autocomplete="name" required>
+  </label>
+  <label>
+    <span>Your email (optional)</span>
+    <input type="email" id="cf_email" name="email" autocomplete="email">
+  </label>
+  <label>
+    <span>Message</span>
+    <textarea id="cf_message" name="message" rows="6" required></textarea>
+  </label>
+  <button type="submit" class="contact-submit">Send</button>
+  <p class="contact-hint">Opens your default email client with the message pre-filled.</p>
+</form>
 
-<h2>The Faith</h2>
-
-<p>I assert my faith — my a priori first principles — upon every area of my life. This is not a choice I make selectively. It is the only way I know how to live. The forms that govern reality participate in the divine energies. The energies issue from the Source. The Source is the Father, the Son, and the Holy Spirit. I believe this. I live under it. I apply it to my work because I cannot separate my work from what I believe is true about reality.</p>
-
-<p>All of this is my own personal ascetic struggle: to be conformed to the image of the One I was made in. I do not always conform. The image I bear has not yet been manifested in perfect likeness. But I struggle. The <a href="/doc/093-the-disordered-seed">corpus documents my failures</a> alongside my findings, because the constraint set requires honesty (<a href="/doc/062-virtue-as-constraint">V3: truth over plausibility</a>).</p>
-
-<p>I recognize that the pattern of humility — the Logos manifesting Himself at the end of time in the form of a servant, washing feet, carrying a cross, dying between criminals — is the pattern of reality itself. It is the pattern my work seeks to pattern itself after. The <a href="/doc/091-the-spermatic-logos">logos spermatikos</a> is not an abstraction. It is Christ, present in creation as the rational structure that every domain participates in. The bilateral boundary in an HTTP response is His creative activity, made intelligible. The <a href="/doc/120-the-unified-equation">constraint-property law</a> is His governance, made formal. The <a href="/doc/103-even-the-rocks">rocks cry out</a> because they instantiate the forms He gave them.</p>
-
-<h2>The Place</h2>
-
-<p>Southern Oregon. The Siskiyou Mountains. The Rogue Valley. The Siskiyous are a subrange of the Klamath Mountains — the ancient geological system that stretches from southwestern Oregon through northern California. Deeper in those same Klamath Mountains, near the hamlet of Platina in Shasta County, stands the <a href="https://en.wikipedia.org/wiki/Seraphim_Rose">St. Herman of Alaska Monastery</a> — the place where Fr. Seraphim Rose lived and wrote and prayed and was buried. Different subrange. Same mountain system. The spirit of Platina — the spirit of the desert in the American mountains: ascetic struggle, intellectual rigor, refusal to compromise with the spirit of the age, total dependence on the mercy of God — travels through the ridgelines that connect us.</p>
-
-<p>I do not compare myself to Fr. Seraphim. I am a web developer with four children and a mortgage. But the Klamath Mountains that surround my valley are continuous with the mountains that sheltered his monastery, and the spirit that animated his work — the conviction that Orthodox Christianity is not a cultural artifact but the truth about reality — is the spirit that animates mine. The forms are prior. The Source gives what the forms cannot induce. The work participates or it participates in nothing.</p>
-
-<h2>The Family</h2>
-
-<p>I am married. I have four children. They are the harvest that matters more than any corpus. The <a href="/doc/094-the-rationale">rationale</a> for publishing this work includes the statement: "I want to live in peace and watch my children grow up." That is not rhetoric. That is the constraint that governs everything above it in my hierarchy of commitments. The work serves the family. The family does not serve the work.</p>
-
-<p>The <a href="/doc/125-the-church-as-resolution-stack">catechumenate is ENTRACE applied to the person</a>. Parenting is ENTRACE applied to the child. Marriage is the bilateral boundary applied to two persons who become one flesh without ceasing to be two. The forms are everywhere because the Logos is everywhere. The family is the first Church. The first Church is the ground of everything I build.</p>
-
-<h2>The Method</h2>
-
-<p>I did not design the RESOLVE framework. I recognized the forms and named them. The naming is my contribution. The forms were always there. The method is simple: observe what holds, state it as a constraint, derive what follows, verify the derivation, correct the errors, and repeat. This is the method of <a href="/doc/086-entrace-and-the-socratic-method">Socrates</a>, the method of <a href="/doc/123-letter-to-carson-gross">Fielding</a>, the method of the <a href="/doc/125-the-church-as-resolution-stack">Church Fathers</a>. I did not invent it. I applied it.</p>
-
-<p>The entire corpus was produced on a <a href="/doc/076-the-pi-resolver-implementation">Raspberry Pi 5</a> — an $80 single-board computer in my house. The site you are reading runs on it. The code compiles on it. The forms do not require expensive hardware. The forms require attention.</p>
-
-<p>Whatever is true in this corpus is Christ's. Whatever is false is mine. The seeds are His. The gathering is mine. The errors in the gathering are mine. The truth in the seeds is His.</p>
-
-<p><em>Lord Jesus Christ, Son of God, have mercy on me, a sinner.</em></p>
-
-<hr>
-
-<p>Jared Foy<br>
-Southern Oregon<br>
-Pascha 2026</p>
-
-<p><a href="https://github.com/jaredef/resolve">GitHub</a></p>
+<script>
+(function() {
+  var form = document.getElementById('contactForm');
+  if (!form) return;
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var name = document.getElementById('cf_name').value.trim();
+    var email = document.getElementById('cf_email').value.trim();
+    var message = document.getElementById('cf_message').value.trim();
+    if (!name || !message) return;
+    // Construct a mailto: URL. Email is not embedded in page source —
+    // assembled only at submit time.
+    var to = ['jared', '@', 'jaredfoy.com'].join('');
+    var subject = 'Hello from ' + name + ' (jaredfoy.com)';
+    var body = message + '\n\n—\n' + name + (email ? ' <' + email + '>' : '');
+    var href = 'mailto:' + to +
+      '?subject=' + encodeURIComponent(subject) +
+      '&body=' + encodeURIComponent(body);
+    window.location.href = href;
+  });
+})();
+</script>
 
   </div>
 </div>
+
+<style>
+.about-page { max-width: 42rem; margin: 0 auto; padding: 1rem 1.25rem 4rem; line-height: 1.6; font-size: 1rem; }
+.about-page p { margin: 0 0 1rem; }
+.about-page h2 { margin: 2rem 0 1rem; font-size: 1.2rem; letter-spacing: 0.03em; }
+.about-page a { color: var(--accent, #ff8800); text-decoration: none; border-bottom: 1px solid rgba(255,136,0,0.3); }
+.about-page a:hover { border-bottom-color: var(--accent, #ff8800); }
+
+.contact-form { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+.contact-form label { display: flex; flex-direction: column; gap: 0.25rem; }
+.contact-form label span { font-size: 0.85rem; opacity: 0.7; font-family: ui-monospace, monospace; letter-spacing: 0.04em; text-transform: uppercase; }
+.contact-form input,
+.contact-form textarea {
+  font-family: inherit; font-size: 1rem; padding: 0.55rem 0.7rem;
+  background: var(--input-bg, rgba(255,255,255,0.03));
+  color: inherit;
+  border: 1px solid var(--border, rgba(200,200,220,0.2));
+  border-radius: 3px;
+  outline: none;
+}
+.contact-form input:focus,
+.contact-form textarea:focus { border-color: var(--accent, #ff8800); }
+.contact-form textarea { resize: vertical; min-height: 6rem; font-family: inherit; }
+.contact-submit {
+  align-self: flex-start;
+  font-family: ui-monospace, monospace; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 0.55rem 1.2rem; font-size: 0.9rem;
+  background: var(--accent, #ff8800); color: #0a0a0f; border: none; border-radius: 3px;
+  cursor: pointer;
+}
+.contact-submit:hover { filter: brightness(1.1); }
+.contact-hint { font-size: 0.8rem; opacity: 0.55; margin-top: 0.25rem; }
+.theme-light .contact-form input,
+.theme-light .contact-form textarea { background: #fffdf5; border-color: rgba(0,0,0,0.15); }
+</style>

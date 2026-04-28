@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#ff8800">
+  <title>PRESTO — Progressive REST with On-Demand Code</title>
+  <meta name="description" content="An architectural style that extends Fielding's code-on-demand constraint into a progressive spectrum. The design space REST permits that was never explored.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="RESOLVE">
+  <meta property="og:title" content="PRESTO — Progressive REST with On-Demand Code">
+  <meta property="og:description" content="The architectural style Fielding named the optional constraint of.">
+  <meta property="og:url" content="https://jaredfoy.com/resolve/presto">
+  <meta property="og:image" content="https://jaredfoy.com/og/home.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PRESTO — Progressive REST with On-Demand Code">
+  <meta name="twitter:description" content="The architectural style Fielding named the optional constraint of.">
+  <meta name="twitter:image" content="https://jaredfoy.com/og/home.png">
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('theme');
+        var isLight = t === 'light' || (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches);
+        if (isLight) document.documentElement.classList.add('theme-light');
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="/css/style.css?v=31">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* ── Chrome (home link, theme toggle) ─────────────────────────────── */
+    .presto-chrome {
+      position: fixed;
+      top: 1rem;
+      left: 1.25rem;
+      right: 1.25rem;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .presto-home-link,
+    .presto-theme-btn {
+      pointer-events: auto;
+      font-family: var(--font-mono, "JetBrains Mono", monospace);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text);
+      background: color-mix(in srgb, var(--bg) 78%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
+      border-radius: 3px;
+      padding: 0.55rem 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .presto-home-link:hover,
+    .presto-theme-btn:hover {
+      background: color-mix(in srgb, var(--bg) 90%, transparent);
+    }
+
+    /* ── Central visual (the Stage) ──────────────────────────────────── */
+    .presto-page { position: relative; min-height: 100vh; }
+
+    .presto-stage {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      overflow: hidden;
+      transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Horizontal alignment slides the whole stage opposite the current column's
+       side. Column-right sections pull visual left; column-left sections push
+       visual right. Transform on the fixed element is safe; it's the ancestor
+       transforms that break fixed positioning, not a transform on the element
+       itself. */
+    .presto-stage[data-align="left"]  { transform: translateX(-20vw); }
+    .presto-stage[data-align="right"] { transform: translateX(20vw); }
+
+    @media (max-width: 900px) {
+      .presto-stage[data-align="left"],
+      .presto-stage[data-align="right"] { transform: none; }
+    }
+
+    .presto-scene {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: max(4rem, 8vh) 1.5rem;
+      opacity: 0;
+      transition: opacity 0.9s ease;
+      pointer-events: none;
+    }
+
+    .presto-stage[data-scene="rest"]      .presto-scene[data-id="rest"],
+    .presto-stage[data-scene="source"]    .presto-scene[data-id="code"],
+    .presto-stage[data-scene="pipeline"]  .presto-scene[data-id="code"],
+    .presto-stage[data-scene="resolved"]  .presto-scene[data-id="code"],
+    .presto-stage[data-scene="layers"]    .presto-scene[data-id="layers"],
+    .presto-stage[data-scene="snippet"]   .presto-scene[data-id="snippet"],
+    .presto-stage[data-scene="impls"]     .presto-scene[data-id="impls"] {
+      opacity: 1;
+    }
+
+    /* REST six-constraints scene */
+    .presto-rest-wrap {
+      width: min(760px, 90vw);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.8rem;
+    }
+
+    .presto-constraint {
+      border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+      border-radius: 4px;
+      padding: 1.1rem 1rem 1rem;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--text) 80%, transparent);
+      background: color-mix(in srgb, var(--bg) 70%, transparent);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      text-align: center;
+      transition: all 0.6s ease;
+    }
+
+    .presto-constraint-label {
+      display: block;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: color-mix(in srgb, var(--text) 45%, transparent);
+      margin-top: 0.4rem;
+    }
+
+    .presto-constraint.is-optional {
+      border-color: color-mix(in srgb, #ffd66b 70%, transparent);
+      color: var(--text);
+      animation: presto-pulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes presto-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, #ffd66b 0%, transparent); }
+      50% { box-shadow: 0 0 26px 2px color-mix(in srgb, #ffd66b 35%, transparent); }
+    }
+
+    /* Code panel scene */
+    .presto-code-panel {
+      width: min(780px, 94vw);
+      max-height: min(72vh, 640px);
+      overflow: auto;
+      background: color-mix(in srgb, var(--bg) 90%, transparent);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+      border-radius: 6px;
+      padding: 1.4rem 1.5rem;
+      font-family: var(--font-mono, "JetBrains Mono", monospace);
+      font-size: 0.8rem;
+      line-height: 1.65;
+      white-space: pre;
+      color: color-mix(in srgb, var(--text) 85%, transparent);
+    }
+
+    .presto-code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.66rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--text) 50%, transparent);
+      padding-bottom: 0.7rem;
+      margin-bottom: 0.9rem;
+      border-bottom: 1px solid color-mix(in srgb, var(--border) 45%, transparent);
+    }
+
+    .presto-code-badge {
+      padding: 0.2rem 0.55rem;
+      border-radius: 2px;
+      background: color-mix(in srgb, var(--border) 35%, transparent);
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+    }
+
+    /* Directive coloring — the bilateral boundary made visible. */
+    .srv { color: #c38cff; }                  /* server-consumed (purple) */
+    .cli { color: #ffd66b; }                  /* client-facing (amber) */
+    .str { color: color-mix(in srgb, var(--text) 65%, transparent); }
+    .tag { color: color-mix(in srgb, var(--text) 75%, transparent); }
+    .cmt { color: color-mix(in srgb, var(--text) 40%, transparent); font-style: italic; }
+
+    /* Pipeline-driven fade-outs. Each scene sets data-stage on the panel;
+       CSS rules below hide directive classes once their pipeline stage has run. */
+    .presto-code-panel { transition: font-size 0.5s ease; }
+
+    /* Source panel: directives fade through pipeline stages.
+       Class names match the actual htxlang directives from reference-profile §4. */
+    .d-layout, .d-include, .d-data, .d-each, .d-v, .d-auth, .d-action, .d-script {
+      transition: opacity 0.8s ease, color 0.8s ease, text-decoration 0.4s ease;
+    }
+
+    /* Source stage: everything present at full color (defaults in .srv / .cli) */
+
+    /* Pipeline stage: the server's half is visibly being consumed.
+       Stage 6 (includes) done → crossed out. Stage 10 (data) → dimmed.
+       Stage 14 (each/if) → dimmed. Stage 15 (htx:v) → tinted green to signal evaluation. */
+    [data-stage="pipeline"] .d-layout,
+    [data-stage="pipeline"] .d-include { opacity: 0.2; text-decoration: line-through; }
+    [data-stage="pipeline"] .d-data    { opacity: 0.35; }
+    [data-stage="pipeline"] .d-each    { opacity: 0.5; }
+    [data-stage="pipeline"] .d-auth    { opacity: 0.4; }
+    [data-stage="pipeline"] .d-action  { opacity: 0.4; }
+    [data-stage="pipeline"] .d-v       { color: #9fe29a; }
+    [data-stage="pipeline"] .d-script  { opacity: 0.55; }
+
+    /* Source panel fades fully out at the resolved stage;
+       a separate .presto-code-panel.is-resolved panel fades in. */
+    #prestoCode { transition: opacity 0.7s ease; }
+    #prestoResolved {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: max(4rem, 8vh) 1.5rem;
+      opacity: 0;
+      transition: opacity 0.7s ease;
+      pointer-events: none;
+    }
+    #prestoResolved .presto-code-panel { pointer-events: auto; }
+    .presto-stage[data-scene="resolved"] #prestoCode { opacity: 0; }
+    .presto-stage[data-scene="resolved"] #prestoResolved { opacity: 1; }
+
+    /* Layers 0-6 scene */
+    .presto-layers {
+      width: min(600px, 92vw);
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .presto-layer {
+      display: grid;
+      grid-template-columns: 2.2rem 1fr auto;
+      gap: 0.9rem;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+      border-radius: 4px;
+      background: color-mix(in srgb, var(--bg) 80%, transparent);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      font-family: var(--font-mono, monospace);
+      font-size: 0.78rem;
+      color: color-mix(in srgb, var(--text) 85%, transparent);
+    }
+
+    .presto-layer-num {
+      font-weight: 600;
+      color: color-mix(in srgb, var(--text) 60%, transparent);
+      text-align: right;
+    }
+
+    .presto-layer-cost {
+      font-size: 0.66rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--text) 45%, transparent);
+    }
+
+    .presto-layer.is-foundational {
+      border-color: color-mix(in srgb, #ffd66b 55%, transparent);
+    }
+
+    /* Progressive reveal: the current layer pulses amber, established layers
+       (below current) stay present at full visibility, future layers (above
+       current) dim away. Transition handles scrolling smoothly through the stack. */
+    .presto-layer {
+      transition: opacity 0.6s ease, transform 0.5s ease, background 0.5s ease,
+                  border-color 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .presto-layer.is-current {
+      background: color-mix(in srgb, #ffd66b 18%, color-mix(in srgb, var(--bg) 78%, transparent));
+      border-color: color-mix(in srgb, #ffd66b 75%, transparent);
+      color: var(--text);
+      transform: translateX(0.45rem);
+      box-shadow: 0 0 28px -6px color-mix(in srgb, #ffd66b 45%, transparent);
+    }
+
+    .presto-layer.is-future {
+      opacity: 0.28;
+    }
+
+    /* .is-established gets default styling — visible, "already adopted", no highlight. */
+
+    /* Implementations scene */
+    .presto-impls {
+      width: min(700px, 92vw);
+      text-align: center;
+    }
+
+    .presto-impls-title {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--text) 55%, transparent);
+      margin: 0 0 1.4rem;
+    }
+
+    .presto-impls-langs {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .presto-impls-lang {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.92rem;
+      letter-spacing: 0.08em;
+      padding: 0.55rem 1rem;
+      border: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
+      border-radius: 3px;
+      background: color-mix(in srgb, var(--bg) 80%, transparent);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .presto-impls-arrow {
+      font-family: var(--font-mono, monospace);
+      font-size: 1.3rem;
+      color: color-mix(in srgb, var(--text) 35%, transparent);
+      margin: 0.3rem 0 0.9rem;
+    }
+
+    .presto-impls-spec {
+      font-family: var(--font-mono, monospace);
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.9rem 1.4rem;
+      border: 1px solid color-mix(in srgb, #ffd66b 65%, transparent);
+      border-radius: 3px;
+      background: color-mix(in srgb, #ffd66b 10%, color-mix(in srgb, var(--bg) 82%, transparent));
+      display: inline-block;
+      color: var(--text);
+    }
+
+    /* ── Overlay (text content on top of stage) ──────────────────────── */
+    .presto-overlay {
+      position: relative;
+      z-index: 1;
+      pointer-events: none;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2.5rem;
+    }
+
+    .presto-pretext,
+    .presto-col,
+    .presto-epilogue {
+      pointer-events: auto;
+    }
+
+    .presto-pretext {
+      padding: 5.5rem 1rem 3rem;
+      text-align: center;
+      background: linear-gradient(to bottom, var(--bg) 0%, color-mix(in srgb, var(--bg) 75%, transparent) 55%, transparent 100%);
+      margin: 0 -2.5rem 0;
+    }
+
+    .presto-kicker {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--text) 60%, transparent);
+      margin: 0 0 0.75rem;
+    }
+
+    .presto-pretext h1 {
+      font-size: clamp(2.6rem, 5.5vw, 4.4rem);
+      line-height: 1.02;
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.025em;
+    }
+
+    .presto-subtitle {
+      font-size: 1.05rem;
+      color: color-mix(in srgb, var(--text) 72%, transparent);
+      margin: 0 0 1.6rem;
+      font-style: italic;
+    }
+
+    .presto-lede {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      max-width: 44rem;
+      margin: 0 auto 2rem;
+    }
+
+    .presto-scroll-hint {
+      margin: 2rem 0 0;
+      font-size: 1.3rem;
+      color: color-mix(in srgb, var(--text) 45%, transparent);
+      animation: presto-hint 2.2s ease-in-out infinite;
+    }
+
+    @keyframes presto-hint {
+      0%, 100% { transform: translateY(0); opacity: 0.45; }
+      50% { transform: translateY(6px); opacity: 0.9; }
+    }
+
+    .presto-scroll-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 4rem 0;
+    }
+
+    /* Column side is driven by data-align — the attribute that also drives the
+       stage's opposite shift. data-align="left" means the visual shifts left, so
+       the column sits on the right; data-align="right" is the mirror; "center"
+       has no column to position (snippet scenes). Using the attribute rather
+       than :nth-child keeps parity stable when sections are added or removed. */
+    .presto-scroll-section[data-align="left"] {
+      justify-content: flex-end;
+      padding-right: clamp(1rem, 8vw, 8rem);
+    }
+
+    .presto-scroll-section[data-align="right"] {
+      justify-content: flex-start;
+      padding-left: clamp(1rem, 8vw, 8rem);
+    }
+
+    .presto-scroll-section[data-align="center"] {
+      justify-content: center;
+    }
+
+    /* Snippet sections are transitional — between a layer's concept and the
+       next layer. A full 100vh dwell is too much; ~55vh lets the snippet
+       appear, hold briefly, and give way. The snippet itself lives in the
+       fixed stage, so section height only controls how long the scene is
+       active via the IntersectionObserver, not the snippet's visible size. */
+    .presto-scroll-section[data-scene="snippet"] {
+      min-height: 55vh;
+      padding: 2rem 0;
+    }
+
+    .presto-col {
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+      border-radius: 6px;
+      padding: 1.6rem 1.5rem 1.4rem;
+      font-size: 0.98rem;
+      line-height: 1.7;
+      max-width: 26rem;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+
+    .presto-scroll-section.in-view .presto-col {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .presto-col .presto-ordinal {
+      display: inline-block;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      color: color-mix(in srgb, var(--text) 45%, transparent);
+      margin-bottom: 0.35rem;
+    }
+
+    .presto-col h3 {
+      margin: 0 0 0.7rem;
+      font-size: 1.1rem;
+      letter-spacing: -0.005em;
+      color: var(--text);
+    }
+
+    .presto-col p {
+      margin: 0 0 0.8rem;
+      color: color-mix(in srgb, var(--text) 92%, transparent);
+    }
+
+    .presto-col p:last-child { margin-bottom: 0; }
+
+    .presto-col em { font-style: italic; color: color-mix(in srgb, var(--text) 80%, transparent); }
+
+    .presto-col code {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.86rem;
+      padding: 0.05rem 0.35rem;
+      border-radius: 2px;
+      background: color-mix(in srgb, var(--border) 35%, transparent);
+    }
+
+    /* Legacy in-column snippet styling (no longer used after moving snippets
+       to their own scene) — kept available in case a narrower inline use is
+       reintroduced later. */
+    .presto-snippet {
+      position: relative;
+      margin: 1rem 0 0;
+      padding: 1.9rem 0.95rem 0.85rem;
+      background: color-mix(in srgb, var(--bg) 94%, transparent);
+      border: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+      border-radius: 3px;
+      font-family: var(--font-mono, "JetBrains Mono", monospace);
+      font-size: 0.72rem;
+      line-height: 1.55;
+      white-space: pre;
+      overflow-x: auto;
+      color: color-mix(in srgb, var(--text) 84%, transparent);
+    }
+
+    .presto-snippet::before {
+      content: attr(data-label);
+      position: absolute;
+      top: 0.65rem;
+      left: 0.95rem;
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--text) 48%, transparent);
+      font-family: var(--font-mono, monospace);
+    }
+
+    /* Large snippet scene — each layer's snippet gets its own scroll beat
+       between the concept section and the next layer. All 7 snippets live in
+       the scene DOM; the stage's data-layer attribute determines which one
+       is opaque. Fades smoothly between them. */
+    .presto-snippet-large {
+      grid-column: 1;
+      grid-row: 1;
+      position: relative;
+      width: min(720px, 94vw);
+      max-height: min(70vh, 620px);
+      overflow: auto;
+      padding: 2.1rem 1.5rem 1.3rem;
+      background: color-mix(in srgb, var(--bg) 92%, transparent);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+      border-radius: 6px;
+      font-family: var(--font-mono, "JetBrains Mono", monospace);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      white-space: pre;
+      color: color-mix(in srgb, var(--text) 88%, transparent);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.55s ease;
+    }
+
+    .presto-snippet-large::before {
+      content: attr(data-label);
+      position: absolute;
+      top: 0.85rem;
+      left: 1.5rem;
+      font-size: 0.66rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--text) 52%, transparent);
+      font-family: var(--font-mono, monospace);
+    }
+
+    .presto-stage[data-scene="snippet"][data-layer="0"] .presto-snippet-large[data-for-layer="0"],
+    .presto-stage[data-scene="snippet"][data-layer="1"] .presto-snippet-large[data-for-layer="1"],
+    .presto-stage[data-scene="snippet"][data-layer="2"] .presto-snippet-large[data-for-layer="2"],
+    .presto-stage[data-scene="snippet"][data-layer="3"] .presto-snippet-large[data-for-layer="3"],
+    .presto-stage[data-scene="snippet"][data-layer="4"] .presto-snippet-large[data-for-layer="4"],
+    .presto-stage[data-scene="snippet"][data-layer="5"] .presto-snippet-large[data-for-layer="5"],
+    .presto-stage[data-scene="snippet"][data-layer="6"] .presto-snippet-large[data-for-layer="6"] {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .presto-col a {
+      color: var(--text);
+      text-decoration: underline;
+      text-decoration-color: color-mix(in srgb, #ffd66b 70%, transparent);
+      text-underline-offset: 2px;
+    }
+
+    .presto-featured-doc {
+      display: block;
+      margin-top: 0.9rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+      font-family: var(--font-mono, monospace);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #ffd66b;
+      text-decoration: none;
+    }
+
+    .presto-featured-doc:hover {
+      text-decoration: underline;
+      text-decoration-color: color-mix(in srgb, #ffd66b 60%, transparent);
+    }
+
+    .presto-epilogue {
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+      border-radius: 6px;
+      padding: 1.85rem 2rem;
+      margin: 0 auto 4rem;
+      max-width: 54rem;
+      font-size: 1rem;
+      line-height: 1.75;
+      text-align: center;
+    }
+
+    .presto-epilogue p { margin: 0 0 0.9rem; }
+    .presto-epilogue p:last-child { margin-bottom: 0; }
+
+    .presto-epilogue-note {
+      font-size: 0.82rem;
+      color: color-mix(in srgb, var(--text) 55%, transparent);
+      font-style: italic;
+    }
+
+    @media (max-width: 720px) {
+      .presto-scroll-section[data-align="left"],
+      .presto-scroll-section[data-align="right"],
+      .presto-scroll-section[data-align="center"] {
+        justify-content: center;
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      .presto-overlay { padding: 0 1rem; }
+      .presto-rest-wrap { grid-template-columns: repeat(2, 1fr); }
+      .presto-code-panel { font-size: 0.68rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="presto-chrome">
+    <a class="presto-home-link" href="/">&larr; RESOLVE</a>
+    <button class="presto-theme-btn" id="themeToggle" aria-label="Toggle theme" title="Toggle light/dark theme">THEME</button>
+  </div>
+
+  <div class="presto-page">
+
+    <!-- The Stage: all scenes stacked; one active per scroll section. -->
+    <div id="prestoStage" class="presto-stage" data-scene="rest">
+
+      <!-- Scene: REST six constraints -->
+      <div class="presto-scene" data-id="rest">
+        <div class="presto-rest-wrap">
+          <div class="presto-constraint">Client-Server <span class="presto-constraint-label">mandatory</span></div>
+          <div class="presto-constraint">Statelessness <span class="presto-constraint-label">mandatory</span></div>
+          <div class="presto-constraint">Cacheability <span class="presto-constraint-label">mandatory</span></div>
+          <div class="presto-constraint">Uniform Interface <span class="presto-constraint-label">mandatory</span></div>
+          <div class="presto-constraint">Layered System <span class="presto-constraint-label">mandatory</span></div>
+          <div class="presto-constraint is-optional">Code-on-Demand <span class="presto-constraint-label">optional</span></div>
+        </div>
+      </div>
+
+      <!-- Scene: Code panel — bilateral source + unilateral resolved, crossfaded by stage. -->
+      <div class="presto-scene" data-id="code">
+        <pre id="prestoCode" class="presto-code-panel" data-stage="source"><div class="presto-code-header"><span id="prestoCodeLabel">.htx &mdash; source representation</span><span class="presto-code-badge" id="prestoCodeBadge">bilateral</span></div><span class="srv d-layout">&lt;htx:layout src=<span class="str">"layouts/main.htx"</span> /&gt;</span>
+<span class="srv d-include">&lt;htx:include src=<span class="str">"partials/header.htx"</span> /&gt;</span>
+
+<span class="srv d-data">&lt;htx:data type=<span class="str">"post"</span> order=<span class="str">"published_at desc"</span> limit=<span class="str">"3"</span> as=<span class="str">"posts"</span> /&gt;</span>
+
+<span class="tag">&lt;main class=<span class="str">"posts"</span>&gt;</span>
+  <span class="srv d-each">&lt;htx:each items=<span class="str">"posts"</span> as=<span class="str">"post"</span>&gt;</span>
+    <span class="tag">&lt;article&gt;</span>
+      <span class="tag">&lt;h2&gt;</span><span class="srv d-v">&lt;htx:v&gt;post.title&lt;/htx:v&gt;</span><span class="tag">&lt;/h2&gt;</span>
+      <span class="tag">&lt;p&gt;</span><span class="srv d-v">&lt;htx:v&gt;post.author | uppercase&lt;/htx:v&gt;</span><span class="tag">&lt;/p&gt;</span>
+      <span class="tag">&lt;a</span> <span class="cli">hx-get=<span class="str">"/post/<span class="srv d-v">&#123;htx:post.slug&#125;</span>"</span></span> <span class="cli">hx-target=<span class="str">"main"</span></span><span class="tag">&gt;Read&lt;/a&gt;</span>
+    <span class="tag">&lt;/article&gt;</span>
+  <span class="srv d-each">&lt;/htx:each&gt;</span>
+<span class="tag">&lt;/main&gt;</span>
+
+<span class="srv d-auth">&lt;htx:auth&gt;</span>
+  <span class="srv d-action">&lt;htx:action name=<span class="str">"create"</span> type=<span class="str">"post"</span> /&gt;</span>
+  <span class="tag">&lt;form</span> <span class="cli">hx-post=<span class="str">"/posts?t=<span class="srv d-v">&#123;htx:$actions.create&#125;</span>"</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;input name=<span class="str">"title"</span> /&gt;</span>
+    <span class="tag">&lt;button&gt;Post&lt;/button&gt;</span>
+  <span class="tag">&lt;/form&gt;</span>
+<span class="srv d-auth">&lt;/htx:auth&gt;</span>
+
+<span class="srv d-script">&lt;htx:script&gt;</span>
+  el.addEventListener(<span class="str">'click'</span>, e =&gt;
+    e.target.closest(<span class="str">'article'</span>)?.classList.toggle(<span class="str">'open'</span>));
+<span class="srv d-script">&lt;/htx:script&gt;</span></pre>
+
+        <!-- Resolved panel — what the browser actually receives. Only client-facing
+             directives (hx-*) and plain HTML remain. -->
+        <div id="prestoResolved">
+          <pre class="presto-code-panel"><div class="presto-code-header"><span>.html &mdash; resolved representation</span><span class="presto-code-badge">unilateral</span></div><span class="cmt">&lt;!-- layout wrapper + resolved header omitted for clarity --&gt;</span>
+<span class="tag">&lt;main class=<span class="str">"posts"</span>&gt;</span>
+  <span class="tag">&lt;article&gt;</span>
+    <span class="tag">&lt;h2&gt;</span>My First Post<span class="tag">&lt;/h2&gt;</span>
+    <span class="tag">&lt;p&gt;</span>JARED<span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;a</span> <span class="cli">hx-get=<span class="str">"/post/my-first-post"</span></span> <span class="cli">hx-target=<span class="str">"main"</span></span><span class="tag">&gt;Read&lt;/a&gt;</span>
+  <span class="tag">&lt;/article&gt;</span>
+  <span class="cmt">&lt;!-- two more article blocks expanded from htx:each --&gt;</span>
+<span class="tag">&lt;/main&gt;</span>
+
+<span class="tag">&lt;form</span> <span class="cli">hx-post=<span class="str">"/posts?t=eyJhY3Rpb24i...sig"</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;input name=<span class="str">"title"</span> /&gt;</span>
+  <span class="tag">&lt;button&gt;Post&lt;/button&gt;</span>
+<span class="tag">&lt;/form&gt;</span>
+
+<span class="tag">&lt;script&gt;</span>
+  el.addEventListener(<span class="str">'click'</span>, e =&gt;
+    e.target.closest(<span class="str">'article'</span>)?.classList.toggle(<span class="str">'open'</span>));
+<span class="tag">&lt;/script&gt;</span></pre>
+        </div>
+      </div>
+
+      <!-- Scene: Progressive Layers 0-6 -->
+      <div class="presto-scene" data-id="layers">
+        <div class="presto-layers">
+          <div class="presto-layer is-foundational"><span class="presto-layer-num">0</span><span>Static hypermedia &mdash; plain HTML</span><span class="presto-layer-cost">no JS</span></div>
+          <div class="presto-layer"><span class="presto-layer-num">1</span><span>Declarative attributes (hx-*)</span><span class="presto-layer-cost">tiny runtime</span></div>
+          <div class="presto-layer"><span class="presto-layer-num">2</span><span>Scoped behavioral units (on-click, on-change)</span><span class="presto-layer-cost">per-scope scripts</span></div>
+          <div class="presto-layer"><span class="presto-layer-num">3</span><span>Server-pushed code</span><span class="presto-layer-cost">WebSocket</span></div>
+          <div class="presto-layer"><span class="presto-layer-num">4</span><span>Authenticated data channels</span><span class="presto-layer-cost">channel tokens</span></div>
+          <div class="presto-layer"><span class="presto-layer-num">5</span><span>Binary delivery (images, audio, blobs)</span><span class="presto-layer-cost">binary frames</span></div>
+          <div class="presto-layer"><span class="presto-layer-num">6</span><span>WebAssembly &mdash; native-speed client compute</span><span class="presto-layer-cost">wasm manifest</span></div>
+        </div>
+      </div>
+
+      <!-- Scene: Large per-layer htmx snippet. All 7 live in the DOM; the
+           one matching the stage's data-layer is opaque. -->
+      <div class="presto-scene" data-id="snippet">
+        <pre class="presto-snippet-large" data-for-layer="0" data-label="htmx &middot; Layer 0"><span class="cmt">&lt;!-- plain hypermedia; htmx not loaded --&gt;</span>
+&lt;a href=<span class="str">"/post/my-first-post"</span>&gt;Read&lt;/a&gt;
+
+&lt;form method=<span class="str">"post"</span> action=<span class="str">"/posts"</span>&gt;
+  &lt;input name=<span class="str">"title"</span>&gt;
+  &lt;button&gt;Post&lt;/button&gt;
+&lt;/form&gt;</pre>
+
+        <pre class="presto-snippet-large" data-for-layer="1" data-label="htmx &middot; Layer 1"><span class="cmt">&lt;!-- request + target + swap, declaratively --&gt;</span>
+&lt;button <span class="cli">hx-get</span>=<span class="str">"/posts/new"</span>
+        <span class="cli">hx-target</span>=<span class="str">"#content"</span>
+        <span class="cli">hx-swap</span>=<span class="str">"innerHTML"</span>&gt;
+  New Post
+&lt;/button&gt;</pre>
+
+        <pre class="presto-snippet-large" data-for-layer="2" data-label="htmx &middot; Layer 2"><span class="cmt">&lt;!-- hx-on::* scopes a handler to its element --&gt;</span>
+&lt;form <span class="cli">hx-post</span>=<span class="str">"/posts"</span>
+      <span class="cli">hx-on::after-request</span>=<span class="str">"this.reset()"</span>
+      <span class="cli">hx-target</span>=<span class="str">"#list"</span>&gt;
+  &lt;input name=<span class="str">"title"</span>&gt;
+  &lt;button&gt;Post&lt;/button&gt;
+&lt;/form&gt;</pre>
+
+        <pre class="presto-snippet-large" data-for-layer="3" data-label="htmx &middot; Layer 3"><span class="cmt">&lt;!-- ws extension + out-of-band swaps --&gt;</span>
+&lt;div <span class="cli">hx-ext</span>=<span class="str">"ws"</span> <span class="cli">ws-connect</span>=<span class="str">"/events"</span>&gt;
+  <span class="cmt">&lt;!-- server pushes fragments like: --&gt;</span>
+  <span class="cmt">&lt;!-- &lt;div id="alert" hx-swap-oob="true"&gt;…&lt;/div&gt; --&gt;</span>
+&lt;/div&gt;</pre>
+
+        <pre class="presto-snippet-large" data-for-layer="4" data-label="htmx &middot; Layer 4"><span class="cmt">&lt;!-- channel token materialized into the representation --&gt;</span>
+&lt;div <span class="cli">hx-ext</span>=<span class="str">"ws"</span>
+     <span class="cli">ws-connect</span>=<span class="str">"/channel/trading?t=<span class="srv">&#123;htx:$grants.channel&#125;</span>"</span>&gt;
+  <span class="cmt">&lt;!-- token expires; channel closes; no ambient authority --&gt;</span>
+&lt;/div&gt;</pre>
+
+        <pre class="presto-snippet-large" data-for-layer="5" data-label="htmx &middot; Layer 5"><span class="cmt">&lt;!-- binary gated by signed URL; grant materialized server-side --&gt;</span>
+&lt;img <span class="tag">src</span>=<span class="str">"/asset/<span class="srv">&#123;htx:$grants.asset&#125;</span>/chart.png"</span>
+     <span class="tag">alt</span>=<span class="str">"role-scoped, expires-in-session"</span>&gt;</pre>
+
+        <pre class="presto-snippet-large" data-for-layer="6" data-label="htmx &middot; Layer 6"><span class="cmt">&lt;!-- htmx triggers load; the wasm runtime takes over --&gt;</span>
+&lt;div id=<span class="str">"chart"</span>&gt;&lt;/div&gt;
+&lt;script <span class="cli">hx-trigger</span>=<span class="str">"load"</span> type=<span class="str">"module"</span>&gt;
+  const &#123; instance &#125; = await WebAssembly.instantiateStreaming(
+    fetch(<span class="str">'/wasm/chart.wasm?t=<span class="srv">&#123;htx:$grants.wasm&#125;</span>'</span>)
+  );
+  instance.exports.render(document.getElementById(<span class="str">'chart'</span>));
+&lt;/script&gt;</pre>
+      </div>
+
+      <!-- Scene: Six independent implementations -->
+      <div class="presto-scene" data-id="impls">
+        <div class="presto-impls">
+          <p class="presto-impls-title">Independent implementations of the specification</p>
+          <div class="presto-impls-langs">
+            <span class="presto-impls-lang">TypeScript</span>
+            <span class="presto-impls-lang">Go</span>
+            <span class="presto-impls-lang">Elixir</span>
+            <span class="presto-impls-lang">Python</span>
+            <span class="presto-impls-lang">Rust</span>
+            <span class="presto-impls-lang">C</span>
+          </div>
+          <div class="presto-impls-arrow" aria-hidden="true">&darr;</div>
+          <div class="presto-impls-spec">One specification &middot; htxlang</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overlay: scrolling text content -->
+    <div class="presto-overlay">
+__content__
+    </div>
+  </div>
+
+  <script>
+    // Theme toggle
+    (function() {
+      var btn = document.getElementById('themeToggle');
+      if (!btn) return;
+      function sync() { btn.textContent = document.documentElement.classList.contains('theme-light') ? 'LIGHT' : 'DARK'; }
+      sync();
+      btn.addEventListener('click', function() {
+        var willBeLight = !document.documentElement.classList.contains('theme-light');
+        document.documentElement.classList.toggle('theme-light', willBeLight);
+        try { localStorage.setItem('theme', willBeLight ? 'light' : 'dark'); } catch (e) {}
+        sync();
+      });
+    })();
+
+    // Scroll-driven scene switching. Each section carries data-scene plus (for
+    // the code scenes) data-stage. When a section enters view ≥45%, we update
+    // the stage element with matching attributes; CSS transitions handle the
+    // rest.
+    (function() {
+      var stage = document.getElementById('prestoStage');
+      var codePanel = document.getElementById('prestoCode');
+      var codeLabel = document.getElementById('prestoCodeLabel');
+      var codeBadge = document.getElementById('prestoCodeBadge');
+      if (!stage) return;
+
+      var sections = document.querySelectorAll('.presto-scroll-section[data-scene]');
+      if (!sections.length) return;
+
+      var CODE_LABELS = {
+        source:   { label: '.htx — source representation', badge: 'bilateral' },
+        pipeline: { label: '.htx — mid-pipeline resolution', badge: 'resolving' },
+        resolved: { label: '.html — resolved representation', badge: 'unilateral' }
+      };
+
+      // Layers scene: each scroll section is one layer (0-6). When active, we
+       // set is-current on its layer item, is-established on all below, is-future on all above.
+      var layerItems = document.querySelectorAll('.presto-layers .presto-layer');
+      function setCurrentLayer(n) {
+        layerItems.forEach(function(el, i) {
+          el.classList.toggle('is-current', i === n);
+          el.classList.toggle('is-established', n >= 0 && i < n);
+          el.classList.toggle('is-future', n >= 0 && i > n);
+        });
+      }
+
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.45) {
+            var scene = entry.target.dataset.scene;
+            var stageAttr = entry.target.dataset.stage || scene;
+            var align = entry.target.dataset.align || 'center';
+            stage.dataset.scene = scene;
+            stage.dataset.align = align;
+            // For code scenes, also set the data-stage so directive fades kick in.
+            if (scene === 'source' || scene === 'pipeline' || scene === 'resolved') {
+              codePanel.dataset.stage = stageAttr;
+              var meta = CODE_LABELS[stageAttr];
+              if (meta) {
+                codeLabel.textContent = meta.label;
+                codeBadge.textContent = meta.badge;
+              }
+            }
+            // For layers and snippet scenes, broadcast the active layer so
+            // CSS can light up the right slab / show the right snippet.
+            if (scene === 'layers' || scene === 'snippet') {
+              var layerNum = parseInt(entry.target.dataset.layer, 10);
+              if (!isNaN(layerNum)) {
+                stage.dataset.layer = String(layerNum);
+                setCurrentLayer(layerNum);
+              }
+            }
+            entry.target.classList.add('in-view');
+          } else if (entry.intersectionRatio < 0.25) {
+            entry.target.classList.remove('in-view');
+          }
+        });
+      }, { threshold: [0.0, 0.25, 0.45, 0.7] });
+
+      sections.forEach(function(s) { io.observe(s); });
+    })();
+  </script>
+
+</body>
+</html>

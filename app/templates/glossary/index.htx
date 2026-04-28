@@ -1,0 +1,667 @@
+<script>
+  // Glossary mode — the shared sphere layout reads this flag and switches
+  // term markers from "small de-emphasized dots" to "primary visible nodes
+  // with labels". The entracement walkthrough wiring below is gated on it.
+  window.COHERENCE_GLOSSARY = true;
+</script>
+
+<style>
+  /* ── Glossary pretext: same pattern as the route pretexts (kicker + h1 +
+     subtitle + lede + pill nav + scroll hint) with one extra element — the
+     "Begin entracement" CTA that kicks off the 18-step walkthrough. */
+  .coherence-entrace-cta {
+    display: inline-block;
+    pointer-events: auto;
+    margin: 0.4rem auto 0;
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.7rem 1.2rem;
+    border-radius: 3px;
+    border: 1px solid color-mix(in srgb, #ffd66b 70%, transparent);
+    color: #ffd66b;
+    background: color-mix(in srgb, #ffd66b 10%, color-mix(in srgb, var(--bg) 80%, transparent));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .coherence-entrace-cta:hover {
+    background: color-mix(in srgb, #ffd66b 22%, color-mix(in srgb, var(--bg) 80%, transparent));
+    color: #fff;
+  }
+
+  /* ── Desktop list view: a flat index of all 18 terms below the sphere
+     pretext. Opt-in — hidden by default, revealed by the toggle pill. The
+     mobile list lives in the layout; this one is desktop-only. */
+  .coherence-glossary-list-toggle-wrap {
+    text-align: center;
+    margin: 0 auto 2rem;
+  }
+  .coherence-glossary-list-toggle {
+    pointer-events: auto;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.45rem 0.9rem;
+    border-radius: 3px;
+    border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+    color: color-mix(in srgb, var(--text) 70%, transparent);
+    background: color-mix(in srgb, var(--bg) 78%, transparent);
+    cursor: pointer;
+  }
+  .coherence-glossary-list-toggle:hover { color: var(--text); }
+
+  .coherence-glossary-list {
+    display: none;
+    max-width: 46rem;
+    margin: 0 auto 4rem;
+    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
+    border-radius: 6px;
+    padding: 1.5rem 1.6rem;
+    pointer-events: auto;
+  }
+  .coherence-glossary-list.open { display: block; }
+
+  .coherence-glossary-list h2 {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.8rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--text) 55%, transparent);
+    margin: 0 0 1rem;
+    font-weight: 600;
+  }
+
+  .coherence-glossary-list ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: none;
+  }
+
+  .coherence-glossary-list li {
+    display: grid;
+    grid-template-columns: 2.4rem 1fr;
+    gap: 0.6rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 35%, transparent);
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .coherence-glossary-list li:last-child { border-bottom: none; }
+  .coherence-glossary-list li:hover {
+    background: color-mix(in srgb, #ffd66b 8%, transparent);
+  }
+
+  .coherence-glossary-list .ord {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.74rem;
+    color: color-mix(in srgb, #ffd66b 85%, var(--text));
+    padding-top: 0.15rem;
+  }
+
+  .coherence-glossary-list .row-body strong {
+    display: block;
+    font-size: 0.98rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .coherence-glossary-list .row-body p {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--text) 80%, transparent);
+  }
+
+  .coherence-glossary-list .row-body .count {
+    display: inline-block;
+    margin-top: 0.3rem;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: color-mix(in srgb, var(--text) 48%, transparent);
+  }
+
+  /* ── Definition card: fixed-position panel that fades in when a term is
+     selected (by click, by list tap, or by the walkthrough advancing). */
+  .coherence-term-card {
+    position: fixed;
+    left: 50%;
+    bottom: 2rem;
+    transform: translate(-50%, 20px);
+    z-index: 9;
+    max-width: 36rem;
+    width: calc(100% - 3rem);
+    background: color-mix(in srgb, var(--bg) 94%, transparent);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid color-mix(in srgb, #ffd66b 40%, color-mix(in srgb, var(--border) 60%, transparent));
+    border-radius: 6px;
+    padding: 1.25rem 1.4rem;
+    pointer-events: auto;
+    opacity: 0;
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+  }
+  .coherence-term-card.visible { opacity: 1; transform: translate(-50%, 0); }
+
+  .coherence-term-card .kicker {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #ffd66b;
+    margin: 0 0 0.35rem;
+  }
+  .coherence-term-card h3 {
+    margin: 0 0 0.55rem;
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
+  }
+  .coherence-term-card p.def {
+    margin: 0 0 0.9rem;
+    font-size: 0.97rem;
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--text) 92%, transparent);
+  }
+  .coherence-term-card .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 1.2rem;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--text) 60%, transparent);
+    margin-bottom: 0.9rem;
+  }
+  .coherence-term-card .meta a {
+    color: color-mix(in srgb, var(--text) 88%, transparent);
+    text-decoration: none;
+    border-bottom: 1px dotted currentColor;
+  }
+  .coherence-term-card .actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .coherence-term-card button, .coherence-term-card .inline-link {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 0.55rem 0.95rem;
+    border-radius: 3px;
+    border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+    color: var(--text);
+    background: transparent;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .coherence-term-card .primary {
+    border-color: color-mix(in srgb, #ffd66b 70%, transparent);
+    color: #ffd66b;
+    background: color-mix(in srgb, #ffd66b 12%, transparent);
+  }
+  .coherence-term-card .primary:hover { background: color-mix(in srgb, #ffd66b 24%, transparent); color: #fff; }
+  .coherence-term-card .exit { opacity: 0.7; }
+  .coherence-term-card .exit:hover { opacity: 1; }
+</style>
+
+<header class="coherence-pretext">
+  <p class="coherence-kicker">jaredfoy.com / glossary</p>
+  <h1>The Coherence Glossary</h1>
+  <p class="coherence-subtitle">Eighteen load-bearing terms, in the order they have to arrive.</p>
+  <p class="coherence-lede">Each term is one concept the corpus cannot do without. Each marker sits at the centroid of the documents that discuss it &mdash; so the glossary is not a flat list, it is a shape on the sphere. Click any marker to see its definition. Or begin the entracement walkthrough, and the camera will carry you through the sequence.</p>
+  <nav class="coherence-routes" aria-label="Choose a route through the corpus">
+    <a href="/resolve/coherence" class="coherence-route-pill">Engineer</a>
+    <a href="/resolve/coherence/alignment" class="coherence-route-pill">Alignment Researcher</a>
+    <a href="/resolve/coherence/philosopher" class="coherence-route-pill">Philosopher</a>
+    <a href="/resolve/glossary" class="coherence-route-pill is-active">Glossary</a>
+  </nav>
+  <a class="coherence-entrace-cta" id="entraceStartBtn" href="#" role="button">Begin entracement &rarr;</a>
+</header>
+
+<div class="coherence-glossary-list-toggle-wrap">
+  <button class="coherence-glossary-list-toggle" id="glossaryListToggle" type="button">Show list view</button>
+</div>
+
+<section class="coherence-glossary-list" id="glossaryList" aria-label="Flat list of the eighteen glossary terms">
+  <h2>All 18 terms</h2>
+  <ol id="glossaryListInner"><li>Loading&hellip;</li></ol>
+</section>
+
+<!-- Term definition card — shared by one-off clicks and the walkthrough. -->
+<aside class="coherence-term-card" id="termCard" aria-live="polite" hidden>
+  <p class="kicker" id="cardKicker">Term 01 of 18</p>
+  <h3 id="cardTitle">Term title</h3>
+  <p class="def" id="cardDef">Definition text.</p>
+  <p class="meta">
+    <span id="cardMatchCount">0 matches</span>
+    <a id="cardAnchor" href="#">anchor doc</a>
+  </p>
+  <div class="actions">
+    <button type="button" class="exit" id="cardExit">Exit entracement</button>
+    <button type="button" class="primary" id="cardContinue">Continue &rarr;</button>
+  </div>
+</aside>
+
+<!-- Coda: empty scroll section kept for consistency with the other routes,
+     so the zoom-in behavior at the bottom of the page still feels the same
+     after the user finishes exploring the glossary. -->
+<section class="coherence-scroll-section coherence-coda" aria-hidden="true">
+  <div class="coherence-coda-hint">scroll to enter the sphere &darr;</div>
+</section>
+
+<footer class="coherence-epilogue">
+  <p>The glossary is the path, not the index. Read it in order once &mdash; the order is load-bearing &mdash; then return to the corpus and the terms will stand up where they belong.</p>
+</footer>
+
+<script>
+// ── Desktop walkthrough controller ──
+// Skipped entirely on phones (the mobile controller below runs instead).
+// State machine: idle | walking | done. The card is the only visible UI
+// surface once walking; clicking a marker mid-walk advances the state to
+// the clicked term. Exit at any time returns to idle (free navigation).
+(function() {
+  if (window.__IS_GLOSSARY_MOBILE) return;
+
+  var STATE = { mode: 'idle', index: 0, prevPos: null };
+
+  var card = document.getElementById('termCard');
+  var cardKicker = document.getElementById('cardKicker');
+  var cardTitle = document.getElementById('cardTitle');
+  var cardDef = document.getElementById('cardDef');
+  var cardMatchCount = document.getElementById('cardMatchCount');
+  var cardAnchor = document.getElementById('cardAnchor');
+  var cardExit = document.getElementById('cardExit');
+  var cardContinue = document.getElementById('cardContinue');
+  var startBtn = document.getElementById('entraceStartBtn');
+  var listToggle = document.getElementById('glossaryListToggle');
+  var list = document.getElementById('glossaryList');
+  var listInner = document.getElementById('glossaryListInner');
+
+  var terms = [];
+
+  function showCard() {
+    card.hidden = false;
+    requestAnimationFrame(function() { card.classList.add('visible'); });
+  }
+  function hideCard() {
+    card.classList.remove('visible');
+    setTimeout(function() { card.hidden = true; }, 500);
+  }
+
+  function renderCard(idx) {
+    if (idx < 0 || idx >= terms.length) return;
+    var t = terms[idx];
+    cardKicker.textContent = 'Term ' + String(t.path_order).padStart(2, '0') + ' of ' + terms.length;
+    cardTitle.textContent = t.term;
+    cardDef.textContent = t.description;
+    cardMatchCount.textContent = t.matched_doc_count + (t.matched_doc_count === 1 ? ' match' : ' matches');
+    if (t.anchor_slug) {
+      cardAnchor.href = '/resolve/doc/' + t.anchor_slug;
+      cardAnchor.textContent = 'Anchor: Doc ' + String(t.anchor_doc).padStart(3, '0');
+      cardAnchor.style.display = '';
+    } else {
+      cardAnchor.style.display = 'none';
+    }
+    if (STATE.mode === 'walking') {
+      cardContinue.textContent = (idx === terms.length - 1) ? 'Finish entracement' : 'Continue \u2192';
+      cardContinue.style.display = '';
+    } else {
+      cardContinue.style.display = 'none';
+    }
+  }
+
+  function advanceTo(idx, drawPath) {
+    if (idx < 0 || idx >= terms.length) return;
+    var t = terms[idx];
+    if (!t || !t.sphere_pos) return;
+    if (window.__coherenceAim) window.__coherenceAim(t.sphere_pos, 400);
+    if (window.__coherenceSelectTerm) window.__coherenceSelectTerm(idx);
+    if (drawPath && STATE.prevPos && window.__coherenceDrawPathSegment) {
+      window.__coherenceDrawPathSegment(STATE.prevPos, t.sphere_pos);
+    }
+    STATE.prevPos = t.sphere_pos;
+    STATE.index = idx;
+    renderCard(idx);
+    showCard();
+  }
+
+  function startWalkthrough() {
+    if (terms.length === 0) return;
+    STATE.mode = 'walking';
+    STATE.index = 0;
+    STATE.prevPos = null;
+    if (window.__coherenceClearPath) window.__coherenceClearPath();
+    advanceTo(0, false);
+  }
+
+  function endWalkthrough() {
+    STATE.mode = 'done';
+    if (window.__coherenceAim) window.__coherenceAim([0, 0, 1], 620);
+    if (window.__coherenceClearSelection) window.__coherenceClearSelection();
+    cardKicker.textContent = 'Entracement complete';
+    cardTitle.textContent = 'The path is drawn.';
+    cardDef.textContent = 'You have walked the eighteen terms in the order they have to arrive. The sphere holds them now as a shape, not a list.';
+    cardMatchCount.textContent = terms.length + ' terms';
+    cardAnchor.href = '/resolve';
+    cardAnchor.textContent = 'Full corpus';
+    cardContinue.style.display = 'none';
+    cardExit.textContent = 'Close';
+    var meta = cardAnchor.parentElement;
+    if (meta && !meta.querySelector('[data-post-link]')) {
+      var a1 = document.createElement('a');
+      a1.href = '/resolve/doc/328-methodology'; a1.dataset.postLink = '1'; a1.textContent = 'Methodology (Doc 328)';
+      var a2 = document.createElement('a');
+      a2.href = '/resolve/doc/329-onboarding'; a2.dataset.postLink = '1'; a2.textContent = 'Onboarding (Doc 329)';
+      meta.appendChild(a1); meta.appendChild(a2);
+    }
+  }
+
+  function exitWalkthrough() {
+    STATE.mode = 'idle';
+    STATE.index = 0;
+    STATE.prevPos = null;
+    if (window.__coherenceClearSelection) window.__coherenceClearSelection();
+    if (window.__coherenceClearPath) window.__coherenceClearPath();
+    hideCard();
+    cardExit.textContent = 'Exit entracement';
+  }
+
+  if (startBtn) startBtn.addEventListener('click', function(ev) {
+    ev.preventDefault();
+    startWalkthrough();
+  });
+
+  if (cardContinue) cardContinue.addEventListener('click', function() {
+    if (STATE.mode !== 'walking') return;
+    if (STATE.index >= terms.length - 1) { endWalkthrough(); return; }
+    advanceTo(STATE.index + 1, true);
+  });
+
+  if (cardExit) cardExit.addEventListener('click', function() { exitWalkthrough(); });
+
+  if (listToggle) listToggle.addEventListener('click', function() {
+    var open = list.classList.toggle('open');
+    listToggle.textContent = open ? 'Hide list view' : 'Show list view';
+  });
+
+  window.__coherenceOnTermsReady = function(td) {
+    terms = td;
+    var html = '';
+    for (var i = 0; i < terms.length; i++) {
+      var t = terms[i];
+      html += '<li data-idx="' + i + '">' +
+        '<span class="ord">' + String(t.path_order).padStart(2, '0') + '</span>' +
+        '<span class="row-body"><strong>' + t.term + '</strong><p>' + t.description + '</p>' +
+        '<span class="count">' + t.matched_doc_count + (t.matched_doc_count === 1 ? ' match' : ' matches') + '</span></span>' +
+        '</li>';
+    }
+    listInner.innerHTML = html;
+    var items = listInner.querySelectorAll('li');
+    for (var j = 0; j < items.length; j++) {
+      items[j].addEventListener('click', function(ev) {
+        var idx = Number(ev.currentTarget.dataset.idx);
+        STATE.mode = 'idle';
+        STATE.index = idx;
+        if (window.__coherenceAim && terms[idx] && terms[idx].sphere_pos) {
+          window.__coherenceAim(terms[idx].sphere_pos, 420);
+        }
+        if (window.__coherenceSelectTerm) window.__coherenceSelectTerm(idx);
+      });
+    }
+  };
+
+  window.__coherenceOnTermSelected = function(idx, t) {
+    renderCard(idx);
+    showCard();
+  };
+})();
+
+// ── Mobile controller ──
+// Runs only when __IS_GLOSSARY_MOBILE is true. Fetches /api/terms directly
+// (the sphere module isn't loaded in mobile mode), populates the list view
+// in the layout, and drives the full-screen card-flow for the walkthrough.
+(function() {
+  if (!window.__IS_GLOSSARY_MOBILE) return;
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  var listEl = document.getElementById('mobileTermList');
+  var beginBtn = document.getElementById('mobileBeginBtn');
+  var flow = document.getElementById('glossaryCardFlow');
+  var flowCard = document.getElementById('flowCard');
+  var flowKicker = document.getElementById('flowKicker');
+  var flowTitle = document.getElementById('flowTitle');
+  var flowDef = document.getElementById('flowDef');
+  var flowSeries = document.getElementById('flowSeries');
+  var flowAnchor = document.getElementById('flowAnchor');
+  var flowDoneLinks = document.getElementById('flowDoneLinks');
+  var flowProgress = document.getElementById('flowProgress');
+  var flowBarFill = document.getElementById('flowBarFill');
+  var flowExitBtn = document.getElementById('flowExitBtn');
+  var flowBackBtn = document.getElementById('flowBackBtn');
+  var flowContinueBtn = document.getElementById('flowContinueBtn');
+
+  var terms = [];
+  var idx = 0;
+  var mode = 'idle'; // idle | walking | done
+  var lastScrollY = 0;
+
+  function renderList() {
+    if (terms.length === 0) {
+      listEl.innerHTML = '<li style="padding:1.5rem; text-align:center; color:color-mix(in srgb, var(--text) 55%, transparent);">No terms available.</li>';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < terms.length; i++) {
+      var t = terms[i];
+      var series = t.series_title ? '<span class="series-ribbon">' + escapeHtml(t.series_title) + '</span>' : '';
+      var anchor = '';
+      if (t.anchor_slug) {
+        var docNum = String(t.anchor_doc).padStart(3, '0');
+        anchor = '<a class="anchor-link" href="/resolve/doc/' + encodeURIComponent(t.anchor_slug) + '">Read Doc ' + docNum + ' &rarr;</a>';
+      }
+      html += '<li data-idx="' + i + '">' +
+        '<span class="ord">' + String(t.path_order).padStart(2, '0') + '</span>' +
+        '<div>' +
+          '<h3>' + escapeHtml(t.term) + '</h3>' +
+          '<p class="def">' + escapeHtml(t.description) + '</p>' +
+          '<div class="row-foot">' + anchor + series + '</div>' +
+        '</div>' +
+      '</li>';
+    }
+    listEl.innerHTML = html;
+    // No per-item tap on mobile — each card already has its Read Doc link.
+    // Extra gesture interactivity would compete with scroll.
+  }
+
+  function openFlow(startIdx) {
+    if (terms.length === 0) return;
+    mode = 'walking';
+    idx = Math.max(0, Math.min(startIdx | 0, terms.length - 1));
+    lastScrollY = window.scrollY || 0;
+    document.body.style.overflow = 'hidden';
+    flow.classList.add('open');
+    // Fill the card synchronously on open — skip the 180ms leaving/entering
+    // swap so the user sees content immediately, not a blank panel.
+    renderFlowSync();
+  }
+
+  // Synchronous render — used on the first paint when the overlay opens.
+  function renderFlowSync() {
+    var t = terms[idx];
+    if (!t) return;
+    flowCard.classList.remove('leaving');
+    flowCard.classList.remove('entering');
+    flowKicker.textContent = 'Term ' + String(t.path_order).padStart(2, '0') + ' of ' + terms.length;
+    flowTitle.textContent = t.term;
+    flowDef.textContent = t.description;
+    if (t.series_title) {
+      flowSeries.textContent = t.series_title;
+      flowSeries.style.display = '';
+    } else {
+      flowSeries.style.display = 'none';
+    }
+    if (t.anchor_slug) {
+      flowAnchor.href = '/resolve/doc/' + encodeURIComponent(t.anchor_slug);
+      flowAnchor.textContent = 'Read Doc ' + String(t.anchor_doc).padStart(3, '0') + ' \u2192';
+      flowAnchor.style.display = '';
+    } else {
+      flowAnchor.style.display = 'none';
+    }
+    flowDoneLinks.style.display = 'none';
+    flowContinueBtn.textContent = (idx === terms.length - 1) ? 'Finish \u2192' : 'Continue \u2192';
+    flowBackBtn.style.display = idx === 0 ? 'none' : '';
+    var prog = idx + 1;
+    flowProgress.textContent = prog + ' / ' + terms.length;
+    flowBarFill.style.width = ((prog / terms.length) * 100) + '%';
+  }
+
+  function closeFlow() {
+    mode = 'idle';
+    flow.classList.remove('open');
+    document.body.style.overflow = '';
+    window.scrollTo(0, lastScrollY);
+  }
+
+  function renderFlow(enterFromRight) {
+    var isDone = (mode === 'done' || idx === terms.length);
+    var t = isDone ? null : terms[idx];
+    if (!isDone && !t) return;
+
+    // Animate out, then swap content, then animate in. Keeps the transition
+    // responsive (~280ms each way) without thrashing layout.
+    flowCard.classList.add('leaving');
+    setTimeout(function() {
+      if (isDone) {
+        // Completion screen sits at a pseudo-index past the last term.
+        flowKicker.textContent = 'Entracement complete';
+        flowTitle.textContent = 'The path is walked.';
+        flowDef.textContent = 'You have walked the eighteen terms in the order they have to arrive. They stand together now as a shape.';
+        flowSeries.style.display = 'none';
+        flowAnchor.style.display = 'none';
+        flowDoneLinks.style.display = 'flex';
+        flowContinueBtn.textContent = 'Return to list';
+        flowBackBtn.style.display = '';
+        flowProgress.textContent = terms.length + ' / ' + terms.length;
+        flowBarFill.style.width = '100%';
+      } else {
+        flowKicker.textContent = 'Term ' + String(t.path_order).padStart(2, '0') + ' of ' + terms.length;
+        flowTitle.textContent = t.term;
+        flowDef.textContent = t.description;
+        if (t.series_title) {
+          flowSeries.textContent = t.series_title;
+          flowSeries.style.display = '';
+        } else {
+          flowSeries.style.display = 'none';
+        }
+        if (t.anchor_slug) {
+          flowAnchor.href = '/resolve/doc/' + encodeURIComponent(t.anchor_slug);
+          flowAnchor.textContent = 'Read Doc ' + String(t.anchor_doc).padStart(3, '0') + ' \u2192';
+          flowAnchor.style.display = '';
+        } else {
+          flowAnchor.style.display = 'none';
+        }
+        flowDoneLinks.style.display = 'none';
+        flowContinueBtn.textContent = (idx === terms.length - 1) ? 'Finish \u2192' : 'Continue \u2192';
+        flowBackBtn.style.display = idx === 0 ? 'none' : '';
+        var prog = idx + 1;
+        flowProgress.textContent = prog + ' / ' + terms.length;
+        flowBarFill.style.width = ((prog / terms.length) * 100) + '%';
+      }
+
+      // Enter animation — from the right if advancing, left if going back.
+      flowCard.classList.remove('leaving');
+      flowCard.classList.add('entering');
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+          flowCard.classList.remove('entering');
+        });
+      });
+    }, 180);
+  }
+
+  function advance() {
+    if (mode === 'done') {
+      // Return-to-list pressed from completion screen.
+      closeFlow();
+      return;
+    }
+    if (idx >= terms.length - 1) {
+      mode = 'done';
+      idx = terms.length; // past-the-end marker for the completion view
+      renderFlow(true);
+      return;
+    }
+    idx += 1;
+    renderFlow(true);
+  }
+
+  function goBack() {
+    if (mode === 'done') {
+      mode = 'walking';
+      idx = terms.length - 1;
+      renderFlow(false);
+      return;
+    }
+    if (idx > 0) {
+      idx -= 1;
+      renderFlow(false);
+    }
+  }
+
+  beginBtn.addEventListener('click', function() { openFlow(0); });
+  flowExitBtn.addEventListener('click', function() { closeFlow(); });
+  flowContinueBtn.addEventListener('click', function() { advance(); });
+  flowBackBtn.addEventListener('click', function() { goBack(); });
+
+  // Swipe support — light, doesn't hijack vertical scroll in the list.
+  // Only active when the overlay is open.
+  var touchStartX = null, touchStartY = null;
+  flow.addEventListener('touchstart', function(ev) {
+    if (ev.touches.length !== 1) return;
+    touchStartX = ev.touches[0].clientX;
+    touchStartY = ev.touches[0].clientY;
+  }, { passive: true });
+  flow.addEventListener('touchend', function(ev) {
+    if (touchStartX == null) return;
+    var t = ev.changedTouches[0];
+    var dx = t.clientX - touchStartX;
+    var dy = t.clientY - touchStartY;
+    touchStartX = null; touchStartY = null;
+    if (Math.abs(dx) > 60 && Math.abs(dy) < 40) {
+      if (dx < 0) advance(); else goBack();
+    }
+  }, { passive: true });
+
+  // Escape key closes the overlay (useful when the phone is in landscape
+  // with a hardware/BT keyboard).
+  document.addEventListener('keydown', function(ev) {
+    if (!flow.classList.contains('open')) return;
+    if (ev.key === 'Escape') closeFlow();
+    else if (ev.key === 'ArrowRight') advance();
+    else if (ev.key === 'ArrowLeft') goBack();
+  });
+
+  fetch('/api/terms').then(function(r) { return r.json(); }).then(function(td) {
+    if (!td || !td.terms) return;
+    terms = td.terms;
+    renderList();
+  }).catch(function() {
+    listEl.innerHTML = '<li style="padding:1.5rem; text-align:center; color:color-mix(in srgb, var(--text) 55%, transparent);">Could not load terms. Please try again.</li>';
+  });
+})();
+</script>

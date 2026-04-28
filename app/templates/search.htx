@@ -27,7 +27,7 @@
             return;
           }
           results.innerHTML = data.results.map(function(r) {
-            return '<a href="/doc/' + r.slug + '" class="search-result">' +
+            return '<a href="/resolve/doc/' + r.slug + '" class="search-result">' +
               '<span class="search-result-title">' + (r.title || r.slug) + '</span>' +
               (r.introduction ? '<span class="search-result-intro">' + r.introduction.slice(0, 160) + '...</span>' : '') +
               (r.snippet ? '<span class="search-result-snippet">' + r.snippet + '</span>' : '') +

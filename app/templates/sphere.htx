@@ -1,19 +1,209 @@
-<div class="page-header">
-  <h1>Coherence Sphere</h1>
-  <p class="section-desc">The RESOLVE corpus as a 3D coherence field. 254 documents. 620 edges. Foundational documents near the center. Connections glow between related nodes. Drag to rotate. Scroll to zoom. Click to navigate.</p>
+<style>
+  /* Full-immersive sphere: hide chrome, stretch canvas, overlay UI */
+  body.sphere-full { overflow: hidden; }
+  body.sphere-full .scroll-progress,
+  body.sphere-full .mobile-breadcrumb,
+  body.sphere-full .mobile-menu-btn,
+  body.sphere-full .mobile-top-btn { display: none !important; }
+  body.sphere-full .canvas { display: block; padding: 0; margin: 0; max-width: none; }
+  body.sphere-full .nav-col { display: none !important; }
+  body.sphere-full .content-col { padding: 0; margin: 0; max-width: none; width: 100vw; height: 100vh; overflow: hidden; }
+
+  #sphereStage { position: fixed; inset: 0; width: 100vw; height: 100vh; overflow: hidden; background: var(--bg, #0a0a0f); }
+  #sphereStage canvas { display: block; width: 100vw; height: 100vh; touch-action: none; }
+
+  #sphereTooltip {
+    position: absolute;
+    pointer-events: none;
+    background: rgba(10, 10, 20, 0.92);
+    color: #e8e8f0;
+    border: 1px solid rgba(200, 200, 220, 0.2);
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 12px;
+    max-width: 320px;
+    display: none;
+    z-index: 5;
+    line-height: 1.4;
+  }
+  .theme-light #sphereTooltip {
+    background: rgba(255, 255, 252, 0.96);
+    color: #1a1a1f;
+    border-color: rgba(0, 0, 0, 0.15);
+  }
+
+  #sphereHeader {
+    position: fixed; top: 0; left: 0; right: 0;
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 14px;
+    z-index: 4;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(10,10,20,0.55), rgba(10,10,20,0));
+  }
+  .theme-light #sphereHeader {
+    background: linear-gradient(180deg, rgba(248,247,242,0.75), rgba(248,247,242,0));
+  }
+  #sphereHeader > * { pointer-events: auto; }
+  #sphereHeader a.back-link {
+    color: inherit; text-decoration: none; font-family: ui-monospace, monospace;
+    font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 6px 10px; border: 1px solid currentColor; border-radius: 3px;
+    opacity: 0.75;
+  }
+  #sphereHeader a.back-link:hover { opacity: 1; }
+  #sphereHeader .sphere-title {
+    font-family: ui-monospace, monospace; font-size: 13px;
+    letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.65;
+  }
+  #sphereHeader .sphere-hint {
+    margin-left: auto; font-size: 11px; opacity: 0.5;
+    font-family: ui-monospace, monospace;
+  }
+  #projToggle {
+    display: inline-flex; gap: 0;
+    border: 1px solid currentColor; border-radius: 3px;
+    overflow: hidden; opacity: 0.75;
+  }
+  #projToggle .proj-btn {
+    background: none; color: inherit; border: none; cursor: pointer;
+    font-family: ui-monospace, monospace; font-size: 11px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 6px 12px;
+    transition: background 0.12s ease-out;
+  }
+  #projToggle .proj-btn:not(:last-child) { border-right: 1px solid currentColor; }
+  #projToggle .proj-btn.active { background: rgba(124, 138, 255, 0.22); }
+  #projToggle .proj-btn:hover:not(.active) { background: rgba(255, 255, 255, 0.06); }
+  .theme-light #projToggle .proj-btn:hover:not(.active) { background: rgba(0, 0, 0, 0.04); }
+  #projToggle .proj-btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+  @media (max-width: 640px) {
+    #sphereHeader .sphere-hint { display: none; }
+    #sphereHeader { padding: 10px 12px; }
+  }
+
+  #nodeSidebar {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 420px; max-width: 92vw;
+    background: var(--bg-panel, #12121a);
+    border-left: 1px solid var(--border, rgba(200,200,220,0.15));
+    transform: translateX(100%);
+    transition: transform 0.22s ease-out;
+    z-index: 10;
+    display: flex; flex-direction: column;
+    box-shadow: -8px 0 24px rgba(0,0,0,0.35);
+  }
+  .theme-light #nodeSidebar { background: #fffdf5; border-left-color: rgba(0,0,0,0.12); box-shadow: -8px 0 24px rgba(0,0,0,0.08); }
+  #nodeSidebar.open { transform: translateX(0); }
+  #nodeSidebar .sidebar-header {
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid var(--border, rgba(200,200,220,0.12));
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  #nodeSidebar .sidebar-docnum {
+    font-family: ui-monospace, monospace; font-size: 12px;
+    letter-spacing: 0.08em; opacity: 0.65;
+  }
+  #nodeSidebar .sidebar-title {
+    font-size: 18px; line-height: 1.3; margin: 4px 0 0; font-weight: 600;
+  }
+  #nodeSidebar .sidebar-close {
+    margin-left: auto; background: none; border: 1px solid currentColor;
+    color: inherit; width: 28px; height: 28px; border-radius: 3px;
+    font-size: 16px; line-height: 1; cursor: pointer; opacity: 0.6;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  #nodeSidebar .sidebar-close:hover { opacity: 1; }
+  #nodeSidebar .sidebar-body {
+    padding: 16px 20px; overflow-y: auto; flex: 1;
+    font-size: 15px; line-height: 1.55;
+  }
+  #nodeSidebar .sidebar-body p { margin: 0 0 1em; }
+  #nodeSidebar .sidebar-loading,
+  #nodeSidebar .sidebar-empty { opacity: 0.5; font-style: italic; }
+  #nodeSidebar .sidebar-footer {
+    padding: 14px 20px; border-top: 1px solid var(--border, rgba(200,200,220,0.12));
+    display: flex; gap: 10px;
+  }
+  #nodeSidebar .sidebar-footer a {
+    font-family: ui-monospace, monospace; font-size: 12px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 8px 12px; border: 1px solid currentColor; border-radius: 3px;
+    text-decoration: none; color: inherit; opacity: 0.8;
+  }
+  #nodeSidebar .sidebar-footer a:hover { opacity: 1; }
+  #nodeSidebar .sidebar-section {
+    font-family: ui-monospace, monospace; font-size: 11px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    opacity: 0.5; margin-top: 4px;
+  }
+  @media (max-width: 640px) {
+    #nodeSidebar { width: 100vw; max-width: 100vw; border-left: none; }
+  }
+</style>
+
+<div id="sphereStage">
+  <div id="sphereTooltip"></div>
 </div>
 
-<div id="sphereContainer" style="width:100%;height:75vh;border:1px solid var(--border);border-radius:6px;position:relative;overflow:hidden;">
-  <div id="sphereTooltip" class="network-tooltip"></div>
-</div>
+<header id="sphereHeader">
+  <a href="/" class="back-link">← RESOLVE</a>
+  <span class="sphere-title" id="sphereTitle">PCA Projection</span>
+  <div id="projToggle" role="group" aria-label="Projection method">
+    <button type="button" data-proj="pca" class="proj-btn active">PCA</button>
+    <button type="button" data-proj="umap" class="proj-btn">UMAP</button>
+  </div>
+  <span class="sphere-hint">Drag to rotate · Scroll to zoom · Click a node</span>
+</header>
+
+<aside id="nodeSidebar" aria-hidden="true">
+  <div class="sidebar-header">
+    <div>
+      <div class="sidebar-docnum" id="sbDocNum"></div>
+      <h2 class="sidebar-title" id="sbTitle"></h2>
+      <div class="sidebar-section" id="sbSection"></div>
+    </div>
+    <button type="button" class="sidebar-close" id="sbClose" aria-label="Close">×</button>
+  </div>
+  <div class="sidebar-body" id="sbBody">
+    <p class="sidebar-empty">Click a node on the sphere to read its summary.</p>
+  </div>
+  <div class="sidebar-footer">
+    <a href="#" id="sbFull" target="_self">Read full document →</a>
+  </div>
+</aside>
+
+<script>
+(function() {
+  document.body.classList.add('sphere-full');
+})();
+</script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (function() {
-  var container = document.getElementById('sphereContainer');
+  var stage = document.getElementById('sphereStage');
   var tooltip = document.getElementById('sphereTooltip');
-  var width = container.clientWidth;
-  var height = container.clientHeight;
+  var sidebar = document.getElementById('nodeSidebar');
+  var sbClose = document.getElementById('sbClose');
+  var sbDocNum = document.getElementById('sbDocNum');
+  var sbTitle = document.getElementById('sbTitle');
+  var sbSection = document.getElementById('sbSection');
+  var sbBody = document.getElementById('sbBody');
+  var sbFull = document.getElementById('sbFull');
+  var width = window.innerWidth;
+  var height = window.innerHeight;
+
+  var SECTION_COLORS = {
+    framework: 0x7c8aff, method: 0x2dd4bf, safety: 0xf87171, ground: 0xfbbf24,
+    letters: 0xa78bfa, architecture: 0x34d399, formalization: 0xfb923c,
+    evidence: 0x60a5fa, economics: 0xf472b6
+  };
+  var SECTION_LABELS = {
+    framework: 'framework', method: 'method', safety: 'safety', ground: 'ground',
+    letters: 'letters', architecture: 'architecture', formalization: 'formalization',
+    evidence: 'evidence', economics: 'economics'
+  };
 
   var scene = new THREE.Scene();
   var isLight = document.documentElement.classList.contains('theme-light');
@@ -27,13 +217,7 @@
   var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(width, height);
   renderer.setPixelRatio(window.devicePixelRatio);
-  container.appendChild(renderer.domElement);
-
-  var SECTION_COLORS = {
-    framework: 0x7c8aff, method: 0x2dd4bf, safety: 0xf87171, ground: 0xfbbf24,
-    letters: 0xa78bfa, architecture: 0x34d399, formalization: 0xfb923c,
-    evidence: 0x60a5fa, economics: 0xf472b6
-  };
+  stage.appendChild(renderer.domElement);
 
   var raycaster = new THREE.Raycaster();
   raycaster.params.Points.threshold = 5;
@@ -44,98 +228,220 @@
   scene.add(edgeGroup);
 
   var nodes = [], nodeData = [], positions = [];
-
-  // Mouse controls
-  var isDown = false, prevX = 0, prevY = 0, rotX = 0, rotY = 0, targetRotX = 0, targetRotY = 0;
+  var isDown = false, downX = 0, downY = 0, moved = false;
+  var prevX = 0, prevY = 0, rotX = 0, rotY = 0, targetRotX = 0, targetRotY = 0;
   var autoRotate = true;
+  var selectedIdx = -1;
 
-  container.addEventListener('mousedown', function(e) { isDown = true; autoRotate = false; prevX = e.clientX; prevY = e.clientY; });
-  container.addEventListener('mousemove', function(e) {
+  // ── Pointer controls: unified mouse + touch ─────────────────────────
+  function onPointerDown(e) {
+    var p = getPoint(e);
+    isDown = true; moved = false;
+    autoRotate = false;
+    prevX = downX = p.x; prevY = downY = p.y;
+  }
+  function onPointerMove(e) {
+    var p = getPoint(e);
     if (isDown) {
-      targetRotY += (e.clientX - prevX) * 0.005;
-      targetRotX += (e.clientY - prevY) * 0.005;
+      var dx = p.x - prevX, dy = p.y - prevY;
+      if (Math.abs(p.x - downX) + Math.abs(p.y - downY) > 4) moved = true;
+      targetRotY += dx * 0.005;
+      targetRotX += dy * 0.005;
       targetRotX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotX));
-      prevX = e.clientX; prevY = e.clientY;
+      prevX = p.x; prevY = p.y;
     }
-    // Tooltip
-    var rect = container.getBoundingClientRect();
-    mouse.x = ((e.clientX - rect.left) / width) * 2 - 1;
-    mouse.y = -((e.clientY - rect.top) / height) * 2 + 1;
-  });
-  container.addEventListener('mouseup', function() { isDown = false; });
-  container.addEventListener('mouseleave', function() { isDown = false; tooltip.style.display = 'none'; });
-  container.addEventListener('wheel', function(e) {
+    mouse.x = (p.x / width) * 2 - 1;
+    mouse.y = -(p.y / height) * 2 + 1;
+  }
+  function onPointerUp(e) {
+    if (isDown && !moved) { tryClickAtCurrentMouse(); }
+    isDown = false;
+  }
+  function getPoint(e) {
+    if (e.touches && e.touches.length > 0) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    if (e.changedTouches && e.changedTouches.length > 0) return { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY };
+    return { x: e.clientX, y: e.clientY };
+  }
+
+  renderer.domElement.addEventListener('mousedown', onPointerDown);
+  window.addEventListener('mousemove', onPointerMove);
+  window.addEventListener('mouseup', onPointerUp);
+  renderer.domElement.addEventListener('touchstart', function(e) { onPointerDown(e); }, { passive: true });
+  renderer.domElement.addEventListener('touchmove', function(e) { onPointerMove(e); }, { passive: true });
+  renderer.domElement.addEventListener('touchend', onPointerUp);
+  renderer.domElement.addEventListener('mouseleave', function() { tooltip.style.display = 'none'; });
+
+  // Scoped to canvas: page has no scrollable area anyway, but we still want
+  // the page chrome (keyboard shortcuts, etc.) to keep working.
+  renderer.domElement.addEventListener('wheel', function(e) {
     e.preventDefault();
-    camera.position.z = Math.max(150, Math.min(1200, camera.position.z + e.deltaY * 0.5));
+    camera.position.z = Math.max(140, Math.min(1200, camera.position.z + e.deltaY * 0.5));
   }, { passive: false });
 
-  container.addEventListener('click', function(e) {
-    var rect = container.getBoundingClientRect();
-    mouse.x = ((e.clientX - rect.left) / width) * 2 - 1;
-    mouse.y = -((e.clientY - rect.top) / height) * 2 + 1;
+  function tryClickAtCurrentMouse() {
     raycaster.setFromCamera(mouse, camera);
     var intersects = raycaster.intersectObjects(nodeGroup.children);
     if (intersects.length > 0) {
       var idx = intersects[0].object.userData.index;
-      if (idx !== undefined && nodeData[idx]) {
-        window.location.href = '/doc/' + nodeData[idx].id;
-      }
+      if (idx !== undefined && nodeData[idx]) openNode(idx);
     }
+  }
+
+  // ── Sidebar open/close ──────────────────────────────────────────────
+  function openNode(idx) {
+    var n = nodeData[idx];
+    if (!n) return;
+    selectedIdx = idx;
+    sidebar.classList.add('open');
+    sidebar.setAttribute('aria-hidden', 'false');
+    var colorHex = '#' + (SECTION_COLORS[n.section] || 0x888888).toString(16).padStart(6, '0');
+    sbDocNum.textContent = n.doc_num ? ('DOC ' + n.doc_num) : '';
+    sbDocNum.style.color = colorHex;
+    sbTitle.textContent = n.title;
+    sbSection.textContent = SECTION_LABELS[n.section] || n.section || '';
+    sbFull.href = '/resolve/doc/' + n.id;
+    sbBody.innerHTML = '<p class="sidebar-loading">Loading reader\u2019s summary\u2026</p>';
+
+    fetch('/api/doc-intro/' + encodeURIComponent(n.id))
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(data) {
+        if (selectedIdx !== idx) return;
+        if (!data || !data.intro) {
+          sbBody.innerHTML = '<p class="sidebar-empty">No reader\u2019s summary available for this document.</p>';
+          return;
+        }
+        // Paragraphs split on double-newlines; within a paragraph, single
+        // newlines become spaces so the rendered prose flows naturally.
+        var paras = data.intro.split(/\n\s*\n/).map(function(p) { return p.replace(/\n/g, ' ').trim(); }).filter(Boolean);
+        sbBody.innerHTML = paras.map(function(p) {
+          return '<p>' + escapeHtml(p) + '</p>';
+        }).join('');
+      })
+      .catch(function() {
+        if (selectedIdx !== idx) return;
+        sbBody.innerHTML = '<p class="sidebar-empty">Failed to load summary.</p>';
+      });
+  }
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    sidebar.setAttribute('aria-hidden', 'true');
+    selectedIdx = -1;
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function(c) {
+      return c === '&' ? '&amp;' : c === '<' ? '&lt;' : c === '>' ? '&gt;' : c === '"' ? '&quot;' : '&#39;';
+    });
+  }
+  sbClose.addEventListener('click', closeSidebar);
+  window.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && sidebar.classList.contains('open')) closeSidebar();
   });
+
+  // ── Data load ───────────────────────────────────────────────────────
+  var RADIUS = 200;
+  var nodeIndex = {};
+  var edgeData = [];
+  var edgeLines = [];
+  var currentProjection = 'pca';
+
+  function positionFromProjection(n, i, totalNodes, projKey) {
+    // projKey: 'pca' | 'umap'. Returns [x,y,z] in world coords scaled by RADIUS.
+    var src = projKey === 'umap' ? n.umap_pos : n.pca_pos;
+    if (src && src.length === 3) {
+      return [RADIUS * src[0], RADIUS * src[1], RADIUS * src[2]];
+    }
+    // Docs without the requested projection: pin near origin with a small
+    // Fibonacci-distributed offset so they are visible but clearly "no data".
+    var phi = Math.acos(1 - 2 * (i + 0.5) / totalNodes);
+    var theta = Math.PI * (1 + Math.sqrt(5)) * i;
+    var r = RADIUS * 0.08;
+    return [
+      r * Math.sin(phi) * Math.cos(theta),
+      r * Math.sin(phi) * Math.sin(theta),
+      r * Math.cos(phi),
+    ];
+  }
+
+  function applyProjection(projKey) {
+    currentProjection = projKey;
+    var total = nodeData.length;
+    for (var i = 0; i < total; i++) {
+      var n = nodeData[i];
+      var p = positionFromProjection(n, i, total, projKey);
+      positions[i].set(p[0], p[1], p[2]);
+      if (nodeGroup.children[i]) nodeGroup.children[i].position.copy(positions[i]);
+    }
+    // Rebuild edge geometries against the new positions.
+    for (var e = 0; e < edgeLines.length; e++) {
+      var L = edgeLines[e];
+      var si = L.si, ti = L.ti;
+      var geo = new THREE.BufferGeometry().setFromPoints([positions[si], positions[ti]]);
+      L.line.geometry.dispose();
+      L.line.geometry = geo;
+    }
+  }
 
   fetch('/api/network').then(function(r) { return r.json(); }).then(function(data) {
     nodeData = data.nodes;
-    var edgeData = data.edges;
-    var nodeIndex = {};
+    edgeData = data.edges;
 
-    // Position nodes on/in a sphere
-    var RADIUS = 200;
-    for (var i = 0; i < nodeData.length; i++) {
+    var total = nodeData.length;
+    for (var i = 0; i < total; i++) {
       var n = nodeData[i];
       nodeIndex[n.id] = i;
 
-      // Importance determines distance from center
-      var imp = n.importance || 99;
-      var r = imp <= 1 ? RADIUS * 0.15 : imp <= 2 ? RADIUS * 0.4 : imp <= 3 ? RADIUS * 0.65 : RADIUS * (0.7 + Math.random() * 0.3);
+      var p = positionFromProjection(n, i, total, currentProjection);
+      positions.push(new THREE.Vector3(p[0], p[1], p[2]));
 
-      // Fibonacci sphere distribution for even spacing
-      var phi = Math.acos(1 - 2 * (i + 0.5) / nodeData.length);
-      var theta = Math.PI * (1 + Math.sqrt(5)) * i;
-      var x = r * Math.sin(phi) * Math.cos(theta);
-      var y = r * Math.sin(phi) * Math.sin(theta);
-      var z = r * Math.cos(phi);
-
-      positions.push(new THREE.Vector3(x, y, z));
-
-      // Node sphere
-      var size = imp <= 1 ? 5 : imp <= 2 ? 3.5 : imp <= 3 ? 2.5 : 1.5;
+      // Uniform node size and opacity: the editorial importance tiers were
+      // arbitrary; every doc is a doc. Color still reflects section (automated
+      // from filename heuristic, data-driven enough to keep).
+      var size = 2.5;
       var color = SECTION_COLORS[n.section] || 0x6b7280;
       var geo = new THREE.SphereGeometry(size, 12, 12);
-      var mat = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: imp <= 2 ? 0.95 : 0.7 });
+      var mat = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.8 });
       var mesh = new THREE.Mesh(geo, mat);
       mesh.position.copy(positions[i]);
       mesh.userData = { index: i };
       nodeGroup.add(mesh);
     }
 
-    // Edges as lines
     var edgeColor = isLight ? 0x8888aa : 0x6a6a9a;
     var edgeMat = new THREE.LineBasicMaterial({ color: edgeColor, transparent: true, opacity: isLight ? 0.25 : 0.35 });
     for (var e = 0; e < edgeData.length; e++) {
       var si = nodeIndex[edgeData[e].source];
       var ti = nodeIndex[edgeData[e].target];
       if (si === undefined || ti === undefined) continue;
-      var geo = new THREE.BufferGeometry().setFromPoints([positions[si], positions[ti]]);
-      var line = new THREE.Line(geo, edgeMat);
+      var egeo = new THREE.BufferGeometry().setFromPoints([positions[si], positions[ti]]);
+      var line = new THREE.Line(egeo, edgeMat);
       edgeGroup.add(line);
+      edgeLines.push({ line: line, si: si, ti: ti });
     }
 
-    // Ambient glow sphere
-    var glowGeo = new THREE.SphereGeometry(RADIUS * 1.05, 32, 32);
-    var glowMat = new THREE.MeshBasicMaterial({ color: isLight ? 0xd0d0e0 : 0x1a1a3a, transparent: true, opacity: isLight ? 0.08 : 0.06, side: THREE.BackSide });
-    scene.add(new THREE.Mesh(glowGeo, glowMat));
+    // Check if any docs carry a UMAP position; if none, disable the UMAP toggle.
+    var hasUmap = nodeData.some(function(n) { return n.umap_pos && n.umap_pos.length === 3; });
+    var umapBtn = document.querySelector('#projToggle .proj-btn[data-proj="umap"]');
+    if (umapBtn && !hasUmap) {
+      umapBtn.setAttribute('disabled', 'disabled');
+      umapBtn.title = 'UMAP positions not computed yet — run app/scripts/compute-umap.py';
+    }
 
     animate();
+  });
+
+  // ── Projection toggle ───────────────────────────────────────────────
+  var sphereTitleEl = document.getElementById('sphereTitle');
+  var PROJ_LABELS = { pca: 'PCA Projection', umap: 'UMAP Projection' };
+  var projButtons = document.querySelectorAll('#projToggle .proj-btn');
+  projButtons.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      if (btn.hasAttribute('disabled')) return;
+      var proj = btn.getAttribute('data-proj');
+      if (proj === currentProjection) return;
+      projButtons.forEach(function(b) { b.classList.toggle('active', b === btn); });
+      if (sphereTitleEl) sphereTitleEl.textContent = PROJ_LABELS[proj] || 'Projection';
+      applyProjection(proj);
+    });
   });
 
   var hoveredIdx = -1;
@@ -143,16 +449,13 @@
   function animate() {
     requestAnimationFrame(animate);
 
-    if (autoRotate) targetRotY += 0.002;
+    if (autoRotate && !sidebar.classList.contains('open')) targetRotY += 0.002;
     rotX += (targetRotX - rotX) * 0.08;
     rotY += (targetRotY - rotY) * 0.08;
 
-    nodeGroup.rotation.x = rotX;
-    nodeGroup.rotation.y = rotY;
-    edgeGroup.rotation.x = rotX;
-    edgeGroup.rotation.y = rotY;
+    nodeGroup.rotation.x = rotX; nodeGroup.rotation.y = rotY;
+    edgeGroup.rotation.x = rotX; edgeGroup.rotation.y = rotY;
 
-    // Tooltip raycasting
     raycaster.setFromCamera(mouse, camera);
     var intersects = raycaster.intersectObjects(nodeGroup.children);
     if (intersects.length > 0) {
@@ -160,7 +463,6 @@
       if (idx !== hoveredIdx) {
         hoveredIdx = idx;
         var n = nodeData[idx];
-        var rect = container.getBoundingClientRect();
         var screenPos = positions[idx].clone();
         screenPos.applyMatrix4(nodeGroup.matrixWorld);
         screenPos.project(camera);
@@ -169,26 +471,25 @@
         tooltip.style.display = 'block';
         tooltip.style.left = Math.min(sx + 15, width - 330) + 'px';
         tooltip.style.top = Math.max(sy - 10, 10) + 'px';
-        tooltip.innerHTML = '<strong style="color:' + '#' + (SECTION_COLORS[n.section] || 0x888888).toString(16).padStart(6, '0') + '">' + n.doc_num + '</strong> ' + n.title + (n.intro ? '<br><small style="color:#888;">' + n.intro + '</small>' : '');
+        tooltip.innerHTML = '<strong style="color:' + '#' + (SECTION_COLORS[n.section] || 0x888888).toString(16).padStart(6, '0') + '">' + (n.doc_num || '') + '</strong> ' + escapeHtml(n.title) + (n.intro ? '<br><small style="opacity:0.7;">' + escapeHtml(n.intro) + '</small>' : '');
       }
-      container.style.cursor = 'pointer';
+      renderer.domElement.style.cursor = 'pointer';
     } else {
       if (hoveredIdx !== -1) { tooltip.style.display = 'none'; hoveredIdx = -1; }
-      container.style.cursor = isDown ? 'grabbing' : 'grab';
+      renderer.domElement.style.cursor = isDown ? 'grabbing' : 'grab';
     }
 
     renderer.render(scene, camera);
   }
 
   window.addEventListener('resize', function() {
-    width = container.clientWidth;
-    height = container.clientHeight;
+    width = window.innerWidth; height = window.innerHeight;
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
     renderer.setSize(width, height);
   });
 
-  // Watch for theme toggle
+  // Theme toggle live-update
   var themeBtn = document.getElementById('themeToggle');
   if (themeBtn) {
     themeBtn.addEventListener('click', function() {

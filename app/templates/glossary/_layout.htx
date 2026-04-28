@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#ff8800">
+  <title>The Coherence Glossary — RESOLVE</title>
+  <meta name="description" content="Eighteen load-bearing terms of the RESOLVE corpus, in the order they have to arrive.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="RESOLVE">
+  <meta property="og:title" content="The Coherence Glossary">
+  <meta property="og:description" content="Eighteen load-bearing terms of the RESOLVE corpus, in the order they have to arrive.">
+  <meta property="og:url" content="https://jaredfoy.com/resolve/glossary">
+  <meta property="og:image" content="https://jaredfoy.com/og/home.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Coherence Glossary">
+  <meta name="twitter:description" content="Eighteen load-bearing terms of the RESOLVE corpus.">
+  <meta name="twitter:image" content="https://jaredfoy.com/og/home.png">
+  <script>
+    // Resolve theme before CSS paints — matches the main layout's anti-flash behavior.
+    (function() {
+      try {
+        var t = localStorage.getItem('theme');
+        var isLight = t === 'light' || (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches);
+        if (isLight) document.documentElement.classList.add('theme-light');
+      } catch (e) {}
+    })();
+    // Feature detection — the sphere is the primary view on every device
+    // that can render WebGL, including phones. We only fall back to the
+    // flat list + card-flow walkthrough when WebGL is unavailable (old
+    // browser, WebGL disabled, GPU blocklisted). The flag name is kept for
+    // the downstream code; its meaning is now "use the list-view path."
+    window.__IS_GLOSSARY_MOBILE = (function() {
+      try {
+        if (!window.WebGLRenderingContext) return true;
+        var c = document.createElement('canvas');
+        if (!(c.getContext('webgl') || c.getContext('experimental-webgl'))) return true;
+        return false;
+      } catch (e) { return true; }
+    })();
+    // Toggle the list-mode class on <html> before first paint so there's
+    // no flash of the sphere scaffold on a WebGL-less browser. CSS rules
+    // below key off either .glossary-list-mode on html or body.
+    if (window.__IS_GLOSSARY_MOBILE) {
+      document.documentElement.classList.add('glossary-list-mode');
+    }
+  </script>
+  <link rel="stylesheet" href="/css/style.css?v=31">
+  <style>
+    /* Standalone glossary layout. Mirrors coherence/_layout.htx on desktop
+       (same sphere, same chrome, same term markers); diverges on mobile by
+       swapping the "gate" message for a real working list + card-flow. */
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .coherence-chrome {
+      position: fixed;
+      top: 1rem;
+      left: 1.25rem;
+      right: 1.25rem;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .coherence-home-link,
+    .coherence-theme-btn {
+      pointer-events: auto;
+      font-family: var(--font-mono, "JetBrains Mono", monospace);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text);
+      background: color-mix(in srgb, var(--bg) 78%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
+      border-radius: 3px;
+      padding: 0.55rem 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .coherence-home-link:hover,
+    .coherence-theme-btn:hover {
+      background: color-mix(in srgb, var(--bg) 90%, transparent);
+    }
+
+    .coherence-page {
+      position: relative;
+      min-height: 100vh;
+    }
+
+    .coherence-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: auto;
+      overflow: hidden;
+    }
+
+    .coherence-canvas canvas {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .coherence-overlay {
+      position: relative;
+      z-index: 1;
+      pointer-events: none;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2.5rem;
+    }
+
+    .coherence-pretext,
+    .coherence-col,
+    .coherence-epilogue {
+      pointer-events: auto;
+    }
+
+    .coherence-pretext {
+      padding: 5.5rem 1rem 3rem;
+      text-align: center;
+      background: linear-gradient(to bottom, var(--bg) 0%, color-mix(in srgb, var(--bg) 75%, transparent) 55%, transparent 100%);
+      margin: 0 -2.5rem 0;
+    }
+
+    .coherence-kicker {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--text) 60%, transparent);
+      margin: 0 0 0.75rem;
+    }
+
+    .coherence-pretext h1 {
+      font-size: clamp(2.6rem, 5.5vw, 4.4rem);
+      line-height: 1.02;
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.025em;
+    }
+
+    .coherence-subtitle {
+      font-size: 1.05rem;
+      color: color-mix(in srgb, var(--text) 72%, transparent);
+      margin: 0 0 1.6rem;
+      font-style: italic;
+    }
+
+    .coherence-lede {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      max-width: 44rem;
+      margin: 0 auto;
+      color: var(--text);
+    }
+
+    .coherence-scroll-hint {
+      margin: 2.5rem 0 0;
+      font-size: 1.3rem;
+      color: color-mix(in srgb, var(--text) 45%, transparent);
+      animation: coherence-hint 2.2s ease-in-out infinite;
+    }
+
+    .coherence-routes {
+      display: flex;
+      justify-content: center;
+      gap: 0.4rem;
+      margin: 0 auto 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .coherence-route-pill {
+      pointer-events: auto;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 0.55rem 1rem;
+      border-radius: 3px;
+      border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+      color: color-mix(in srgb, var(--text) 68%, transparent);
+      text-decoration: none;
+      background: color-mix(in srgb, var(--bg) 78%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .coherence-route-pill:hover {
+      color: var(--text);
+      border-color: color-mix(in srgb, var(--border) 85%, transparent);
+    }
+
+    .coherence-route-pill.is-active {
+      color: var(--text);
+      border-color: color-mix(in srgb, #ffd66b 75%, transparent);
+      background: color-mix(in srgb, #ffd66b 15%, color-mix(in srgb, var(--bg) 78%, transparent));
+    }
+
+    @keyframes coherence-hint {
+      0%, 100% { transform: translateY(0); opacity: 0.45; }
+      50% { transform: translateY(6px); opacity: 0.9; }
+    }
+
+    .coherence-scroll-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 4rem 0;
+    }
+
+    .coherence-scroll-section:nth-child(odd) {
+      justify-content: flex-end;
+      padding-right: clamp(1rem, 8vw, 8rem);
+    }
+
+    .coherence-scroll-section:nth-child(even) {
+      justify-content: flex-start;
+      padding-left: clamp(1rem, 8vw, 8rem);
+    }
+
+    .coherence-col {
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+      border-radius: 6px;
+      padding: 1.6rem 1.5rem 1.4rem;
+      font-size: 0.98rem;
+      line-height: 1.7;
+      max-width: 26rem;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+
+    .coherence-scroll-section.in-view .coherence-col {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .coherence-epilogue {
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+      border-radius: 6px;
+      padding: 1.85rem 2rem;
+      margin: 0 auto 4rem;
+      max-width: 54rem;
+      font-size: 1rem;
+      line-height: 1.75;
+      text-align: center;
+    }
+
+    .coherence-epilogue p {
+      margin: 0 0 0.9rem;
+    }
+
+    .coherence-epilogue p:last-child {
+      margin-bottom: 0;
+    }
+
+    .coherence-epilogue-note {
+      font-size: 0.82rem;
+      color: color-mix(in srgb, var(--text) 55%, transparent);
+      font-style: italic;
+    }
+
+    .network-tooltip {
+      position: fixed;
+      display: none;
+      max-width: 320px;
+      background: color-mix(in srgb, var(--bg) 95%, transparent);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.55rem 0.75rem;
+      font-size: 0.82rem;
+      line-height: 1.4;
+      color: var(--text);
+      pointer-events: none;
+      z-index: 100;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    }
+
+    .coherence-coda {
+      min-height: 300vh;
+      padding: 0;
+      display: block;
+    }
+
+    .coherence-coda-hint {
+      position: sticky;
+      top: 20vh;
+      text-align: center;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--text) 35%, transparent);
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+    }
+
+    /* ── Term overlay (shared with the coherence routes' version). Glossary
+       mode is always on here, so the markers are primary and labelled. */
+    .coherence-term-label {
+      position: fixed;
+      pointer-events: none;
+      font-family: var(--font-mono, "JetBrains Mono", monospace);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #ffd66b;
+      text-shadow: 0 0 8px color-mix(in srgb, var(--bg) 85%, transparent), 0 1px 2px rgba(0, 0, 0, 0.6);
+      z-index: 8;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      white-space: nowrap;
+      padding: 0.15rem 0.4rem;
+      background: color-mix(in srgb, var(--bg) 70%, transparent);
+      border-radius: 2px;
+      transform: translate(-50%, -140%);
+    }
+    .coherence-term-label.visible { opacity: 1; }
+    .coherence-term-label.hover {
+      color: #fff;
+      text-shadow: 0 0 10px #ffd66b, 0 1px 2px rgba(0, 0, 0, 0.7);
+      pointer-events: auto;
+      cursor: pointer;
+    }
+
+    /* ── Mobile scaffolding (below 768px) ──
+       The 3D sphere is hidden; a flat ordered list of 18 terms takes its
+       place, and a full-screen card-flow overlay provides the walkthrough.
+       Everything below is purpose-built for phones and doesn't touch the
+       desktop experience. */
+    .glossary-mobile {
+      display: none;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      padding: 4.5rem 1.1rem 3rem;
+    }
+
+    .glossary-mobile .mobile-pretext {
+      text-align: center;
+      padding: 0 0.25rem 1.5rem;
+      border-bottom: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+      margin-bottom: 1.5rem;
+    }
+    .glossary-mobile .mobile-pretext p.kicker {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--text) 60%, transparent);
+      margin: 0 0 0.6rem;
+    }
+    .glossary-mobile .mobile-pretext h1 {
+      font-size: 1.85rem;
+      line-height: 1.1;
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    .glossary-mobile .mobile-pretext .sub {
+      font-style: italic;
+      color: color-mix(in srgb, var(--text) 72%, transparent);
+      margin: 0 0 1rem;
+      font-size: 0.95rem;
+    }
+    .glossary-mobile .mobile-pretext .lede {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--text);
+      margin: 0 0 1.2rem;
+    }
+
+    .glossary-mobile .begin-entracement {
+      display: inline-block;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.95rem 1.1rem;
+      border-radius: 4px;
+      border: 1px solid color-mix(in srgb, #ffd66b 70%, transparent);
+      color: #ffd66b;
+      background: color-mix(in srgb, #ffd66b 12%, transparent);
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .glossary-mobile .begin-entracement:active {
+      background: color-mix(in srgb, #ffd66b 24%, transparent);
+    }
+
+    .glossary-mobile ol.term-list {
+      list-style: none;
+      padding: 0;
+      margin: 1.5rem 0 0;
+    }
+    .glossary-mobile ol.term-list > li {
+      background: color-mix(in srgb, var(--bg) 92%, transparent);
+      border: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+      border-radius: 6px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 0.75rem;
+      display: grid;
+      grid-template-columns: 2.2rem 1fr;
+      gap: 0.75rem;
+    }
+    .glossary-mobile ol.term-list .ord {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      color: color-mix(in srgb, #ffd66b 90%, var(--text));
+      padding-top: 0.15rem;
+    }
+    .glossary-mobile ol.term-list h3 {
+      margin: 0 0 0.3rem;
+      font-size: 1.05rem;
+      letter-spacing: -0.01em;
+    }
+    .glossary-mobile ol.term-list p.def {
+      margin: 0 0 0.6rem;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: color-mix(in srgb, var(--text) 85%, transparent);
+    }
+    .glossary-mobile ol.term-list .row-foot {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 0.9rem;
+      align-items: center;
+    }
+    .glossary-mobile ol.term-list .anchor-link {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px dotted currentColor;
+    }
+    .glossary-mobile ol.term-list .series-ribbon {
+      display: inline-block;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.22rem 0.55rem;
+      border-radius: 2px;
+      background: color-mix(in srgb, var(--accent, #7c8aff) 18%, transparent);
+      color: color-mix(in srgb, var(--text) 88%, transparent);
+      border: 1px solid color-mix(in srgb, var(--accent, #7c8aff) 35%, transparent);
+    }
+
+    /* ── Card-flow overlay (full-screen walkthrough on mobile) ── */
+    .glossary-card-flow {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: var(--bg);
+      display: none;
+      flex-direction: column;
+      padding: 1.25rem 1.1rem 1.5rem;
+    }
+    .glossary-card-flow.open { display: flex; }
+
+    .glossary-card-flow .flow-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .glossary-card-flow .flow-progress {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--text) 70%, transparent);
+    }
+    .glossary-card-flow .flow-exit {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.85rem;
+      border-radius: 3px;
+      border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+      color: var(--text);
+      background: transparent;
+      cursor: pointer;
+    }
+    .glossary-card-flow .flow-bar {
+      height: 2px;
+      background: color-mix(in srgb, var(--border) 40%, transparent);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+    }
+    .glossary-card-flow .flow-bar > span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: #ffd66b;
+      transition: width 0.35s ease;
+    }
+
+    .glossary-card-flow .flow-card {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 1rem 0;
+      opacity: 1;
+      transform: translateX(0);
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+    .glossary-card-flow .flow-card.leaving {
+      opacity: 0;
+      transform: translateX(-12px);
+    }
+    .glossary-card-flow .flow-card.entering {
+      opacity: 0;
+      transform: translateX(12px);
+    }
+    .glossary-card-flow .flow-card .kicker {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #ffd66b;
+      margin: 0 0 0.55rem;
+    }
+    .glossary-card-flow .flow-card h2 {
+      font-size: 1.85rem;
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+      margin: 0 0 1rem;
+    }
+    .glossary-card-flow .flow-card p.def {
+      font-size: 1.02rem;
+      line-height: 1.6;
+      margin: 0 0 1.2rem;
+      color: color-mix(in srgb, var(--text) 92%, transparent);
+    }
+    .glossary-card-flow .flow-card .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1rem;
+      align-items: center;
+      margin-bottom: 0.6rem;
+    }
+    .glossary-card-flow .flow-card .meta-row .anchor-link {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.74rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px dotted currentColor;
+    }
+    .glossary-card-flow .flow-card .meta-row .series-ribbon {
+      display: inline-block;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.64rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.22rem 0.55rem;
+      border-radius: 2px;
+      background: color-mix(in srgb, var(--accent, #7c8aff) 18%, transparent);
+      color: color-mix(in srgb, var(--text) 88%, transparent);
+      border: 1px solid color-mix(in srgb, var(--accent, #7c8aff) 35%, transparent);
+    }
+    .glossary-card-flow .flow-card .done-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      margin-top: 0.75rem;
+    }
+    .glossary-card-flow .flow-card .done-links a {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.74rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.65rem 0.8rem;
+      border-radius: 3px;
+      border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+      color: var(--text);
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .glossary-card-flow .flow-foot {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .glossary-card-flow .flow-foot button {
+      flex: 1;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.95rem 0.9rem;
+      border-radius: 4px;
+      border: 1px solid color-mix(in srgb, #ffd66b 70%, transparent);
+      color: #ffd66b;
+      background: color-mix(in srgb, #ffd66b 14%, transparent);
+      cursor: pointer;
+    }
+    .glossary-card-flow .flow-foot button.secondary {
+      border-color: color-mix(in srgb, var(--border) 75%, transparent);
+      color: var(--text);
+      background: transparent;
+    }
+
+    @media (max-width: 980px) {
+      .coherence-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 620px) {
+      .coherence-grid { grid-template-columns: 1fr; }
+      .coherence-overlay { padding: 0 1rem; }
+      .coherence-pretext { padding-top: 4.5rem; }
+    }
+
+    /* Sphere-vs-list swap. The sphere is primary on every device that can
+       render WebGL; the flat list + card-flow scaffold is reserved as a
+       fallback when WebGL is missing. The script at the top of this file
+       sets <body class="glossary-list-mode"> in that case. The
+       coherence-chrome (home link + theme toggle) stays visible in both. */
+    html.glossary-list-mode .coherence-canvas,
+    html.glossary-list-mode .coherence-overlay { display: none; }
+    html.glossary-list-mode .glossary-mobile { display: block; }
+
+    /* Let the sphere canvas capture touch gestures instead of page scroll.
+       One-finger drag rotates, two-finger pinch zooms, taps select.
+       touch-action applies to the element the touch lands on (the inner
+       <canvas> fills the container), so we set it on both the wrapper and
+       the canvas itself — otherwise iOS/Chrome grabs pinch for page-zoom. */
+    .coherence-canvas,
+    .coherence-canvas canvas { touch-action: none; }
+  </style>
+</head>
+<body>
+
+  <div class="coherence-chrome">
+    <a class="coherence-home-link" href="/">&larr; RESOLVE</a>
+    <button class="coherence-theme-btn" id="themeToggle" aria-label="Toggle theme" title="Toggle light/dark theme">THEME</button>
+  </div>
+
+  <div class="coherence-page">
+    <div id="coherenceSphere" class="coherence-canvas"></div>
+
+    <div class="coherence-overlay">
+__content__
+    </div>
+  </div>
+
+  <div id="coherenceTooltip" class="network-tooltip"></div>
+
+  <!-- Mobile scaffold — hidden on ≥768px. The index template's script
+       boots this view when window.__IS_GLOSSARY_MOBILE is true, fetching
+       /api/terms once to populate both the list and the card-flow. -->
+  <div class="glossary-mobile" id="glossaryMobile" aria-live="polite">
+    <header class="mobile-pretext">
+      <p class="kicker">jaredfoy.com / glossary</p>
+      <h1>The Coherence Glossary</h1>
+      <p class="sub">Eighteen terms, in the order they have to arrive.</p>
+      <p class="lede">The desktop view is a 3D sphere. On a phone, it's a list &mdash; same order, same terms. Tap <em>Begin Entracement</em> for a guided walk through all eighteen, or scroll the list to read them at your own pace.</p>
+      <button type="button" class="begin-entracement" id="mobileBeginBtn">Begin Entracement &rarr;</button>
+    </header>
+    <ol class="term-list" id="mobileTermList">
+      <li style="padding: 1.5rem; text-align: center; color: color-mix(in srgb, var(--text) 55%, transparent);">Loading the eighteen terms&hellip;</li>
+    </ol>
+  </div>
+
+  <div class="glossary-card-flow" id="glossaryCardFlow" aria-live="polite" role="dialog" aria-modal="true">
+    <div class="flow-head">
+      <span class="flow-progress" id="flowProgress">0 / 18</span>
+      <button type="button" class="flow-exit" id="flowExitBtn">Exit</button>
+    </div>
+    <div class="flow-bar"><span id="flowBarFill"></span></div>
+    <div class="flow-card" id="flowCard">
+      <p class="kicker" id="flowKicker">Term 01 of 18</p>
+      <h2 id="flowTitle">&nbsp;</h2>
+      <p class="def" id="flowDef">&nbsp;</p>
+      <div class="meta-row" id="flowMetaRow">
+        <span class="series-ribbon" id="flowSeries" style="display:none"></span>
+        <a class="anchor-link" id="flowAnchor" href="#">Read Doc &rarr;</a>
+      </div>
+      <div class="done-links" id="flowDoneLinks" style="display:none">
+        <a href="/resolve/doc/328-methodology">Methodology (Doc 328) &rarr;</a>
+        <a href="/resolve/doc/329-onboarding">Onboarding (Doc 329) &rarr;</a>
+      </div>
+    </div>
+    <div class="flow-foot">
+      <button type="button" class="secondary" id="flowBackBtn">&larr; Back</button>
+      <button type="button" id="flowContinueBtn">Continue &rarr;</button>
+    </div>
+  </div>
+
+  <script>
+    // Minimal theme toggle — matches _layout.htx behavior, scoped to this standalone page.
+    (function() {
+      var btn = document.getElementById('themeToggle');
+      if (!btn) return;
+      function sync() {
+        btn.textContent = document.documentElement.classList.contains('theme-light') ? 'LIGHT' : 'DARK';
+      }
+      sync();
+      btn.addEventListener('click', function() {
+        var willBeLight = !document.documentElement.classList.contains('theme-light');
+        document.documentElement.classList.toggle('theme-light', willBeLight);
+        try { localStorage.setItem('theme', willBeLight ? 'light' : 'dark'); } catch (e) {}
+        sync();
+      });
+    })();
+  </script>
+
+  <!-- Sphere — three.js and the full 3D scene. Loaded on every device that
+       can support WebGL, including phones. The mobile-list fallback only
+       kicks in when __IS_GLOSSARY_MOBILE (= WebGL unavailable) is true. -->
+  <script>
+  (function() {
+    if (window.__IS_GLOSSARY_MOBILE) return;
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    s.onload = bootSphere;
+    s.onerror = function() {
+      // CDN failed — degrade to the list view so the page is still usable.
+      window.__IS_GLOSSARY_MOBILE = true;
+      document.documentElement.classList.add('glossary-list-mode');
+    };
+    document.head.appendChild(s);
+
+    function bootSphere() {
+      var container = document.getElementById('coherenceSphere');
+      var tooltip = document.getElementById('coherenceTooltip');
+      if (!container) return;
+
+      var width = container.clientWidth;
+      var height = container.clientHeight;
+
+      var scene = new THREE.Scene();
+      var isLight = document.documentElement.classList.contains('theme-light');
+      var bgColor = isLight ? 0xf8f7f2 : 0x0a0a0f;
+      scene.background = new THREE.Color(bgColor);
+      scene.fog = new THREE.FogExp2(bgColor, 0.0006);
+
+      // Coarse-pointer heuristic for touch-specific tweaks (wider FOV on
+      // narrow portrait viewports, looser raycast threshold for fingers).
+      var isTouch = (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) ||
+                    ('ontouchstart' in window);
+      var initialFov = width < 700 ? 72 : 55;
+
+      var camera = new THREE.PerspectiveCamera(initialFov, width / height, 1, 5000);
+      camera.position.set(0, 0, 550);
+
+      // Pixel ratio capped at 2 so retina phones don't try to render at
+      // 3×/4× device resolution. antialias stays on — at 280 nodes the
+      // per-frame cost is dominated by raycast + label projection.
+      var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      container.appendChild(renderer.domElement);
+
+      var SECTION_COLORS = {
+        framework: 0x7c8aff, method: 0x2dd4bf, safety: 0xf87171, ground: 0xfbbf24,
+        letters: 0xa78bfa, architecture: 0x34d399, formalization: 0xfb923c,
+        evidence: 0x60a5fa, economics: 0xf472b6
+      };
+
+      var raycaster = new THREE.Raycaster();
+      raycaster.params.Points.threshold = 5;
+      var mouse = new THREE.Vector2();
+      var nodeGroup = new THREE.Group();
+      var edgeGroup = new THREE.Group();
+      var axisGroup = new THREE.Group();
+      scene.add(nodeGroup);
+      scene.add(edgeGroup);
+      scene.add(axisGroup);
+
+      var S = {
+        nodeOpacity: 1, edgeOpacity: 0.32, axisOpacity: 0,
+        tierEmphasis: 0, rotationSpeed: 0.0008, cameraZ: 550
+      };
+      var target = Object.assign({}, S);
+
+      var ASPECTS = {
+        intro:    { nodeOpacity: 1.0, edgeOpacity: 0.32, axisOpacity: 0.0, tierEmphasis: 0.0, rotationSpeed: 0.0008, cameraZ: 550 },
+        axes:     { nodeOpacity: 0.25, edgeOpacity: 0.05, axisOpacity: 1.0, tierEmphasis: 0.0, rotationSpeed: 0.0015, cameraZ: 600 },
+        radius:   { nodeOpacity: 1.0, edgeOpacity: 0.08, axisOpacity: 0.0, tierEmphasis: 1.0, rotationSpeed: 0.0004, cameraZ: 440 },
+        edges:    { nodeOpacity: 1.0, edgeOpacity: 0.85, axisOpacity: 0.0, tierEmphasis: 0.0, rotationSpeed: 0.0008, cameraZ: 520 },
+        routeBase:{ nodeOpacity: 1.0, edgeOpacity: 0.06, axisOpacity: 0.0, tierEmphasis: 0.0, rotationSpeed: 0.0006, cameraZ: 500 }
+      };
+
+      function setAspect(name) {
+        var a = ASPECTS[name];
+        if (!a) return;
+        for (var k in a) target[k] = a[k];
+      }
+      window.__coherenceSetAspect = setAspect;
+
+      var ROUTE = window.COHERENCE_ROUTE || null;
+      var featuredIndices = [];
+      var featuredSet = null;
+      var constellationLines = [];
+      var currentFocusIdx = -1;
+      var targetFocusIdx = -1;
+
+      function setRouteColumn(colIdx) {
+        setAspect('routeBase');
+        targetFocusIdx = (featuredIndices[colIdx] !== undefined) ? featuredIndices[colIdx] : -1;
+      }
+
+      var nodeData = [], positions = [];
+      var termGroup = new THREE.Group();
+      scene.add(termGroup);
+      var pathLineGroup = new THREE.Group();
+      scene.add(pathLineGroup);
+      var termData = [];
+      var termMeshes = [];
+      var termLabels = [];
+      var matchedSet = null;
+      var selectedTermIdx = -1;
+      var termHoveredIdx = -1;
+      var IS_GLOSSARY = true; // this layout is only mounted on /glossary
+      var isDown = false, prevX = 0, prevY = 0, rotX = 0, rotY = 0, targetRotX = 0, targetRotY = 0;
+      // Gentle idle tumble resumes this many ms after the last touch/drag
+      // ends. Scrolling the page does not reset the timer.
+      var AUTO_ROTATE_RESUME_MS = 2500;
+      var lastInteractTime = 0;
+      // Auto-rotation is suspended while the entracement walkthrough animates
+      // the camera to a new term, so pitch doesn't drift during the aim. The
+      // walkthrough sets this flag via __coherenceAim / __coherencePauseAutoRotate.
+      var autoRotatePauseUntil = 0;
+      // Tracks the base pitch so the vertical tumble (a sine wave on top of
+      // targetRotX) doesn't fight user drags — when the user drags, `rotXBase`
+      // snaps to the new resting pitch and the sine continues from there.
+      var rotXBase = 0;
+      var autoStartTime = Date.now();
+      // Expose a pause handle for outside controllers (walkthrough aim, etc.)
+      window.__coherencePauseAutoRotate = function(ms) {
+        autoRotatePauseUntil = Date.now() + (ms || 1200);
+      };
+
+      container.addEventListener('mousedown', function(e) {
+        isDown = true; prevX = e.clientX; prevY = e.clientY;
+        lastInteractTime = Date.now();
+      });
+      // mousemove on window (not container) so drags keep tracking when the
+      // cursor crosses the overlay blocks (.coherence-pretext / .coherence-col
+      // / .coherence-epilogue), which are pointer-events: auto and would
+      // otherwise absorb mousemove mid-drag.
+      window.addEventListener('mousemove', function(e) {
+        if (isDown) {
+          targetRotY += (e.clientX - prevX) * 0.005;
+          targetRotX += (e.clientY - prevY) * 0.005;
+          targetRotX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotX));
+          prevX = e.clientX; prevY = e.clientY;
+          lastInteractTime = Date.now();
+        }
+        var rect = container.getBoundingClientRect();
+        mouse.x = ((e.clientX - rect.left) / width) * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / height) * 2 + 1;
+      });
+      window.addEventListener('mouseup', function() {
+        if (isDown) lastInteractTime = Date.now();
+        isDown = false;
+      });
+      container.addEventListener('mouseleave', function() { tooltip.style.display = 'none'; });
+      // Wheel → camera zoom, but gated on progressive entry. The overlay
+      // blocks (pretext / list toggle / term card) are all scrolled natively
+      // first; only once the "scroll to enter the sphere" sentinel in the
+      // coda comes into view does the wheel begin zooming the sphere instead
+      // of scrolling the page. An IntersectionObserver below flips
+      // window.__sphereEntered. While false, this handler never calls
+      // preventDefault and the page scrolls normally regardless of whether
+      // the cursor is over the canvas or the overlay. Bound at the window
+      // level so scrolling anywhere on the page behaves the same — there's
+      // no difference between wheeling over the canvas and over a column.
+      window.__sphereEntered = false;
+      window.addEventListener('wheel', function(e) {
+        if (!window.__sphereEntered) return; // let the browser scroll normally
+        var dy = e.deltaY;
+        if (e.deltaMode === 1) dy *= 16;
+        else if (e.deltaMode === 2) dy *= window.innerHeight;
+        // Release back to page-scroll at either zoom clamp. Wheel-up past the
+        // fully-zoomed-out clamp (cameraZ ≈ 900) hands control back so the
+        // user can scroll the overlay back up; wheel-down past the fully-
+        // zoomed-in clamp (cameraZ ≈ 140) hands control back so the user
+        // can continue past the sentinel to the epilogue below.
+        if (dy < 0 && target.cameraZ >= 899.5) {
+          window.__sphereEntered = false;
+          return;
+        }
+        if (dy > 0 && target.cameraZ <= 140.5) {
+          window.__sphereEntered = false;
+          return;
+        }
+        e.preventDefault();
+        var factor = Math.pow(1.0012, dy);
+        target.cameraZ = Math.max(140, Math.min(900, target.cameraZ * factor));
+        lastInteractTime = Date.now();
+      }, { passive: false });
+
+      container.addEventListener('click', function(e) {
+        var rect = container.getBoundingClientRect();
+        mouse.x = ((e.clientX - rect.left) / width) * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / height) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+        var termHits = raycaster.intersectObjects(termGroup.children);
+        if (termHits.length > 0) {
+          var ti = termHits[0].object.userData.termIndex;
+          if (ti !== undefined && window.__coherenceSelectTerm) {
+            window.__coherenceSelectTerm(ti);
+            return;
+          }
+        }
+        var intersects = raycaster.intersectObjects(nodeGroup.children);
+        if (intersects.length > 0) {
+          var idx = intersects[0].object.userData.index;
+          if (idx !== undefined && nodeData[idx]) {
+            window.location.href = '/resolve/doc/' + nodeData[idx].id;
+          }
+        }
+      });
+
+      // ── Touch handlers ──
+      // Mirror the mouse controls for touch. One-finger drag rotates,
+      // two-finger pinch zooms by adjusting target.cameraZ, tap-without-
+      // drag selects a term marker (or navigates to a doc if tapped). Uses
+      // preventDefault on moves because the canvas has touch-action: none.
+      var touchPrevX = 0, touchPrevY = 0;
+      var pinchStartDist = 0, pinchStartCameraZ = 0;
+      var touchMoved = false;
+      function tdist(t) {
+        var dx = t[0].clientX - t[1].clientX;
+        var dy = t[0].clientY - t[1].clientY;
+        return Math.sqrt(dx*dx + dy*dy);
+      }
+      container.addEventListener('touchstart', function(ev) {
+        lastInteractTime = Date.now();
+        touchMoved = false;
+        if (ev.touches.length === 1) {
+          isDown = true;
+          touchPrevX = ev.touches[0].clientX;
+          touchPrevY = ev.touches[0].clientY;
+          var rect = container.getBoundingClientRect();
+          mouse.x = ((touchPrevX - rect.left) / width) * 2 - 1;
+          mouse.y = -((touchPrevY - rect.top) / height) * 2 + 1;
+        } else if (ev.touches.length === 2) {
+          isDown = false;
+          pinchStartDist = tdist(ev.touches);
+          pinchStartCameraZ = target.cameraZ;
+        }
+      }, { passive: true });
+      container.addEventListener('touchmove', function(ev) {
+        if (ev.touches.length === 1 && isDown) {
+          ev.preventDefault();
+          var tx = ev.touches[0].clientX, ty = ev.touches[0].clientY;
+          var dx = tx - touchPrevX, dy = ty - touchPrevY;
+          if (Math.abs(dx) > 3 || Math.abs(dy) > 3) touchMoved = true;
+          targetRotY += dx * 0.005;
+          targetRotX += dy * 0.005;
+          targetRotX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotX));
+          touchPrevX = tx; touchPrevY = ty;
+          lastInteractTime = Date.now();
+        } else if (ev.touches.length === 2 && pinchStartDist > 0) {
+          ev.preventDefault();
+          touchMoved = true;
+          var d = tdist(ev.touches);
+          var scale = pinchStartDist / d;
+          target.cameraZ = Math.max(140, Math.min(900, pinchStartCameraZ * scale));
+          lastInteractTime = Date.now();
+        }
+      }, { passive: false });
+      container.addEventListener('touchend', function(ev) {
+        lastInteractTime = Date.now();
+        isDown = false;
+        if (ev.touches.length < 2) pinchStartDist = 0;
+        if (!touchMoved && ev.changedTouches.length === 1) {
+          var rect = container.getBoundingClientRect();
+          var t = ev.changedTouches[0];
+          mouse.x = ((t.clientX - rect.left) / width) * 2 - 1;
+          mouse.y = -((t.clientY - rect.top) / height) * 2 + 1;
+          raycaster.setFromCamera(mouse, camera);
+          var termHits2 = raycaster.intersectObjects(termGroup.children);
+          if (termHits2.length > 0) {
+            var ti2 = termHits2[0].object.userData.termIndex;
+            if (ti2 !== undefined && window.__coherenceSelectTerm) {
+              window.__coherenceSelectTerm(ti2);
+              return;
+            }
+          }
+          var hits = raycaster.intersectObjects(nodeGroup.children);
+          if (hits.length > 0) {
+            var i2 = hits[0].object.userData.index;
+            if (i2 !== undefined && nodeData[i2]) {
+              window.location.href = '/resolve/doc/' + nodeData[i2].id;
+            }
+          }
+        }
+      }, { passive: true });
+      if (isTouch) raycaster.params.Points.threshold = 10;
+
+      fetch('/api/network').then(function(r) { return r.json(); }).then(function(data) {
+        nodeData = data.nodes;
+        var edgeData = data.edges;
+        var nodeIndex = {};
+        var RADIUS = 210;
+
+        for (var i = 0; i < nodeData.length; i++) {
+          var n = nodeData[i];
+          nodeIndex[n.id] = i;
+
+          var imp = n.importance || 99;
+          var r = imp <= 1 ? RADIUS * 0.15 : imp <= 2 ? RADIUS * 0.4 : imp <= 3 ? RADIUS * 0.65 : RADIUS * (0.7 + (((i * 2654435761) % 1000) / 1000) * 0.3);
+
+          var x, y, z;
+          if (n.pos && n.pos.length === 3) {
+            x = r * n.pos[0]; y = r * n.pos[1]; z = r * n.pos[2];
+          } else {
+            var phi = Math.acos(1 - 2 * (i + 0.5) / nodeData.length);
+            var theta = Math.PI * (1 + Math.sqrt(5)) * i;
+            x = r * Math.sin(phi) * Math.cos(theta);
+            y = r * Math.sin(phi) * Math.sin(theta);
+            z = r * Math.cos(phi);
+          }
+
+          positions.push(new THREE.Vector3(x, y, z));
+
+          var size = imp <= 1 ? 5 : imp <= 2 ? 3.5 : imp <= 3 ? 2.5 : 1.5;
+          var color = SECTION_COLORS[n.section] || 0x6b7280;
+          var baseOpacity = imp <= 2 ? 0.95 : 0.7;
+          var geo = new THREE.SphereGeometry(size, 12, 12);
+          var mat = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: baseOpacity });
+          var mesh = new THREE.Mesh(geo, mat);
+          mesh.position.copy(positions[i]);
+          mesh.userData = { index: i, imp: imp, baseOpacity: baseOpacity, baseSize: size };
+          nodeGroup.add(mesh);
+        }
+
+        var edgeColor = isLight ? 0x8888aa : 0x6a6a9a;
+        var edgeMat = new THREE.LineBasicMaterial({ color: edgeColor, transparent: true, opacity: 0.32 });
+        for (var e = 0; e < edgeData.length; e++) {
+          var si = nodeIndex[edgeData[e].source];
+          var ti = nodeIndex[edgeData[e].target];
+          if (si === undefined || ti === undefined) continue;
+          var eg = new THREE.BufferGeometry().setFromPoints([positions[si], positions[ti]]);
+          var line = new THREE.Line(eg, edgeMat);
+          line.userData = { isConstellation: false };
+          edgeGroup.add(line);
+        }
+
+        function makeTermMesh(pos, primary) {
+          var size = primary ? 4.6 : 1.8;
+          var geo = new THREE.SphereGeometry(size, 14, 14);
+          var mat = new THREE.MeshBasicMaterial({ color: 0xffd66b, transparent: true, opacity: primary ? 0.95 : 0.55 });
+          var m = new THREE.Mesh(geo, mat);
+          m.position.set(pos[0] * RADIUS * 1.02, pos[1] * RADIUS * 1.02, pos[2] * RADIUS * 1.02);
+          return m;
+        }
+
+        fetch('/api/terms').then(function(r) { return r.json(); }).then(function(td) {
+          if (!td || !td.terms) return;
+          termData = td.terms;
+          for (var ti = 0; ti < termData.length; ti++) {
+            var t = termData[ti];
+            if (!t.sphere_pos || t.sphere_pos.length !== 3) continue;
+            var m = makeTermMesh(t.sphere_pos, IS_GLOSSARY);
+            m.userData = { termIndex: ti };
+            termGroup.add(m);
+            termMeshes.push(m);
+
+            var label = document.createElement('div');
+            label.className = 'coherence-term-label';
+            label.textContent = String(t.path_order).padStart(2, '0') + ' ' + t.term;
+            label.dataset.termIndex = String(ti);
+            if (IS_GLOSSARY) label.classList.add('visible');
+            label.addEventListener('click', function(ev) {
+              var i = Number(ev.currentTarget.dataset.termIndex);
+              if (window.__coherenceSelectTerm) window.__coherenceSelectTerm(i);
+            });
+            document.body.appendChild(label);
+            termLabels.push(label);
+          }
+          if (window.__coherenceOnTermsReady) window.__coherenceOnTermsReady(termData);
+        }).catch(function() { /* API not available; fail quiet. */ });
+
+        window.__coherenceSelectTerm = function(idx) {
+          selectedTermIdx = idx;
+          if (idx < 0 || idx >= termData.length) { matchedSet = null; return; }
+          matchedSet = new Set(termData[idx].matched_docs || []);
+          if (window.__coherenceOnTermSelected) window.__coherenceOnTermSelected(idx, termData[idx]);
+        };
+
+        window.__coherenceClearSelection = function() {
+          selectedTermIdx = -1;
+          matchedSet = null;
+        };
+
+        window.__coherenceAim = function(unitPos, zoom) {
+          if (!unitPos || unitPos.length !== 3) return;
+          var x = unitPos[0], y = unitPos[1], z = unitPos[2];
+          var targetY = Math.atan2(-x, z);
+          var r = Math.sqrt(x * x + z * z);
+          var targetX = Math.atan2(y, r);
+          targetRotX = targetX;
+          targetRotY = targetY;
+          lastInteractTime = Date.now();
+          // Hold auto-rotation off while the camera eases to the term; otherwise
+          // the tumble pulls the aim off-center by the time the lerp settles.
+          autoRotatePauseUntil = Date.now() + 2200;
+          if (typeof zoom === 'number') target.cameraZ = zoom;
+        };
+
+        window.__coherenceDrawPathSegment = function(fromPos, toPos) {
+          if (!fromPos || !toPos) return;
+          var a = new THREE.Vector3(fromPos[0] * RADIUS * 1.02, fromPos[1] * RADIUS * 1.02, fromPos[2] * RADIUS * 1.02);
+          var b = new THREE.Vector3(toPos[0] * RADIUS * 1.02, toPos[1] * RADIUS * 1.02, toPos[2] * RADIUS * 1.02);
+          var g = new THREE.BufferGeometry().setFromPoints([a, b]);
+          var mat = new THREE.LineBasicMaterial({ color: 0xffd66b, transparent: true, opacity: 0.6, linewidth: 2 });
+          var line = new THREE.Line(g, mat);
+          line.userData = { isPath: true };
+          pathLineGroup.add(line);
+        };
+
+        window.__coherenceClearPath = function() {
+          while (pathLineGroup.children.length > 0) {
+            var c = pathLineGroup.children.pop();
+            if (c.geometry) c.geometry.dispose();
+            if (c.material) c.material.dispose();
+            pathLineGroup.remove(c);
+          }
+        };
+
+        function axisLine(color, endpoint) {
+          var mat = new THREE.LineBasicMaterial({ color: color, transparent: true, opacity: 0, linewidth: 2 });
+          var geo = new THREE.BufferGeometry().setFromPoints([endpoint.clone().negate(), endpoint.clone()]);
+          return new THREE.Line(geo, mat);
+        }
+        axisGroup.add(axisLine(0xff6b6b, new THREE.Vector3(RADIUS * 1.35, 0, 0)));
+        axisGroup.add(axisLine(0x2dd4bf, new THREE.Vector3(0, RADIUS * 1.35, 0)));
+        axisGroup.add(axisLine(0x7c8aff, new THREE.Vector3(0, 0, RADIUS * 1.35)));
+
+        var glowGeo = new THREE.SphereGeometry(RADIUS * 1.05, 32, 32);
+        var glowMat = new THREE.MeshBasicMaterial({ color: isLight ? 0xd0d0e0 : 0x1a1a3a, transparent: true, opacity: isLight ? 0.08 : 0.06, side: THREE.BackSide });
+        scene.add(new THREE.Mesh(glowGeo, glowMat));
+
+        var sections = document.querySelectorAll('.coherence-scroll-section[data-aspect-index]');
+        var aspectByIndex = ['intro', 'axes', 'radius', 'edges'];
+        if (sections.length) {
+          if (ROUTE) setAspect('routeBase');
+          var io = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting && entry.intersectionRatio >= 0.45) {
+                var idx = Number(entry.target.dataset.aspectIndex);
+                if (ROUTE) setRouteColumn(idx); else setAspect(aspectByIndex[idx] || 'intro');
+                entry.target.classList.add('in-view');
+              } else if (entry.intersectionRatio < 0.25) {
+                entry.target.classList.remove('in-view');
+              }
+            });
+          }, { threshold: [0.0, 0.25, 0.45, 0.7] });
+          sections.forEach(function(s) { io.observe(s); });
+        }
+
+        // Coda sentinel — "scroll to enter the sphere". When this element is
+        // in view, the wheel handler above switches from page-scroll mode to
+        // zoom-the-sphere mode. IntersectionObserver fires on either edge,
+        // so scrolling back up past the sentinel hands wheel control back to
+        // the browser for native page scroll.
+        var codaHint = document.querySelector('.coherence-coda-hint');
+        if (codaHint) {
+          var sentinelIo = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              window.__sphereEntered = entry.isIntersecting;
+            });
+          }, { threshold: 0.5 });
+          sentinelIo.observe(codaHint);
+        }
+
+        animate();
+      });
+
+      var hoveredIdx = -1;
+
+      function lerp(a, b, t) { return a + (b - a) * t; }
+
+      function animate() {
+        requestAnimationFrame(animate);
+
+        var LERP = 0.06;
+        S.nodeOpacity = lerp(S.nodeOpacity, target.nodeOpacity, LERP);
+        S.edgeOpacity = lerp(S.edgeOpacity, target.edgeOpacity, LERP);
+        S.axisOpacity = lerp(S.axisOpacity, target.axisOpacity, LERP);
+        S.tierEmphasis = lerp(S.tierEmphasis, target.tierEmphasis, LERP);
+        S.rotationSpeed = lerp(S.rotationSpeed, target.rotationSpeed, LERP);
+        S.cameraZ = lerp(S.cameraZ, target.cameraZ, LERP * 0.6);
+
+        // ── Idle auto-rotation ──
+        // Gentle horizontal spin + a slow sine-wave pitch so the sphere tumbles
+        // along a continuous path rather than spinning on one axis. The pitch
+        // sine amplitude is ~15° and its period is ~60s, so it never inverts
+        // the globe. Both pause while the user drags or for a brief window
+        // after interaction (AUTO_ROTATE_RESUME_MS) and during walkthrough
+        // aims (autoRotatePauseUntil).
+        var nowT = Date.now();
+        var sinceInteract = nowT - lastInteractTime;
+        var pausedForAim = nowT < autoRotatePauseUntil;
+        if (!isDown && !pausedForAim && sinceInteract > AUTO_ROTATE_RESUME_MS) {
+          targetRotY += S.rotationSpeed;
+          // Track user-induced pitch as the new sine baseline so drags don't
+          // fight the oscillation.
+          rotXBase = targetRotX - Math.sin((nowT - autoStartTime) * 0.0001047) * 0.262;
+          var pitch = Math.sin((nowT - autoStartTime) * 0.0001047) * 0.262; // ±15° over ~60s
+          targetRotX = rotXBase + pitch;
+          targetRotX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotX));
+        } else {
+          // Keep the baseline in sync with where the user left the camera so
+          // the tumble picks up smoothly when auto-rotation resumes.
+          rotXBase = targetRotX - Math.sin((nowT - autoStartTime) * 0.0001047) * 0.262;
+        }
+        rotX += (targetRotX - rotX) * 0.08;
+        rotY += (targetRotY - rotY) * 0.08;
+
+        nodeGroup.rotation.x = rotX;
+        nodeGroup.rotation.y = rotY;
+        edgeGroup.rotation.x = rotX;
+        edgeGroup.rotation.y = rotY;
+        axisGroup.rotation.x = rotX;
+        axisGroup.rotation.y = rotY;
+        termGroup.rotation.x = rotX;
+        termGroup.rotation.y = rotY;
+        pathLineGroup.rotation.x = rotX;
+        pathLineGroup.rotation.y = rotY;
+
+        var children = nodeGroup.children;
+        var pulse = 1 + 0.25 * Math.sin(Date.now() * 0.004);
+        for (var i = 0; i < children.length; i++) {
+          var mesh = children[i];
+          var ud = mesh.userData;
+          if (ud.baseOpacity === undefined) continue;
+
+          var opacity, scale;
+          opacity = ud.baseOpacity * S.nodeOpacity;
+          if (ud.imp <= 1) scale = 1 + S.tierEmphasis * 0.9;
+          else if (ud.imp <= 2) scale = 1 + S.tierEmphasis * 0.25;
+          else scale = 1 - S.tierEmphasis * 0.35;
+          if (matchedSet && nodeData[i]) {
+            if (matchedSet.has(nodeData[i].id)) {
+              opacity = Math.max(opacity, ud.baseOpacity);
+              scale = Math.max(scale, 1.35);
+            } else {
+              opacity = ud.baseOpacity * 0.1;
+              scale = 0.7;
+            }
+          }
+          mesh.material.opacity = opacity;
+          mesh.scale.setScalar(Math.max(0.55, scale));
+        }
+
+        var termChildren = termGroup.children;
+        for (var tmi = 0; tmi < termChildren.length; tmi++) {
+          var tm = termChildren[tmi];
+          var tud = tm.userData;
+          if (tud.termIndex === undefined) continue;
+          var isSel = (tud.termIndex === selectedTermIdx);
+          var baseScale = 1.0;
+          var termScale = isSel ? (1.9 * pulse) : baseScale;
+          tm.scale.setScalar(termScale);
+          tm.material.opacity = isSel ? 1.0 : 0.9;
+        }
+
+        for (var li = 0; li < termLabels.length; li++) {
+          var lbl = termLabels[li];
+          if (!termData[li] || !termData[li].sphere_pos) continue;
+          var sp = termData[li].sphere_pos;
+          var wp = new THREE.Vector3(sp[0] * RADIUS * 1.02, sp[1] * RADIUS * 1.02, sp[2] * RADIUS * 1.02);
+          wp.applyMatrix4(termGroup.matrixWorld);
+          var proj = wp.clone().project(camera);
+          var behind = proj.z < -1 || proj.z > 1;
+          var sx = (proj.x * 0.5 + 0.5) * width;
+          var sy = (-proj.y * 0.5 + 0.5) * height;
+          lbl.style.left = sx + 'px';
+          lbl.style.top = sy + 'px';
+          var hideBehind = behind || proj.z > 0.99;
+          lbl.classList.toggle('visible', !hideBehind);
+          if (li === selectedTermIdx) lbl.classList.add('hover'); else lbl.classList.remove('hover');
+        }
+
+        var edgeChildren = edgeGroup.children;
+        for (var j = 0; j < edgeChildren.length; j++) {
+          var edge = edgeChildren[j];
+          edge.material.opacity = S.edgeOpacity;
+        }
+
+        var axisChildren = axisGroup.children;
+        for (var k = 0; k < axisChildren.length; k++) {
+          axisChildren[k].material.opacity = S.axisOpacity * 0.85;
+        }
+
+        camera.position.z = S.cameraZ;
+
+        raycaster.setFromCamera(mouse, camera);
+        var termHits = raycaster.intersectObjects(termGroup.children);
+        if (termHits.length > 0) {
+          var thIdx = termHits[0].object.userData.termIndex;
+          if (thIdx !== undefined) termHoveredIdx = thIdx;
+        } else {
+          termHoveredIdx = -1;
+        }
+        var intersects = raycaster.intersectObjects(nodeGroup.children);
+        if (intersects.length > 0) {
+          var idx = intersects[0].object.userData.index;
+          if (idx !== hoveredIdx) {
+            hoveredIdx = idx;
+            var n = nodeData[idx];
+            var screenPos = positions[idx].clone();
+            screenPos.applyMatrix4(nodeGroup.matrixWorld);
+            screenPos.project(camera);
+            var sx = (screenPos.x * 0.5 + 0.5) * width;
+            var sy = (-screenPos.y * 0.5 + 0.5) * height;
+            tooltip.style.display = 'block';
+            tooltip.style.left = Math.min(sx + 15, width - 330) + 'px';
+            tooltip.style.top = Math.max(sy - 10, 10) + 'px';
+            tooltip.innerHTML = '<strong style="color:' + '#' + (SECTION_COLORS[n.section] || 0x888888).toString(16).padStart(6, '0') + '">' + n.doc_num + '</strong> ' + n.title + (n.intro ? '<br><small style="color:#888;">' + n.intro + '</small>' : '');
+          }
+          container.style.cursor = 'pointer';
+        } else {
+          if (hoveredIdx !== -1) { tooltip.style.display = 'none'; hoveredIdx = -1; }
+          container.style.cursor = isDown ? 'grabbing' : 'grab';
+        }
+
+        renderer.render(scene, camera);
+      }
+
+      function resize() {
+        width = container.clientWidth;
+        height = container.clientHeight;
+        camera.aspect = width / height;
+        // Widen FOV on narrow viewports so the sphere fits without cropping.
+        camera.fov = width < 700 ? 72 : 55;
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height);
+      }
+      window.addEventListener('resize', resize);
+      window.addEventListener('orientationchange', resize);
+
+      var themeBtn = document.getElementById('themeToggle');
+      if (themeBtn) {
+        themeBtn.addEventListener('click', function() {
+          setTimeout(function() {
+            var nowLight = document.documentElement.classList.contains('theme-light');
+            var newBg = nowLight ? 0xf8f7f2 : 0x0a0a0f;
+            scene.background = new THREE.Color(newBg);
+            scene.fog = new THREE.FogExp2(newBg, 0.0006);
+            edgeGroup.children.forEach(function(line) {
+              line.material.color.set(nowLight ? 0x8888aa : 0x6a6a9a);
+            });
+          }, 50);
+        });
+      }
+    }
+  })();
+  </script>
+
+</body>
+</html>

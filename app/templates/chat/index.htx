@@ -1,0 +1,361 @@
+<div class="resolve-app" id="resolveApp">
+  <header class="resolve-header">
+    <a href="/resolve" class="resolve-back">← RESOLVE corpus</a>
+    <h1>Governed Conversational Assistant</h1>
+    <p class="resolve-subtitle">Seed-derived from <a href="/resolve/doc/282-the-essential-constraints-of-claude-code">Doc 282</a>. <a href="/resolve/doc/001-entrace-stack">ENTRACE Stack</a> active. <a href="/resolve/doc/265-entracement-study-meta-analysis">Empirical study</a> (Cohen's d > 3).</p>
+  </header>
+
+  <!-- API Key Entry (shown first, key stored in sessionStorage only) -->
+  <div id="keyEntry">
+    <div class="key-notice">
+      <h2>Bring Your Own Key</h2>
+      <p>This assistant runs on <strong>your</strong> Anthropic API key using a <strong>prepare/execute</strong> security model. When this page loaded, the server generated a unique action token. When you enter your key, it is sent <strong>exactly once</strong> to bind to that token. After binding, only the opaque token is used — your raw key is not included in subsequent request headers.</p>
+      <p style="color:#888;font-size:0.8rem;">Your key and your conversation are held in server memory only — not written to disk, to a database, or to logs under the current implementation. Server restart = everything gone. Sessions auto-expire after 1 hour. The server operator's key is not used. <a href="https://console.anthropic.com/settings/keys" style="color:#ff8800;">Get an API key</a></p>
+      <div class="consent-warning" style="margin:1.5rem 0;padding:1rem;border:1px solid #a33;background:#1a0a0a;">
+        <h3 style="color:#f66;font-size:0.9rem;margin:0 0 0.5rem;">Informed Consent Required</h3>
+        <p style="font-size:0.8rem;color:#caa;line-height:1.5;">By entering your API key, you acknowledge that:</p>
+        <ul style="font-size:0.78rem;color:#caa;line-height:1.6;padding-left:1.2rem;">
+          <li><strong>Anthropic advises against sharing your API key with third-party services.</strong> See <a href="https://docs.anthropic.com/en/docs/initial-setup#set-your-api-key" style="color:#ff8800;">Anthropic's documentation</a>: API keys should be kept secure and not exposed to untrusted parties.</li>
+          <li><strong>This is a third-party service</strong> operated by Jared Foy in southern Oregon, not by Anthropic. You are trusting this server's code with your key for the duration of your session.</li>
+          <li><strong>We mitigate this trust requirement architecturally</strong> using a prepare/execute security model where your key transits once and is held in server memory only (never disk). But architectural mitigation is not zero risk.</li>
+          <li><strong>You can verify the code yourself</strong> — click "Show Me the Code" below, or view the <a href="https://github.com/jaredef/jaredfoy.com" style="color:#ff8800;">public GitHub repo</a>. The code running on this server is the code in that repo.</li>
+          <li><strong>Defense in depth — single-use token rotation.</strong> Your key is bound to an opaque action token via a one-time POST. After each chat request, the token is consumed and a new one is issued. Each token is used at most once — an intercepted token has a short reuse window bounded by the rotation cadence; origin validation on the bind and chat endpoints further narrows the cross-origin attack surface.</li>
+          <li><strong style="color:#f66;">Rotate your Anthropic API key when you are done.</strong> We cannot confirm you are on a secure local network. After testing, go to <a href="https://console.anthropic.com/settings/keys" style="color:#ff8800;">console.anthropic.com/settings/keys</a> and rotate (delete + regenerate) the key you used here. This eliminates any residual risk regardless of our architecture.</li>
+          <li><strong>You accept this risk voluntarily.</strong> If you are not comfortable, do not enter your key. You can still read the entire <a href="/" style="color:#ff8800;">RESOLVE corpus</a> without it.</li>
+        </ul>
+        <label style="display:block;margin-top:0.75rem;font-size:0.8rem;color:#eee;cursor:pointer;">
+          <input type="checkbox" id="consentCheck"> I understand and accept the risks described above.
+        </label>
+      </div>
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." disabled style="width:100%;padding:0.5rem;font-family:monospace;background:#111;color:#eee;border:1px solid #333;margin:0 0 1rem;opacity:0.5;">
+      <button id="saveKey" class="resolve-btn" disabled style="opacity:0.5;">Enter</button>
+      <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid #222;">
+        <button id="showCodeEntry" class="resolve-btn" style="background:#222;color:#4a9;">Show Me the Code</button>
+        <p style="color:#666;font-size:0.75rem;margin-top:0.5rem;">Don't trust me. See how the architecture narrows the trust required and bounds specific risks.</p>
+        <p style="color:#888;font-size:0.75rem;margin-top:0.5rem;">This security model was derived from first principles — the <a href="/resolve/doc/282-the-essential-constraints-of-claude-code" style="color:#ff8800;">derivation inversion</a> applied to API key handling via the <a href="/resolve/doc/251-presto-seed" style="color:#ff8800;">PRESTO prepare/execute pattern</a>. The architecture narrows specific classes of risk structurally rather than by policy — prepare/execute bounds the key's transit to a single POST, in-memory-only storage keeps the key off disk, single-use token rotation limits the usable window of any intercepted token, and origin validation on the bind and chat endpoints closes cross-origin paths. Residual risks (dependency vulnerabilities, server compromise, supply-chain attacks on CDN resources, and bugs in this code) remain. Rotate your API key after use; that is the practical mitigation the architecture cannot provide. Perform a complete security audit yourself: <a href="https://github.com/jaredef/jaredfoy.com" style="color:#ff8800;">github.com/jaredef/jaredfoy.com</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat area (hidden until key is provided) -->
+  <div id="chatContainer" style="display:none;">
+    <div class="resolve-toolbar">
+      <button id="clearKey" class="resolve-btn" style="background:#333;color:#aaa;">Change Key</button>
+      <button id="showCode" class="resolve-btn" style="background:#222;color:#4a9;margin-left:0.5rem;">Show Me the Code</button>
+    </div>
+
+    <div class="resolve-chat" id="chatArea">
+      <div class="resolve-messages" id="messages"></div>
+    </div>
+    <div class="resolve-input-bar" id="inputBar">
+      <form id="chatForm" class="resolve-input">
+        <textarea id="userInput" placeholder="Your prompt... (Enter to send, Shift+Enter for newline)" rows="2"></textarea>
+        <button type="submit" class="resolve-send">Send</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+.resolve-app { max-width: 800px; margin: 0 auto; padding: 1rem; font-family: monospace; color: #eee; }
+.resolve-header { margin-bottom: 1.5rem; }
+.resolve-header h1 { font-size: 1.2rem; margin: 0.5rem 0 0.25rem; }
+.resolve-subtitle { font-size: 0.8rem; color: #888; }
+.resolve-subtitle a { color: #ff8800; }
+.resolve-back { color: #ff8800; text-decoration: none; font-size: 0.85rem; }
+.key-notice { max-width: 500px; margin: 2rem auto; padding: 1.5rem; border: 1px solid #333; }
+.key-notice h2 { font-size: 1rem; margin: 0 0 0.75rem; }
+.key-notice p { font-size: 0.85rem; color: #bbb; line-height: 1.5; margin-bottom: 0.5rem; }
+.resolve-toolbar { margin-bottom: 0.5rem; }
+.resolve-btn { background: #ff8800; color: #000; border: none; padding: 0.4rem 1rem; font-family: monospace; cursor: pointer; margin-bottom: 0.5rem; }
+.resolve-chat { display: flex; flex-direction: column; min-height: calc(100vh - 320px); padding-bottom: 120px; }
+.resolve-messages { flex: 1; overflow-y: auto; padding: 1rem 0; }
+.resolve-input-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #0d0d0d; border-top: 1px solid #333; padding: 0.75rem; z-index: 100; max-width: 800px; margin: 0 auto; }
+.resolve-messages .msg { margin-bottom: 1rem; padding: 0.5rem; border-left: 2px solid #333; }
+.resolve-messages .msg.user { border-left-color: #ff8800; }
+.resolve-messages .msg.assistant { border-left-color: #4a9; }
+.resolve-messages .msg .role { font-size: 0.75rem; color: #666; margin-bottom: 0.25rem; }
+.resolve-messages .msg .content { white-space: pre-wrap; font-size: 0.9rem; line-height: 1.5; }
+.resolve-input { display: flex; gap: 0.5rem; }
+.resolve-input textarea { flex: 1; background: #111; color: #eee; border: 1px solid #333; padding: 0.5rem; font-family: monospace; font-size: 0.9rem; resize: vertical; }
+.resolve-send { background: #ff8800; color: #000; border: none; padding: 0.5rem 1.5rem; font-family: monospace; cursor: pointer; align-self: flex-end; }
+.resolve-send:disabled { opacity: 0.5; cursor: not-allowed; }
+.thinking { color: #666; font-style: italic; }
+.md-content { white-space: normal; }
+.md-content p { margin: 0.5rem 0; }
+.md-content h2, .md-content h3, .md-content h4 { margin: 1rem 0 0.5rem; color: #ff8800; }
+.md-content pre { background: #111; padding: 0.75rem; overflow-x: auto; margin: 0.5rem 0; border-left: 2px solid #333; }
+.md-content pre code { background: none; padding: 0; font-size: 0.8rem; }
+.md-content code { background: #1a1a1a; padding: 0.1rem 0.3rem; font-size: 0.85rem; color: #4a9; }
+.md-content strong { color: #eee; }
+.md-content em { color: #ccc; }
+.md-content ul, .md-content ol { margin: 0.5rem 0; padding-left: 1.5rem; }
+.md-content li { margin-bottom: 0.25rem; }
+.md-content hr { border: none; border-top: 1px solid #333; margin: 1rem 0; }
+.md-content blockquote { border-left: 2px solid #ff8800; padding-left: 0.75rem; margin: 0.5rem 0; color: #aaa; }
+</style>
+
+<!-- Code transparency panel -->
+<div id="codePanel" style="display:none;" class="code-panel">
+  <div class="code-header">
+    <h2>Full Server Source — resolve-module.ts</h2>
+    <p>This is the complete server-side code that handles your API key and chat requests. Read it. Verify that your key is never stored.</p>
+  </div>
+  <div class="code-audit">
+    <h3>Security audit summary — PRESTO Prepare/Execute Model</h3>
+    <ul>
+      <li><strong>PREPARE (page render):</strong> Server generates a unique action token and embeds it in this page. The token has an empty slot in server memory.</li>
+      <li><strong>BIND (one-time):</strong> When you enter your key, it is sent ONCE to <code>/api/resolve/bind</code> to fill the slot. After this, the raw key never appears in any request.</li>
+      <li><strong>EXECUTE (every chat):</strong> Chat requests send only the opaque action token in the <code>X-Action-Token</code> header. The server looks up your key from the in-memory slot.</li>
+      <li><strong>Memory only — everything:</strong> API keys, action tokens, AND chat messages all live in server process memory. Nothing is written to disk. No SQLite. No log files. Server restart = completely clean slate.</li>
+      <li><strong>TTL on everything:</strong> Action tokens expire after 1 hour. Chat sessions expire after 1 hour. Expired entries are automatically garbage-collected.</li>
+      <li><strong>One-time bind:</strong> Each token can be filled exactly once. A second bind attempt is rejected (409 Conflict).</li>
+      <li><strong>Client side:</strong> After binding, the key is cleared from the input field. Only the opaque token is stored in <code>sessionStorage</code>. The token is worthless outside this server.</li>
+      <li><strong>No database:</strong> There is no SQLite. No file-based storage of any kind for chat data. Everything is a JavaScript Map in process memory.</li>
+    </ul>
+  </div>
+  <pre class="code-source"><code id="sourceCode">Loading...</code></pre>
+</div>
+
+<style>
+.code-panel { position: fixed; bottom: 0; left: 0; right: 0; padding: 1rem; border-top: 2px solid #4a9; background: #0a0a0a; max-height: 75vh; overflow-y: auto; z-index: 200; }
+.code-header { margin-bottom: 1rem; }
+.code-header h2 { font-size: 1rem; margin: 0 0 0.5rem; color: #4a9; }
+.code-header p { font-size: 0.8rem; color: #888; }
+.code-audit { margin-bottom: 1rem; padding: 1rem; background: #111; border-left: 2px solid #4a9; }
+.code-audit h3 { font-size: 0.9rem; color: #4a9; margin: 0 0 0.5rem; }
+.code-audit ul { margin: 0; padding-left: 1.2rem; font-size: 0.8rem; color: #bbb; line-height: 1.6; }
+.code-audit li { margin-bottom: 0.3rem; }
+.code-audit code { background: #1a1a1a; padding: 0.1rem 0.3rem; color: #ff8800; }
+.code-source { background: #111; padding: 1rem; overflow-x: auto; font-size: 0.75rem; line-height: 1.4; color: #ccc; white-space: pre; }
+</style>
+
+<script>
+(function() {
+  var currentSession = null;
+
+  // PRESTO Prepare/Execute: action token is fetched from the server on page load.
+  // The user's API key is sent ONCE to fill the token's slot, then only the
+  // opaque token is used. The key never appears in a header after binding.
+  var actionToken = '';
+  var tokenBound = false;
+
+  function getToken() { return sessionStorage.getItem('resolve_action_token') || actionToken; }
+  function setToken(t) { sessionStorage.setItem('resolve_action_token', t); actionToken = t; }
+  function clearTokenStore() { sessionStorage.removeItem('resolve_action_token'); sessionStorage.removeItem('resolve_token_bound'); tokenBound = false; actionToken = ''; }
+
+  function showKeyEntry() {
+    document.getElementById('keyEntry').style.display = 'block';
+    document.getElementById('chatContainer').style.display = 'none';
+  }
+
+  function showChat() {
+    document.getElementById('keyEntry').style.display = 'none';
+    document.getElementById('chatContainer').style.display = 'block';
+    // Auto-create a fresh session — no history browsing
+    if (!currentSession) {
+      api('POST', '/api/resolve/sessions').then(function(data) {
+        currentSession = data.id;
+      });
+    }
+  }
+
+  // On page load: check if already bound, otherwise fetch a fresh token
+  if (sessionStorage.getItem('resolve_token_bound') === 'true' && getToken()) {
+    tokenBound = true;
+    showChat();
+  } else {
+    // PREPARE phase: fetch a fresh action token from the server
+    fetch('/api/resolve/token').then(function(r) { return r.json(); }).then(function(data) {
+      if (data.token) {
+        setToken(data.token);
+        showKeyEntry();
+      }
+    }).catch(function() { showKeyEntry(); });
+  }
+
+  document.getElementById('consentCheck').addEventListener('change', function() {
+    var checked = this.checked;
+    document.getElementById('apiKeyInput').disabled = !checked;
+    document.getElementById('apiKeyInput').style.opacity = checked ? '1' : '0.5';
+    document.getElementById('saveKey').disabled = !checked;
+    document.getElementById('saveKey').style.opacity = checked ? '1' : '0.5';
+  });
+
+  document.getElementById('saveKey').addEventListener('click', function() {
+    var key = document.getElementById('apiKeyInput').value.trim();
+    if (!key.startsWith('sk-ant-')) { alert('Key should start with sk-ant-'); return; }
+    var btn = document.getElementById('saveKey');
+    btn.disabled = true;
+    btn.textContent = 'Binding...';
+    // EXECUTE phase: bind the key to the action token
+    fetch('/api/resolve/bind', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: getToken(), key: key })
+    }).then(function(r) { return r.json(); }).then(function(data) {
+      if (data.ok) {
+        tokenBound = true;
+        setToken(getToken());
+        sessionStorage.setItem('resolve_token_bound', 'true');
+        // Clear the key from the input — it's now in server memory only
+        document.getElementById('apiKeyInput').value = '';
+        showChat();
+      } else {
+        alert(data.error || 'Bind failed');
+      }
+      btn.disabled = false;
+      btn.textContent = 'Enter';
+    }).catch(function(err) {
+      alert('Error: ' + err);
+      btn.disabled = false;
+      btn.textContent = 'Enter';
+    });
+  });
+
+  document.getElementById('clearKey').addEventListener('click', function() {
+    clearTokenStore();
+    sessionStorage.removeItem('resolve_token_bound');
+    // Refresh to get a new action token from the server
+    window.location.reload();
+  });
+
+  function toggleCode(btn) {
+    var panel = document.getElementById('codePanel');
+    var isOpen = panel.style.display !== 'none';
+    panel.style.display = isOpen ? 'none' : 'block';
+    // Update ALL show-code buttons' text
+    var buttons = [document.getElementById('showCode'), document.getElementById('showCodeEntry')];
+    buttons.forEach(function(b) { if (b) b.textContent = isOpen ? 'Show Me the Code' : 'Close'; });
+    if (!isOpen && document.getElementById('sourceCode').textContent === 'Loading...') {
+      fetch('/api/resolve/source').then(function(r) { return r.text(); }).then(function(src) {
+        document.getElementById('sourceCode').textContent = src;
+      });
+    }
+  }
+
+  document.getElementById('showCode').addEventListener('click', function() { toggleCode(this); });
+  if (document.getElementById('showCodeEntry')) {
+    document.getElementById('showCodeEntry').addEventListener('click', function() { toggleCode(this); });
+  }
+
+  function api(method, path, body) {
+    var opts = {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Action-Token': getToken()
+      }
+    };
+    // Always send at least {} for POST — PRESTO engine expects valid JSON when Content-Type is application/json
+    if (method === 'POST') opts.body = JSON.stringify(body || {});
+    return fetch(path, opts).then(function(r) { return r.json(); });
+  }
+
+  function escapeHtml(text) {
+    var d = document.createElement('div');
+    d.textContent = text;
+    return d.innerHTML;
+  }
+
+  // Lightweight markdown → HTML for assistant responses
+  function renderMd(text) {
+    var html = escapeHtml(text);
+    // Code blocks (``` ... ```)
+    html = html.replace(/```(\w*)\n([\s\S]*?)```/g, function(m, lang, code) {
+      return '<pre><code>' + code + '</code></pre>';
+    });
+    // Inline code
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+    // Bold
+    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    // Italic
+    html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    // Headers
+    html = html.replace(/^### (.+)$/gm, '<h4>$1</h4>');
+    html = html.replace(/^## (.+)$/gm, '<h3>$1</h3>');
+    html = html.replace(/^# (.+)$/gm, '<h2>$1</h2>');
+    // Horizontal rules
+    html = html.replace(/^---$/gm, '<hr>');
+    // Unordered lists
+    html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+    html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+    // Ordered lists
+    html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+    // Blockquotes
+    html = html.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+    // Paragraphs (double newline)
+    html = html.replace(/\n\n/g, '</p><p>');
+    html = '<p>' + html + '</p>';
+    // Clean up empty paragraphs
+    html = html.replace(/<p>\s*<\/p>/g, '');
+    html = html.replace(/<p>\s*(<h[234]>)/g, '$1');
+    html = html.replace(/(<\/h[234]>)\s*<\/p>/g, '$1');
+    html = html.replace(/<p>\s*(<pre>)/g, '$1');
+    html = html.replace(/(<\/pre>)\s*<\/p>/g, '$1');
+    html = html.replace(/<p>\s*(<ul>)/g, '$1');
+    html = html.replace(/(<\/ul>)\s*<\/p>/g, '$1');
+    html = html.replace(/<p>\s*(<hr>)/g, '$1');
+    html = html.replace(/(<hr>)\s*<\/p>/g, '$1');
+    html = html.replace(/<p>\s*(<blockquote>)/g, '$1');
+    html = html.replace(/(<\/blockquote>)\s*<\/p>/g, '$1');
+    return html;
+  }
+
+  function scrollToBottom() {
+    var el = document.getElementById('messages');
+    el.scrollTop = el.scrollHeight;
+  }
+
+  // Enter to send (Shift+Enter for newline)
+  document.getElementById('userInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      document.getElementById('chatForm').dispatchEvent(new Event('submit'));
+    }
+  });
+
+  document.getElementById('chatForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var input = document.getElementById('userInput');
+    var msg = input.value.trim();
+    if (!msg || !currentSession) return;
+
+    document.getElementById('messages').innerHTML +=
+      '<div class="msg user"><div class="role">user</div><div class="content">' + escapeHtml(msg) + '</div></div>';
+    document.getElementById('messages').innerHTML +=
+      '<div class="msg assistant thinking" id="thinking"><div class="role">assistant</div><div class="content">resolving...</div></div>';
+    input.value = '';
+    scrollToBottom();
+
+    var btn = document.querySelector('.resolve-send');
+    btn.disabled = true;
+
+    api('POST', '/api/resolve/chat', { sessionId: currentSession, message: msg })
+      .then(function(data) {
+        var el = document.getElementById('thinking');
+        if (el) el.remove();
+        // DEFENSE IN DEPTH: rotate to the new token returned by the server
+        if (data.nextToken) {
+          setToken(data.nextToken);
+        }
+        if (data.error) {
+          document.getElementById('messages').innerHTML +=
+            '<div class="msg assistant"><div class="role">error</div><div class="content">' + escapeHtml(data.error) + '</div></div>';
+        } else {
+          document.getElementById('messages').innerHTML +=
+            '<div class="msg assistant"><div class="role">assistant</div><div class="content md-content">' + renderMd(data.content || '') + '</div></div>';
+        }
+        scrollToBottom();
+        btn.disabled = false;
+      })
+      .catch(function(err) {
+        var el = document.getElementById('thinking');
+        if (el) el.remove();
+        document.getElementById('messages').innerHTML +=
+          '<div class="msg assistant"><div class="role">error</div><div class="content">' + escapeHtml(String(err)) + '</div></div>';
+        btn.disabled = false;
+      });
+  });
+})();
+</script>

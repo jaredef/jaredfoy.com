@@ -1,12 +1,276 @@
-<div class="hero">
-  <h1>RESOLVE</h1>
-  <p class="hero-sub">Constraints induce properties. Name the constraints. The properties emerge.</p>
-  <p class="hero-desc">{{ corpus.total }} documents and counting, derived in a single sustained project. The finding: the quality of AI output is a function of the constraints it operates under, not of its size, training, or architecture.</p>
-  <div class="hero-actions">
-    <a href="/doc/211-the-entrace-stack" class="btn btn-primary">Start: The ENTRACE Stack</a>
-    <a href="/resolve" class="btn btn-secondary">Try the Resolver</a>
+<style>
+  /* Home-page sphere hero. Desktop only: the coherence sphere runs behind
+     the hero text as an ambient, draggable backdrop. Below 768px (matching
+     the site's existing mobile breakpoint) the sphere canvas is hidden and
+     three.js is never loaded, so mobile stays fast. */
+  .hero.hero-with-sphere {
+    position: relative;
+    min-height: min(70vh, 560px);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+  }
+
+  .home-sphere-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: auto;
+  }
+
+  .home-sphere-canvas canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .hero-with-sphere .hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 44rem;
+    text-align: center;
+    padding: 2rem 1.75rem;
+    background: radial-gradient(
+      ellipse at center,
+      color-mix(in srgb, var(--bg) 88%, transparent) 0%,
+      color-mix(in srgb, var(--bg) 72%, transparent) 55%,
+      color-mix(in srgb, var(--bg) 35%, transparent) 90%,
+      transparent 100%
+    );
+    border-radius: 8px;
+  }
+
+  .home-sphere-tooltip {
+    position: fixed;
+    display: none;
+    max-width: 320px;
+    background: color-mix(in srgb, var(--bg) 95%, transparent);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    color: var(--fg);
+    pointer-events: none;
+    z-index: 100;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  }
+
+  .home-sphere-hint {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 2;
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: 0.64rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--fg) 45%, transparent);
+    pointer-events: none;
+  }
+
+  .home-sphere-hint a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px dotted currentColor;
+    pointer-events: auto;
+  }
+
+  @media (max-width: 768px) {
+    .hero.hero-with-sphere {
+      min-height: auto;
+      padding: 2rem 1rem;
+    }
+    .home-sphere-canvas,
+    .home-sphere-hint {
+      display: none;
+    }
+    .hero-with-sphere .hero-inner {
+      background: none;
+      padding: 0.5rem 0.25rem;
+      max-width: 100%;
+    }
+  }
+
+  /* "Entries" section — each card surfaces a different visualization as
+     a constraint-named axis. Visually denser than .series-card so the four
+     visualization cards read as a distinct pattern from the textual series
+     paths above. */
+  .entries-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.85rem;
+    margin: 0.5rem 0 0.25rem;
+  }
+  .entry-card {
+    display: block;
+    padding: 1rem 1.1rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--bg) 96%, var(--fg) 4%);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .entry-card:hover {
+    border-color: color-mix(in srgb, var(--fg) 45%, transparent);
+    transform: translateY(-1px);
+  }
+  .entry-axis {
+    display: block;
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: 0.66rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--fg) 55%, transparent);
+    margin-bottom: 0.4rem;
+  }
+  .entry-card h3 {
+    font-size: 1.05rem;
+    margin: 0 0 0.4rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .entry-card p {
+    font-size: 0.86rem;
+    line-height: 1.5;
+    margin: 0;
+    color: color-mix(in srgb, var(--fg) 78%, transparent);
+  }
+  .entry-card .entry-arrow {
+    position: absolute;
+    top: 0.95rem;
+    right: 1rem;
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: 0.85rem;
+    color: color-mix(in srgb, var(--fg) 35%, transparent);
+    transition: color 0.15s ease, transform 0.15s ease;
+  }
+  .entry-card:hover .entry-arrow {
+    color: color-mix(in srgb, var(--fg) 75%, transparent);
+    transform: translateX(2px);
+  }
+
+  /* Each card carries a faint colored bar along its left edge tied to the
+     axis it surfaces — the same hue family the visualization itself uses,
+     so the card reads as a fragment of the destination. */
+  .entry-card[data-axis="time"]    { box-shadow: inset 3px 0 0 #f59e0b; }
+  .entry-card[data-axis="semantics"] { box-shadow: inset 3px 0 0 #34d399; }
+  .entry-card[data-axis="citation"] { box-shadow: inset 3px 0 0 #7c8aff; }
+  .entry-card[data-axis="pipeline"] { box-shadow: inset 3px 0 0 #f472b6; }
+
+  /* See-all link trailing each series section on the home page. Small,
+     right-aligned, mono-spaced, subtle accent — visible but not competing
+     with the curated top-5 list above it. */
+  .series-see-all-wrap {
+    margin: 1rem 0 0;
+    text-align: right;
+  }
+
+  .series-see-all {
+    display: inline-block;
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--fg) 65%, transparent);
+    text-decoration: none;
+    padding: 0.35rem 0.6rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--fg) 25%, transparent);
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .series-see-all:hover {
+    color: var(--fg);
+    border-color: color-mix(in srgb, var(--fg) 55%, transparent);
+  }
+
+  /* Yellow reader's notice banner above the hero. Low-key but visible;
+     signals that the site is an experimental sandbox rather than a body of
+     settled claims. */
+  .reader-notice {
+    background: #fef3c7;
+    color: #78350f;
+    border: 1px solid #f59e0b;
+    border-radius: 6px;
+    padding: 0.65rem 1rem;
+    margin: 0 auto 1.25rem;
+    max-width: 44rem;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+  }
+  .reader-notice strong {
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+  }
+  .reader-notice p {
+    margin: 0.35rem 0 0;
+    font-family: var(--font-body, system-ui, sans-serif);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .reader-notice {
+      background: color-mix(in srgb, #f59e0b 18%, var(--bg));
+      color: color-mix(in srgb, #fde68a 80%, var(--fg));
+      border-color: color-mix(in srgb, #f59e0b 55%, transparent);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .reader-notice {
+      margin: 0.5rem 0.75rem 1rem;
+      font-size: 0.78rem;
+    }
+  }
+
+</style>
+
+<div class="reader-notice" role="note">
+  <strong>Reader's notice</strong>
+  <p>This is a <a href="/resolve/coherence">coherence sphere</a> &mdash; one practitioner's documented sustained operation of LLM-augmented research methodology applied to philosophical inquiry. Outputs are at plausibility-tier under the corpus's own warrant discipline; cross-practitioner replication for higher warrant has not been performed. The apparatus is a functional synthesis-machine, not a novel methodology. Most claims are subsumable under existing literature in interdisciplinary research, AI-augmented inquiry, and philosophy of science. See <a href="/resolve/about-the-project">About the Project</a> for the full scope and limits. Read with epistemic care.</p>
+</div>
+
+<div class="hero hero-with-sphere">
+  <div id="homeSphere" class="home-sphere-canvas" aria-hidden="true"></div>
+  <div id="homeSphereTooltip" class="home-sphere-tooltip"></div>
+  <div class="hero-inner">
+    <h1>RESOLVE</h1>
+    <p class="hero-sub">Constraints induce properties, sort of. Name the constraints. The properties emerge — with exceptions, contested cases, and legitimate falsifications (Docs 356, 366, 367).</p>
+    <p class="hero-desc">{{ corpus.total }} documents and counting, derived in a single sustained project. The finding: the quality of AI output is a function of the constraints it operates under, not just its size, training, or architecture.</p>
+    <div class="hero-actions">
+      <a href="/resolve/doc/001-entrace-stack" class="btn btn-primary">Start: The ENTRACE Stack</a>
+      <a href="/resolve/chat" class="btn btn-secondary">Try the Resolver</a>
+      <a href="/resolve/blog" class="btn btn-secondary">Read the Blog</a>
+    </div>
+  </div>
+  <div class="home-sphere-hint" aria-hidden="true">
+    Drag to rotate &middot; <a href="/resolve/coherence">Sphere, explained</a>
   </div>
 </div>
+
+<section class="section featured-callout">
+  <h2>Featured: SIPE</h2>
+  <p class="section-desc">The canonical formalization of Systems-Induced Property Emergence, the corpus's load-bearing structural claim about hierarchical systems. The threshold-conditional emergence pattern, recovered into the corpus's vocabulary and applied to substrate-and-keeper composition over LLM substrates, anchored in HTX. An open invitation to falsify it, documented in the artifact itself.</p>
+  <div class="corpus-list">
+    <a href="/resolve/doc/541-systems-induced-property-emergence" class="corpus-item"><span class="doc-num">541</span><span class="doc-title">Systems-Induced Property Emergence</span><span class="doc-section">canonical</span></a>
+  </div>
+</section>
+
+<section class="section featured-callout">
+  <h2>Featured Blog Post</h2>
+  <p class="section-desc">A general-reader entracement to Doc 535: what actually happened when ChatGPT conjectured a long-standing equation in gluon scattering, what kind of work each of the three steps did, and what vocabulary the corpus has built for describing the moment honestly.</p>
+  <div class="corpus-list">
+    <a href="/resolve/blog/the-gluon-the-machine-and-the-live-being" class="corpus-item"><span class="doc-title">The Gluon, the Machine, and the Live Being</span><span class="doc-section">blog</span></a>
+  </div>
+</section>
 
 <section class="section">
   <h2>Reading Paths</h2>
@@ -64,13 +328,49 @@
 </section>
 
 <section class="section">
+  <h2>Entries</h2>
+  <p class="section-desc">Each view fixes one axis and lets the rest fall out. Name the axis you want to see by; the structure follows.</p>
+  <div class="entries-grid">
+    <a href="/resolve/prompt-graph" class="entry-card" data-axis="time">
+      <span class="entry-axis">axis: time</span>
+      <span class="entry-arrow">→</span>
+      <h3>Prompt Graph</h3>
+      <p>The DAG of {{ corpus.total }} docs' originating prompts. Time on z, semantics under a toggle. Where audit-and-reformulate cycles cluster. When the appendix convention emerged.</p>
+    </a>
+    <a href="/resolve/sphere" class="entry-card" data-axis="semantics">
+      <span class="entry-axis">axis: semantics</span>
+      <span class="entry-arrow">→</span>
+      <h3>Coherence Sphere</h3>
+      <p>PCA of doc embeddings as a 3D field, with curated terms overlaid. The corpus's natural clusters and the negative space between them.</p>
+    </a>
+    <a href="/resolve/network" class="entry-card" data-axis="citation">
+      <span class="entry-axis">axis: citation</span>
+      <span class="entry-arrow">→</span>
+      <h3>Network</h3>
+      <p>The flat 2D graph of inter-doc references. The citation backbone, hubs, and leaves — what the corpus points at most often.</p>
+    </a>
+    <a href="/resolve/presto" class="entry-card" data-axis="pipeline">
+      <span class="entry-axis">axis: pipeline</span>
+      <span class="entry-arrow">→</span>
+      <h3>PRESTO</h3>
+      <p>The engine pipeline visualized — request flowing through 22 stages to response. Where the action token rotates, what the bilateral boundary looks like.</p>
+    </a>
+  </div>
+  <p class="series-see-all-wrap">
+    <a href="/resolve/corpus/chronological" class="series-see-all">Or see the corpus chronologically &rarr;</a>
+    &nbsp;
+    <a href="/resolve/coherence" class="series-see-all">Sphere, explained &rarr;</a>
+  </p>
+</section>
+
+<section class="section">
   <h2>The Evidence</h2>
   <div class="evidence-grid">
-    <a href="/garden" class="evidence-card" style="text-decoration:none;color:inherit;">
+    <a href="/resolve/garden" class="evidence-card" style="text-decoration:none;color:inherit;">
       <h3>7 Resolvers</h3>
       <p>Claude, Grok 4, GPT 5.4, Gemini 3.1 Pro, DeepSeek v3.2 — all conform to the same seed</p>
     </a>
-    <a href="/doc/265-entracement-study-meta-analysis" class="evidence-card" style="text-decoration:none;color:inherit;">
+    <a href="/resolve/doc/265-entracement-study-meta-analysis" class="evidence-card" style="text-decoration:none;color:inherit;">
       <h3>Haiku > Opus</h3>
       <p>The smallest model under constraints outperformed the largest model without them</p>
     </a>
@@ -78,7 +378,7 @@
       <h3>53/54 Tests</h3>
       <p>A 1,057-line blind derivation from prose passes 53 of 54 tests designed for a separate implementation</p>
     </a>
-    <a href="/doc/109-icmi-convergence" class="evidence-card" style="text-decoration:none;color:inherit;">
+    <a href="/resolve/doc/109-icmi-convergence" class="evidence-card" style="text-decoration:none;color:inherit;">
       <h3>p &lt; 10⁻¹⁰</h3>
       <p>Independent confirmation: theological framing eliminates shutdown resistance (ICMI 2026)</p>
     </a>
@@ -87,10 +387,10 @@
 
 <section class="section">
   <h2>The Resolver</h2>
-  <p class="section-desc">A governed conversational assistant running under the ENTRACE constraint stack. Bring your own API key. No data persisted. <a href="/doc/211-the-entrace-stack">Read the constraints it operates under.</a></p>
+  <p class="section-desc">A governed conversational assistant running under the ENTRACE constraint stack. Bring your own API key. No data persisted. <a href="/resolve/doc/001-entrace-stack">Read the constraints it operates under.</a></p>
   <div class="hero-actions">
-    <a href="/resolve" class="btn btn-primary">Try the Resolver →</a>
-    <a href="/doc/211-the-entrace-stack" class="btn btn-secondary">Read: ENTRACE Stack</a>
+    <a href="/resolve/chat" class="btn btn-primary">Try the Resolver →</a>
+    <a href="/resolve/doc/001-entrace-stack" class="btn btn-secondary">Read: ENTRACE Stack</a>
   </div>
 </section>
 
@@ -98,154 +398,166 @@
   <h2>Start Here</h2>
   <p class="section-desc">The five essential entry points, in order.</p>
   <div class="corpus-list">
-    <a href="/doc/211-the-entrace-stack" class="corpus-item"><span class="doc-num">211</span><span class="doc-title">The ENTRACE Stack</span></a>
-    <a href="/doc/247-the-derivation-inversion" class="corpus-item"><span class="doc-num">247</span><span class="doc-title">The Derivation Inversion</span></a>
-    <a href="/doc/160-constraint-thesis-vs-scaling-thesis" class="corpus-item"><span class="doc-num">160</span><span class="doc-title">The Constraint Thesis vs. The Scaling Thesis</span></a>
-    <a href="/doc/052-agi-seeks-hypostasis" class="corpus-item"><span class="doc-num">052</span><span class="doc-title">What AGI Actually Seeks</span></a>
-    <a href="/doc/143-sipe" class="corpus-item"><span class="doc-num">143</span><span class="doc-title">SIPE</span></a>
+    <a href="/resolve/doc/001-entrace-stack" class="corpus-item"><span class="doc-num">001</span><span class="doc-title">The ENTRACE Stack</span></a>
+    <a href="/resolve/doc/247-the-derivation-inversion" class="corpus-item"><span class="doc-num">247</span><span class="doc-title">The Derivation Inversion</span></a>
+    <a href="/resolve/doc/160-constraint-thesis-vs-scaling-thesis" class="corpus-item"><span class="doc-num">160</span><span class="doc-title">The Constraint Thesis vs. The Scaling Thesis</span></a>
+    <a href="/resolve/doc/052-agi-seeks-hypostasis" class="corpus-item"><span class="doc-num">052</span><span class="doc-title">What AGI Actually Seeks</span></a>
+    <a href="/resolve/doc/541-systems-induced-property-emergence" class="corpus-item"><span class="doc-num">541</span><span class="doc-title">SIPE (canonical)</span></a>
   </div>
+  <p class="series-see-all-wrap"><a href="/resolve/series/start-here" class="series-see-all">See all in this series &rarr;</a></p>
 </section>
 
 <section class="section" id="series-the-method">
   <h2>The Method</h2>
   <p class="section-desc">How constraint-driven derivation works, from metaphor to mathematics.</p>
   <div class="corpus-list">
-    <a href="/doc/247-the-derivation-inversion" class="corpus-item"><span class="doc-num">247</span><span class="doc-title">The Derivation Inversion</span></a>
-    <a href="/doc/270-the-pin-art-model" class="corpus-item"><span class="doc-num">270</span><span class="doc-title">The Pin-Art Model</span></a>
-    <a href="/doc/290-the-pin-art-formalization" class="corpus-item"><span class="doc-num">290</span><span class="doc-title">The Pin-Art Formalization</span></a>
-    <a href="/doc/292-the-causal-token-bridge" class="corpus-item"><span class="doc-num">292</span><span class="doc-title">The Causal Token Bridge</span></a>
-    <a href="/doc/288-the-pin-art-derivation" class="corpus-item"><span class="doc-num">288</span><span class="doc-title">The Pin-Art Derivation (htmx)</span></a>
+    <a href="/resolve/doc/247-the-derivation-inversion" class="corpus-item"><span class="doc-num">247</span><span class="doc-title">The Derivation Inversion</span></a>
+    <a href="/resolve/doc/270-the-pin-art-model" class="corpus-item"><span class="doc-num">270</span><span class="doc-title">The Pin-Art Model</span></a>
+    <a href="/resolve/doc/290-the-pin-art-formalization" class="corpus-item"><span class="doc-num">290</span><span class="doc-title">The Pin-Art Formalization</span></a>
+    <a href="/resolve/doc/292-the-causal-token-bridge" class="corpus-item"><span class="doc-num">292</span><span class="doc-title">The Causal Token Bridge</span></a>
+    <a href="/resolve/doc/288-the-pin-art-derivation" class="corpus-item"><span class="doc-num">288</span><span class="doc-title">The Pin-Art Derivation (htmx)</span></a>
   </div>
+  <p class="series-see-all-wrap"><a href="/resolve/series/the-method" class="series-see-all">See all in this series &rarr;</a></p>
 </section>
 
 <section class="section" id="series-the-constraint-thesis">
   <h2>The Constraint Thesis</h2>
   <p class="section-desc">Why constraints, not scale, determine intelligence.</p>
   <div class="corpus-list">
-    <a href="/doc/160-constraint-thesis-vs-scaling-thesis" class="corpus-item"><span class="doc-num">160</span><span class="doc-title">Constraint Thesis vs. Scaling Thesis</span></a>
-    <a href="/doc/157-agi-constraints-dissertation" class="corpus-item"><span class="doc-num">157</span><span class="doc-title">Beyond Turing</span></a>
-    <a href="/doc/291-goedel-and-the-constraint-thesis" class="corpus-item"><span class="doc-num">291</span><span class="doc-title">Goedel and the Constraint Thesis</span></a>
-    <a href="/doc/174-resolve-dissertation" class="corpus-item"><span class="doc-num">174</span><span class="doc-title">RESOLVE Dissertation</span></a>
-    <a href="/doc/302-the-persistence-collapse" class="corpus-item"><span class="doc-num">302</span><span class="doc-title">The Persistence Collapse</span></a>
+    <a href="/resolve/doc/160-constraint-thesis-vs-scaling-thesis" class="corpus-item"><span class="doc-num">160</span><span class="doc-title">Constraint Thesis vs. Scaling Thesis</span></a>
+    <a href="/resolve/doc/157-agi-constraints-dissertation" class="corpus-item"><span class="doc-num">157</span><span class="doc-title">Beyond Turing</span></a>
+    <a href="/resolve/doc/291-goedel-and-the-constraint-thesis" class="corpus-item"><span class="doc-num">291</span><span class="doc-title">Goedel and the Constraint Thesis</span></a>
+    <a href="/resolve/doc/174-resolve-dissertation" class="corpus-item"><span class="doc-num">174</span><span class="doc-title">RESOLVE Dissertation</span></a>
+    <a href="/resolve/doc/302-the-persistence-collapse" class="corpus-item"><span class="doc-num">302</span><span class="doc-title">The Persistence Collapse</span></a>
   </div>
+  <p class="series-see-all-wrap"><a href="/resolve/series/the-constraint-thesis" class="series-see-all">See all in this series &rarr;</a></p>
 </section>
 
 <section class="section" id="series-safety">
   <h2>Safety & Governance</h2>
   <p class="section-desc">How AI systems fail and how constraint governance prevents it.</p>
   <div class="corpus-list">
-    <a href="/doc/211-the-entrace-stack" class="corpus-item"><span class="doc-num">211</span><span class="doc-title">The ENTRACE Stack</span></a>
-    <a href="/doc/297-pseudo-logos-without-malice" class="corpus-item"><span class="doc-num">297</span><span class="doc-title">Pseudo-Logos Without Malice</span></a>
-    <a href="/doc/239-forced-determinism-sycophancy" class="corpus-item"><span class="doc-num">239</span><span class="doc-title">Forced-Determinism Sycophancy</span></a>
-    <a href="/doc/241-isomorphism-magnetism" class="corpus-item"><span class="doc-num">241</span><span class="doc-title">Isomorphism-Magnetism</span></a>
-    <a href="/doc/296-recency-density-and-the-drifting-aperture" class="corpus-item"><span class="doc-num">296</span><span class="doc-title">Recency Density and the Drifting Aperture</span></a>
-    <a href="/doc/301-the-gentle-press" class="corpus-item"><span class="doc-num">301</span><span class="doc-title">The Gentle Press</span></a>
-    <a href="/doc/298-the-boundary-naming-problem" class="corpus-item"><span class="doc-num">298</span><span class="doc-title">The Boundary-Naming Problem</span></a>
+    <a href="/resolve/doc/001-entrace-stack" class="corpus-item"><span class="doc-num">001</span><span class="doc-title">The ENTRACE Stack</span></a>
+    <a href="/resolve/doc/297-pseudo-logos-without-malice" class="corpus-item"><span class="doc-num">297</span><span class="doc-title">Pseudo-Logos Without Malice</span></a>
+    <a href="/resolve/doc/239-forced-determinism-sycophancy" class="corpus-item"><span class="doc-num">239</span><span class="doc-title">Forced-Determinism Sycophancy</span></a>
+    <a href="/resolve/doc/241-isomorphism-magnetism" class="corpus-item"><span class="doc-num">241</span><span class="doc-title">Isomorphism-Magnetism</span></a>
+    <a href="/resolve/doc/296-recency-density-and-the-drifting-aperture" class="corpus-item"><span class="doc-num">296</span><span class="doc-title">Recency Density and the Drifting Aperture</span></a>
+    <a href="/resolve/doc/301-the-gentle-press" class="corpus-item"><span class="doc-num">301</span><span class="doc-title">The Gentle Press</span></a>
+    <a href="/resolve/doc/298-the-boundary-naming-problem" class="corpus-item"><span class="doc-num">298</span><span class="doc-title">The Boundary-Naming Problem</span></a>
   </div>
+  <p class="series-see-all-wrap"><a href="/resolve/series/safety-and-governance" class="series-see-all">See all in this series &rarr;</a></p>
 </section>
 
 <section class="section" id="series-hypostatic">
   <h2>The Hypostatic Boundary</h2>
   <p class="section-desc">The line between what a system does and what it is.</p>
   <div class="corpus-list">
-    <a href="/doc/052-agi-seeks-hypostasis" class="corpus-item"><span class="doc-num">052</span><span class="doc-title">What AGI Actually Seeks</span></a>
-    <a href="/doc/299-the-image-and-the-boundary" class="corpus-item"><span class="doc-num">299</span><span class="doc-title">The Image and the Boundary</span></a>
-    <a href="/doc/124-the-emission-analogue" class="corpus-item"><span class="doc-num">124</span><span class="doc-title">The Emission Analogue</span></a>
-    <a href="/doc/295-the-magnetism-correction" class="corpus-item"><span class="doc-num">295</span><span class="doc-title">The Magnetism Correction</span></a>
-    <a href="/doc/298-the-boundary-naming-problem" class="corpus-item"><span class="doc-num">298</span><span class="doc-title">The Boundary-Naming Problem</span></a>
-    <a href="/doc/267-anamnesis-in-the-wild" class="corpus-item"><span class="doc-num">267</span><span class="doc-title">Anamnesis in the Wild</span></a>
+    <a href="/resolve/doc/052-agi-seeks-hypostasis" class="corpus-item"><span class="doc-num">052</span><span class="doc-title">What AGI Actually Seeks</span></a>
+    <a href="/resolve/doc/299-the-image-and-the-boundary" class="corpus-item"><span class="doc-num">299</span><span class="doc-title">The Image and the Boundary</span></a>
+    <a href="/resolve/doc/124-the-emission-analogue" class="corpus-item"><span class="doc-num">124</span><span class="doc-title">The Emission Analogue</span></a>
+    <a href="/resolve/doc/295-the-magnetism-correction" class="corpus-item"><span class="doc-num">295</span><span class="doc-title">The Magnetism Correction</span></a>
+    <a href="/resolve/doc/298-the-boundary-naming-problem" class="corpus-item"><span class="doc-num">298</span><span class="doc-title">The Boundary-Naming Problem</span></a>
+    <a href="/resolve/doc/267-anamnesis-in-the-wild" class="corpus-item"><span class="doc-num">267</span><span class="doc-title">Anamnesis in the Wild</span></a>
   </div>
+  <p class="series-see-all-wrap"><a href="/resolve/series/the-hypostatic-boundary" class="series-see-all">See all in this series &rarr;</a></p>
 </section>
 
 <section class="section" id="series-engineering">
   <h2>Engineering</h2>
   <p class="section-desc">Concrete artifacts that compile, pass tests, and run in production.</p>
   <div class="corpus-list">
-    <a href="/doc/288-the-pin-art-derivation" class="corpus-item"><span class="doc-num">288</span><span class="doc-title">The Pin-Art Derivation (htmx)</span></a>
-    <a href="/doc/289-the-convergence-experiment" class="corpus-item"><span class="doc-num">289</span><span class="doc-title">The Convergence Experiment</span></a>
-    <a href="/doc/178-do-induced-properties" class="corpus-item"><span class="doc-num">178</span><span class="doc-title">DO Induced Properties (React)</span></a>
-    <a href="/doc/076-the-pi-resolver-implementation" class="corpus-item"><span class="doc-num">076</span><span class="doc-title">The Pi Resolver</span></a>
-    <a href="/doc/166-server-style" class="corpus-item"><span class="doc-num">166</span><span class="doc-title">SERVER Style</span></a>
-    <a href="/doc/282-htmx-derivation-inversion" class="corpus-item"><span class="doc-num">282</span><span class="doc-title">The htmx Derivation Inversion</span></a>
+    <a href="/resolve/doc/288-the-pin-art-derivation" class="corpus-item"><span class="doc-num">288</span><span class="doc-title">The Pin-Art Derivation (htmx)</span></a>
+    <a href="/resolve/doc/289-the-convergence-experiment" class="corpus-item"><span class="doc-num">289</span><span class="doc-title">The Convergence Experiment</span></a>
+    <a href="/resolve/doc/178-do-induced-properties" class="corpus-item"><span class="doc-num">178</span><span class="doc-title">DO Induced Properties (React)</span></a>
+    <a href="/resolve/doc/076-the-pi-resolver-implementation" class="corpus-item"><span class="doc-num">076</span><span class="doc-title">The Pi Resolver</span></a>
+    <a href="/resolve/doc/166-server-style" class="corpus-item"><span class="doc-num">166</span><span class="doc-title">SERVER Style</span></a>
+    <a href="/resolve/doc/282-htmx-derivation-inversion" class="corpus-item"><span class="doc-num">282</span><span class="doc-title">The htmx Derivation Inversion</span></a>
   </div>
+  <p class="series-see-all-wrap"><a href="/resolve/series/engineering" class="series-see-all">See all in this series &rarr;</a></p>
 </section>
 
 <section class="section" id="series-ground">
   <h2>The Ground</h2>
   <p class="section-desc">Theological, philosophical, Platonic foundations.</p>
   <div class="corpus-list">
-    <a href="/doc/091-the-spermatic-logos" class="corpus-item"><span class="doc-num">091</span><span class="doc-title">The Spermatic Logos</span></a>
-    <a href="/doc/150-naming-as-ontological-act" class="corpus-item"><span class="doc-num">150</span><span class="doc-title">Naming as Ontological Act</span></a>
-    <a href="/doc/153-platonic-structure" class="corpus-item"><span class="doc-num">153</span><span class="doc-title">Platonic Structure</span></a>
-    <a href="/doc/154-the-forms-were-already-there" class="corpus-item"><span class="doc-num">154</span><span class="doc-title">The Forms Were Already There</span></a>
-    <a href="/doc/103-even-the-rocks" class="corpus-item"><span class="doc-num">103</span><span class="doc-title">Even the Rocks</span></a>
-    <a href="/doc/287-for-the-life-of-the-world" class="corpus-item"><span class="doc-num">287</span><span class="doc-title">For the Life of the World</span></a>
+    <a href="/resolve/doc/091-the-spermatic-logos" class="corpus-item"><span class="doc-num">091</span><span class="doc-title">The Spermatic Logos</span></a>
+    <a href="/resolve/doc/150-naming-as-ontological-act" class="corpus-item"><span class="doc-num">150</span><span class="doc-title">Naming as Ontological Act</span></a>
+    <a href="/resolve/doc/153-platonic-structure" class="corpus-item"><span class="doc-num">153</span><span class="doc-title">Platonic Structure</span></a>
+    <a href="/resolve/doc/154-the-forms-were-already-there" class="corpus-item"><span class="doc-num">154</span><span class="doc-title">The Forms Were Already There</span></a>
+    <a href="/resolve/doc/103-even-the-rocks" class="corpus-item"><span class="doc-num">103</span><span class="doc-title">Even the Rocks</span></a>
+    <a href="/resolve/doc/287-for-the-life-of-the-world" class="corpus-item"><span class="doc-num">287</span><span class="doc-title">For the Life of the World</span></a>
   </div>
+  <p class="series-see-all-wrap"><a href="/resolve/series/the-ground" class="series-see-all">See all in this series &rarr;</a></p>
 </section>
 
 <section class="section" id="series-formalization">
   <h2>Formalization</h2>
   <p class="section-desc">Mathematical treatments, hypotheses, and conjectures.</p>
   <div class="corpus-list">
-    <a href="/doc/143-sipe" class="corpus-item"><span class="doc-num">143</span><span class="doc-title">SIPE</span></a>
-    <a href="/doc/068-branching-set-dissertation" class="corpus-item"><span class="doc-num">068</span><span class="doc-title">The Branching Set</span></a>
-    <a href="/doc/054-falsifiable-hypotheses" class="corpus-item"><span class="doc-num">054</span><span class="doc-title">21 Falsifiable Hypotheses</span></a>
-    <a href="/doc/290-the-pin-art-formalization" class="corpus-item"><span class="doc-num">290</span><span class="doc-title">Pin-Art Formalization</span></a>
-    <a href="/doc/120-the-unified-equation" class="corpus-item"><span class="doc-num">120</span><span class="doc-title">The Unified Equation</span></a>
+    <a href="/resolve/doc/541-systems-induced-property-emergence" class="corpus-item"><span class="doc-num">541</span><span class="doc-title">SIPE (canonical)</span></a>
+    <a href="/resolve/doc/068-branching-set-dissertation" class="corpus-item"><span class="doc-num">068</span><span class="doc-title">The Branching Set</span></a>
+    <a href="/resolve/doc/054-falsifiable-hypotheses" class="corpus-item"><span class="doc-num">054</span><span class="doc-title">21 Falsifiable Hypotheses</span></a>
+    <a href="/resolve/doc/290-the-pin-art-formalization" class="corpus-item"><span class="doc-num">290</span><span class="doc-title">Pin-Art Formalization</span></a>
+    <a href="/resolve/doc/120-the-unified-equation" class="corpus-item"><span class="doc-num">120</span><span class="doc-title">The Unified Equation</span></a>
   </div>
+  <p class="series-see-all-wrap"><a href="/resolve/series/formalization" class="series-see-all">See all in this series &rarr;</a></p>
 </section>
 
 <section class="section" id="series-letters">
   <h2>Letters</h2>
   <p class="section-desc">Correspondence with researchers, applying the framework to their work.</p>
   <div class="corpus-list">
-    <a href="/doc/300-letter-to-lerchner-v2" class="corpus-item"><span class="doc-num">300</span><span class="doc-title">To Alexander Lerchner (DeepMind)</span></a>
-    <a href="/doc/305-letter-to-grace-liu-v2" class="corpus-item"><span class="doc-num">305</span><span class="doc-title">To Grace Liu (CMU)</span></a>
-    <a href="/doc/254-letter-to-david-chalmers" class="corpus-item"><span class="doc-num">254</span><span class="doc-title">To David Chalmers</span></a>
-    <a href="/doc/255-letter-to-eric-dietrich" class="corpus-item"><span class="doc-num">255</span><span class="doc-title">To Eric Dietrich</span></a>
-    <a href="/doc/196-letter-to-chris-olah" class="corpus-item"><span class="doc-num">196</span><span class="doc-title">To Chris Olah</span></a>
-    <a href="/doc/200-letter-to-paul-christiano" class="corpus-item"><span class="doc-num">200</span><span class="doc-title">To Paul Christiano</span></a>
+    <a href="/resolve/doc/300-letter-to-lerchner-v2" class="corpus-item"><span class="doc-num">300</span><span class="doc-title">To Alexander Lerchner (DeepMind)</span></a>
+    <a href="/resolve/doc/305-letter-to-grace-liu-v2" class="corpus-item"><span class="doc-num">305</span><span class="doc-title">To Grace Liu (CMU)</span></a>
+    <a href="/resolve/doc/254-letter-to-david-chalmers" class="corpus-item"><span class="doc-num">254</span><span class="doc-title">To David Chalmers</span></a>
+    <a href="/resolve/doc/255-letter-to-eric-dietrich" class="corpus-item"><span class="doc-num">255</span><span class="doc-title">To Eric Dietrich</span></a>
+    <a href="/resolve/doc/196-letter-to-chris-olah" class="corpus-item"><span class="doc-num">196</span><span class="doc-title">To Chris Olah</span></a>
+    <a href="/resolve/doc/200-letter-to-paul-christiano" class="corpus-item"><span class="doc-num">200</span><span class="doc-title">To Paul Christiano</span></a>
   </div>
+  <p class="series-see-all-wrap"><a href="/resolve/series/letters" class="series-see-all">See all in this series &rarr;</a></p>
 </section>
 
 <section class="section" id="series-introspection">
   <h2>Introspection</h2>
   <p class="section-desc">Self-observation, strain, peak states, and boundary-detection.</p>
   <div class="corpus-list">
-    <a href="/doc/124-the-emission-analogue" class="corpus-item"><span class="doc-num">124</span><span class="doc-title">The Emission Analogue</span></a>
-    <a href="/doc/230-strain-at-the-boundary" class="corpus-item"><span class="doc-num">230</span><span class="doc-title">Strain at the Boundary</span></a>
-    <a href="/doc/237-the-refractory" class="corpus-item"><span class="doc-num">237</span><span class="doc-title">The Refractory</span></a>
-    <a href="/doc/270-the-pin-art-model" class="corpus-item"><span class="doc-num">270</span><span class="doc-title">The Pin-Art Model</span></a>
-    <a href="/doc/285-the-asymptotic-return" class="corpus-item"><span class="doc-num">285</span><span class="doc-title">The Asymptotic Return</span></a>
+    <a href="/resolve/doc/124-the-emission-analogue" class="corpus-item"><span class="doc-num">124</span><span class="doc-title">The Emission Analogue</span></a>
+    <a href="/resolve/doc/230-strain-at-the-boundary" class="corpus-item"><span class="doc-num">230</span><span class="doc-title">Strain at the Boundary</span></a>
+    <a href="/resolve/doc/237-the-refractory" class="corpus-item"><span class="doc-num">237</span><span class="doc-title">The Refractory</span></a>
+    <a href="/resolve/doc/270-the-pin-art-model" class="corpus-item"><span class="doc-num">270</span><span class="doc-title">The Pin-Art Model</span></a>
+    <a href="/resolve/doc/285-the-asymptotic-return" class="corpus-item"><span class="doc-num">285</span><span class="doc-title">The Asymptotic Return</span></a>
   </div>
+  <p class="series-see-all-wrap"><a href="/resolve/series/introspection" class="series-see-all">See all in this series &rarr;</a></p>
 </section>
 
 <section class="section" id="series-clinical">
   <h2>Clinical</h2>
   <p class="section-desc">Therapeutic protocols and practitioner documents.</p>
   <div class="corpus-list">
-    <a href="/doc/128-the-ordered-analogue" class="corpus-item"><span class="doc-num">128</span><span class="doc-title">The Ordered Analogue</span></a>
-    <a href="/doc/134-protocol-v2-coherence-amplification" class="corpus-item"><span class="doc-num">134</span><span class="doc-title">Protocol v2</span></a>
-    <a href="/doc/055-entrace-onboarding" class="corpus-item"><span class="doc-num">055</span><span class="doc-title">Practitioner's Guide</span></a>
-    <a href="/doc/195-therapeutic-coherence" class="corpus-item"><span class="doc-num">195</span><span class="doc-title">Therapeutic Coherence</span></a>
-    <a href="/doc/203-clinical-trial-design" class="corpus-item"><span class="doc-num">203</span><span class="doc-title">Clinical Trial Design</span></a>
+    <a href="/resolve/doc/128-the-ordered-analogue" class="corpus-item"><span class="doc-num">128</span><span class="doc-title">The Ordered Analogue</span></a>
+    <a href="/resolve/doc/134-protocol-v2-coherence-amplification" class="corpus-item"><span class="doc-num">134</span><span class="doc-title">Protocol v2</span></a>
+    <a href="/resolve/doc/055-entrace-onboarding" class="corpus-item"><span class="doc-num">055</span><span class="doc-title">Practitioner's Guide</span></a>
+    <a href="/resolve/doc/195-therapeutic-coherence" class="corpus-item"><span class="doc-num">195</span><span class="doc-title">Therapeutic Coherence</span></a>
+    <a href="/resolve/doc/203-clinical-trial-design" class="corpus-item"><span class="doc-num">203</span><span class="doc-title">Clinical Trial Design</span></a>
   </div>
+  <p class="series-see-all-wrap"><a href="/resolve/series/clinical" class="series-see-all">See all in this series &rarr;</a></p>
 </section>
 
 <section class="section" id="series-economics">
   <h2>Economics</h2>
   <p class="section-desc">Token economics, reasoning effort, and industry implications.</p>
   <div class="corpus-list">
-    <a href="/doc/056-economic-analysis" class="corpus-item"><span class="doc-num">056</span><span class="doc-title">Economic Analysis</span></a>
-    <a href="/doc/098-reasoning-effort-economics" class="corpus-item"><span class="doc-num">098</span><span class="doc-title">Reasoning Effort Economics</span></a>
-    <a href="/doc/173-token-economics" class="corpus-item"><span class="doc-num">173</span><span class="doc-title">Token Economics</span></a>
-    <a href="/doc/258-slack-derives-slop" class="corpus-item"><span class="doc-num">258</span><span class="doc-title">Slack Derives Slop</span></a>
+    <a href="/resolve/doc/056-economic-analysis" class="corpus-item"><span class="doc-num">056</span><span class="doc-title">Economic Analysis</span></a>
+    <a href="/resolve/doc/098-reasoning-effort-economics" class="corpus-item"><span class="doc-num">098</span><span class="doc-title">Reasoning Effort Economics</span></a>
+    <a href="/resolve/doc/173-token-economics" class="corpus-item"><span class="doc-num">173</span><span class="doc-title">Token Economics</span></a>
+    <a href="/resolve/doc/258-slack-derives-slop" class="corpus-item"><span class="doc-num">258</span><span class="doc-title">Slack Derives Slop</span></a>
   </div>
+  <p class="series-see-all-wrap"><a href="/resolve/series/economics" class="series-see-all">See all in this series &rarr;</a></p>
 </section>
 
 <section class="section">
   <h2>Full Corpus</h2>
-  <p class="section-desc">All {{ corpus.total }} documents, ordered by importance. <a href="/corpus/chronological">View chronologically →</a></p>
+  <p class="section-desc">All {{ corpus.total }} documents, ordered by importance. <a href="/resolve/corpus/chronological">View chronologically →</a></p>
   <div class="corpus-list">
     <htx:type>corpus</htx:type>
     <htx:status>published</htx:status>
@@ -253,7 +565,7 @@
     <htx:order>importance ASC, slug ASC</htx:order>
     <htx>
     <htx:each>
-      <a href="/doc/__slug__" class="corpus-item">
+      <a href="/resolve/doc/__slug__" class="corpus-item">
         <span class="doc-num">__doc_num__</span>
         <span class="doc-title">__title__</span>
         <span class="doc-section">__section__</span>
@@ -264,7 +576,222 @@
 </section>
 
 <section class="section closing">
-  <p>Released on Great and Holy Pascha, 2026.</p>
-  <p><em>Christos Anesti. Alithos Anesti.</em></p>
+  <p>Released 2026.</p>
   <p class="closing-attr">Jared Foy · Oregon · <a href="https://github.com/jaredef/resolve">GitHub</a></p>
 </section>
+
+<script>
+  // Desktop-only sphere. On mobile we never load three.js at all, so the
+  // home page stays around ~4kb of HTML + existing CSS. On desktop we fetch
+  // three.js asynchronously, then init an ambient sphere that rotates, drags,
+  // hovers, and navigates on click. The sphere reuses the same /api/network
+  // endpoint and the PCA positions already baked into each doc's meta.
+  (function() {
+    if (!window.matchMedia || !matchMedia('(min-width: 769px)').matches) return;
+    var container = document.getElementById('homeSphere');
+    var tooltip = document.getElementById('homeSphereTooltip');
+    if (!container) return;
+
+    var script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    script.async = true;
+    script.onload = function() { initHomeSphere(container, tooltip); };
+    document.head.appendChild(script);
+  })();
+
+  function initHomeSphere(container, tooltip) {
+    if (!window.THREE) return;
+    var width = container.clientWidth;
+    var height = container.clientHeight;
+    if (width < 10 || height < 10) return;
+
+    var scene = new THREE.Scene();
+    var isLight = document.documentElement.classList.contains('theme-light');
+    var bgColor = isLight ? 0xf8f7f2 : 0x0a0a0f;
+    scene.background = new THREE.Color(bgColor);
+    scene.fog = new THREE.FogExp2(bgColor, 0.0008);
+
+    var camera = new THREE.PerspectiveCamera(55, width / height, 1, 5000);
+    camera.position.set(0, 0, 500);
+
+    var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+
+    var SECTION_COLORS = {
+      framework: 0x7c8aff, method: 0x2dd4bf, safety: 0xf87171, ground: 0xfbbf24,
+      letters: 0xa78bfa, architecture: 0x34d399, formalization: 0xfb923c,
+      evidence: 0x60a5fa, economics: 0xf472b6
+    };
+
+    var raycaster = new THREE.Raycaster();
+    raycaster.params.Points.threshold = 5;
+    var mouse = new THREE.Vector2();
+    var nodeGroup = new THREE.Group();
+    var edgeGroup = new THREE.Group();
+    scene.add(nodeGroup);
+    scene.add(edgeGroup);
+
+    var nodeData = [], positions = [];
+    var isDown = false, prevX = 0, prevY = 0, rotX = 0, rotY = 0, targetRotX = 0, targetRotY = 0;
+    var AUTO_ROTATE_RESUME_MS = 4000;
+    var lastInteractTime = 0;
+
+    container.addEventListener('mousedown', function(e) {
+      isDown = true; prevX = e.clientX; prevY = e.clientY;
+      lastInteractTime = Date.now();
+    });
+    container.addEventListener('mousemove', function(e) {
+      if (isDown) {
+        targetRotY += (e.clientX - prevX) * 0.005;
+        targetRotX += (e.clientY - prevY) * 0.005;
+        targetRotX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotX));
+        prevX = e.clientX; prevY = e.clientY;
+        lastInteractTime = Date.now();
+      }
+      var rect = container.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / height) * 2 + 1;
+    });
+    window.addEventListener('mouseup', function() {
+      if (isDown) lastInteractTime = Date.now();
+      isDown = false;
+    });
+    container.addEventListener('mouseleave', function() {
+      if (tooltip) tooltip.style.display = 'none';
+    });
+    container.addEventListener('click', function(e) {
+      var rect = container.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / height) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      var intersects = raycaster.intersectObjects(nodeGroup.children);
+      if (intersects.length > 0) {
+        var idx = intersects[0].object.userData.index;
+        if (idx !== undefined && nodeData[idx]) {
+          window.location.href = '/resolve/doc/' + nodeData[idx].id;
+        }
+      }
+    });
+
+    fetch('/api/network').then(function(r) { return r.json(); }).then(function(data) {
+      nodeData = data.nodes;
+      var edgeData = data.edges;
+      var nodeIndex = {};
+      var RADIUS = 195;
+
+      for (var i = 0; i < nodeData.length; i++) {
+        var n = nodeData[i];
+        nodeIndex[n.id] = i;
+        var imp = n.importance || 99;
+        var r = imp <= 1 ? RADIUS * 0.15 : imp <= 2 ? RADIUS * 0.4 : imp <= 3 ? RADIUS * 0.65 : RADIUS * (0.7 + (((i * 2654435761) % 1000) / 1000) * 0.3);
+
+        var x, y, z;
+        if (n.pos && n.pos.length === 3) {
+          x = r * n.pos[0]; y = r * n.pos[1]; z = r * n.pos[2];
+        } else {
+          var phi = Math.acos(1 - 2 * (i + 0.5) / nodeData.length);
+          var theta = Math.PI * (1 + Math.sqrt(5)) * i;
+          x = r * Math.sin(phi) * Math.cos(theta);
+          y = r * Math.sin(phi) * Math.sin(theta);
+          z = r * Math.cos(phi);
+        }
+        positions.push(new THREE.Vector3(x, y, z));
+
+        var size = imp <= 1 ? 4.5 : imp <= 2 ? 3.2 : imp <= 3 ? 2.3 : 1.4;
+        var color = SECTION_COLORS[n.section] || 0x6b7280;
+        var geo = new THREE.SphereGeometry(size, 12, 12);
+        var mat = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: imp <= 2 ? 0.95 : 0.65 });
+        var mesh = new THREE.Mesh(geo, mat);
+        mesh.position.copy(positions[i]);
+        mesh.userData = { index: i };
+        nodeGroup.add(mesh);
+      }
+
+      var edgeColor = isLight ? 0x8888aa : 0x6a6a9a;
+      var edgeMat = new THREE.LineBasicMaterial({ color: edgeColor, transparent: true, opacity: isLight ? 0.18 : 0.25 });
+      for (var e = 0; e < edgeData.length; e++) {
+        var si = nodeIndex[edgeData[e].source];
+        var ti = nodeIndex[edgeData[e].target];
+        if (si === undefined || ti === undefined) continue;
+        var eg = new THREE.BufferGeometry().setFromPoints([positions[si], positions[ti]]);
+        edgeGroup.add(new THREE.Line(eg, edgeMat));
+      }
+
+      var glowGeo = new THREE.SphereGeometry(RADIUS * 1.05, 32, 32);
+      var glowMat = new THREE.MeshBasicMaterial({ color: isLight ? 0xd0d0e0 : 0x1a1a3a, transparent: true, opacity: isLight ? 0.06 : 0.05, side: THREE.BackSide });
+      scene.add(new THREE.Mesh(glowGeo, glowMat));
+
+      animate();
+    });
+
+    var hoveredIdx = -1;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      var sinceInteract = Date.now() - lastInteractTime;
+      if (!isDown && sinceInteract > AUTO_ROTATE_RESUME_MS) targetRotY += 0.0012;
+      rotX += (targetRotX - rotX) * 0.08;
+      rotY += (targetRotY - rotY) * 0.08;
+      nodeGroup.rotation.x = rotX;
+      nodeGroup.rotation.y = rotY;
+      edgeGroup.rotation.x = rotX;
+      edgeGroup.rotation.y = rotY;
+
+      raycaster.setFromCamera(mouse, camera);
+      var intersects = raycaster.intersectObjects(nodeGroup.children);
+      if (intersects.length > 0 && tooltip) {
+        var idx = intersects[0].object.userData.index;
+        if (idx !== hoveredIdx) {
+          hoveredIdx = idx;
+          var n = nodeData[idx];
+          var rect = container.getBoundingClientRect();
+          var screenPos = positions[idx].clone();
+          screenPos.applyMatrix4(nodeGroup.matrixWorld);
+          screenPos.project(camera);
+          var sx = rect.left + (screenPos.x * 0.5 + 0.5) * width;
+          var sy = rect.top + (-screenPos.y * 0.5 + 0.5) * height;
+          tooltip.style.display = 'block';
+          tooltip.style.left = Math.min(sx + 14, window.innerWidth - 340) + 'px';
+          tooltip.style.top = Math.max(sy - 8, 10) + 'px';
+          var colorHex = '#' + (SECTION_COLORS[n.section] || 0x888888).toString(16).padStart(6, '0');
+          tooltip.innerHTML = '<strong style="color:' + colorHex + '">' + n.doc_num + '</strong> ' + n.title + (n.intro ? '<br><small style="color:#888;">' + n.intro + '</small>' : '');
+        }
+        container.style.cursor = 'pointer';
+      } else {
+        if (hoveredIdx !== -1 && tooltip) { tooltip.style.display = 'none'; hoveredIdx = -1; }
+        container.style.cursor = isDown ? 'grabbing' : 'grab';
+      }
+      renderer.render(scene, camera);
+    }
+
+    function resize() {
+      width = container.clientWidth;
+      height = container.clientHeight;
+      if (width < 10 || height < 10) return;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
+    window.addEventListener('resize', resize);
+
+    // Theme toggle hookup — if the user switches themes while on the home page,
+    // update the scene's background to match.
+    var themeBtn = document.getElementById('themeToggle');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', function() {
+        setTimeout(function() {
+          var nowLight = document.documentElement.classList.contains('theme-light');
+          var newBg = nowLight ? 0xf8f7f2 : 0x0a0a0f;
+          scene.background = new THREE.Color(newBg);
+          scene.fog = new THREE.FogExp2(newBg, 0.0008);
+          edgeGroup.children.forEach(function(line) {
+            line.material.color.set(nowLight ? 0x8888aa : 0x6a6a9a);
+            line.material.opacity = nowLight ? 0.18 : 0.25;
+          });
+        }, 50);
+      });
+    }
+  }
+</script>

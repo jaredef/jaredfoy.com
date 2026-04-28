@@ -1,0 +1,702 @@
+<style>
+  body.graph-full { overflow: hidden; }
+  body.graph-full .scroll-progress,
+  body.graph-full .mobile-breadcrumb,
+  body.graph-full .mobile-menu-btn,
+  body.graph-full .mobile-top-btn { display: none !important; }
+  body.graph-full .canvas { display: block; padding: 0; margin: 0; max-width: none; }
+  body.graph-full .nav-col { display: none !important; }
+  body.graph-full .content-col { padding: 0; margin: 0; max-width: none; width: 100vw; height: 100vh; overflow: hidden; }
+
+  #graphStage { position: fixed; inset: 0; width: 100vw; height: 100vh; overflow: hidden; background: var(--bg, #0a0a0f); }
+  #graphStage canvas { display: block; width: 100vw; height: 100vh; touch-action: none; }
+
+  #graphTooltip {
+    position: absolute;
+    pointer-events: none;
+    background: rgba(10, 10, 20, 0.92);
+    color: #e8e8f0;
+    border: 1px solid rgba(200, 200, 220, 0.2);
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 12px;
+    max-width: 360px;
+    display: none;
+    z-index: 5;
+    line-height: 1.4;
+  }
+  .theme-light #graphTooltip {
+    background: rgba(255, 255, 252, 0.96);
+    color: #1a1a1f;
+    border-color: rgba(0, 0, 0, 0.15);
+  }
+
+  #graphHeader {
+    position: fixed; top: 0; left: 0; right: 0;
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 14px;
+    z-index: 4;
+    pointer-events: none;
+    color: #e8e8f0;
+    font-size: 13px;
+  }
+  .theme-light #graphHeader { color: #1a1a1f; }
+  #graphHeader > * { pointer-events: auto; }
+  #graphHeader a { color: inherit; }
+  #graphTitle { font-weight: 600; font-size: 15px; }
+  #graphMeta { opacity: 0.7; }
+
+  #legend {
+    position: fixed; bottom: 16px; left: 16px;
+    background: rgba(10, 10, 20, 0.85);
+    color: #e8e8f0;
+    border: 1px solid rgba(200, 200, 220, 0.15);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-size: 12px;
+    line-height: 1.6;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .theme-light #legend {
+    background: rgba(255, 255, 252, 0.92);
+    color: #1a1a1f;
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+  #legend .swatch { display: inline-block; width: 12px; height: 2px; margin-right: 6px; vertical-align: middle; }
+
+  /* Camera control helper buttons (zoom in/out, reset) — visible on touch */
+  #cameraControls {
+    position: fixed; right: 16px; bottom: 16px;
+    display: flex; flex-direction: column; gap: 8px;
+    z-index: 4;
+  }
+  #cameraControls button {
+    width: 44px; height: 44px;
+    border-radius: 22px;
+    border: 1px solid rgba(200, 200, 220, 0.22);
+    background: rgba(15, 15, 25, 0.85);
+    color: #e8e8f0;
+    font-size: 18px; font-weight: 600;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .theme-light #cameraControls button {
+    background: rgba(255, 255, 252, 0.92);
+    color: #1a1a1f;
+    border-color: rgba(0, 0, 0, 0.12);
+  }
+  #cameraControls button:active { transform: scale(0.94); }
+  #cameraControls button:hover { background: rgba(40, 40, 55, 0.95); }
+  .theme-light #cameraControls button:hover { background: rgba(245, 245, 240, 0.98); }
+
+  /* Mobile tweaks */
+  @media (max-width: 600px) {
+    #legend { font-size: 11px; padding: 8px 10px; bottom: 12px; left: 12px; }
+    #graphHeader { padding: 10px 14px; font-size: 12px; gap: 8px; }
+    #graphTitle { font-size: 14px; }
+    #cameraControls { bottom: 12px; right: 12px; }
+  }
+
+  #nodeSidebar {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 460px; max-width: 90vw;
+    background: rgba(15, 15, 25, 0.98);
+    color: #e8e8f0;
+    border-left: 1px solid rgba(200, 200, 220, 0.15);
+    transform: translateX(100%);
+    transition: transform 0.18s ease;
+    z-index: 6;
+    display: flex; flex-direction: column;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .theme-light #nodeSidebar {
+    background: rgba(255, 255, 252, 0.99);
+    color: #1a1a1f;
+    border-left-color: rgba(0, 0, 0, 0.1);
+  }
+  #nodeSidebar.open { transform: translateX(0); }
+  .sidebar-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(200, 200, 220, 0.12);
+  }
+  .theme-light .sidebar-header { border-bottom-color: rgba(0, 0, 0, 0.08); }
+  .sidebar-header .doc-num {
+    font-family: ui-monospace, monospace;
+    font-size: 12px;
+    opacity: 0.65;
+  }
+  .sidebar-header button {
+    background: transparent;
+    border: 1px solid rgba(200, 200, 220, 0.25);
+    color: inherit;
+    padding: 4px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 12px;
+  }
+  .sidebar-body {
+    padding: 18px 20px;
+    overflow-y: auto;
+    flex: 1;
+  }
+  .sidebar-body h3 {
+    font-size: 14px;
+    margin: 0 0 10px 0;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .sidebar-body .label {
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    opacity: 0.55;
+    margin: 14px 0 6px;
+  }
+  .sidebar-body .prompt-text {
+    font-size: 14px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    line-height: 1.55;
+  }
+  .sidebar-footer {
+    padding: 14px 20px;
+    border-top: 1px solid rgba(200, 200, 220, 0.12);
+  }
+  .theme-light .sidebar-footer { border-top-color: rgba(0, 0, 0, 0.08); }
+  .sidebar-footer a {
+    display: inline-block;
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 1px;
+  }
+</style>
+
+<div id="graphHeader">
+  <span id="graphTitle">Prompt Graph</span>
+  <span id="graphMeta">loading…</span>
+</div>
+
+<div id="graphStage"></div>
+
+<div id="graphTooltip"></div>
+
+<div id="legend">
+  <div><span class="swatch" style="background:#fbbf24;"></span>explicit doc reference</div>
+  <div><span class="swatch" style="background:#7dd3fc;"></span>continuation</div>
+  <div><span class="swatch" style="background:rgba(180,180,200,0.45);"></span>temporal predecessor</div>
+  <div style="margin-top:6px; opacity:0.85;"><span style="display:inline-block;width:4px;height:4px;border-radius:50%;background:rgba(180,180,200,0.55);margin-right:11px;vertical-align:middle;"></span>doc embedding (semantic mode)</div>
+  <div style="margin-top:8px; opacity:0.7;">drag to rotate · scroll/pinch to zoom · tap a node · TIME button switches layout</div>
+</div>
+
+<div id="cameraControls">
+  <button id="layoutBtn" title="toggle layout: time ↔ semantic" aria-label="toggle layout" style="font-size:11px; letter-spacing:0.04em; text-transform:uppercase;">time</button>
+  <button id="zoomInBtn" title="zoom in" aria-label="zoom in">+</button>
+  <button id="zoomOutBtn" title="zoom out" aria-label="zoom out">−</button>
+  <button id="resetBtn" title="reset view" aria-label="reset view" style="font-size:13px;">⟲</button>
+</div>
+
+<aside id="nodeSidebar">
+  <div class="sidebar-header">
+    <span class="doc-num" id="sbDocNum">—</span>
+    <button id="sbClose">close</button>
+  </div>
+  <div class="sidebar-body">
+    <h3 id="sbTitle">—</h3>
+    <div class="label">prompt <span id="sbPromptIndex"></span></div>
+    <div class="prompt-text" id="sbBody">—</div>
+  </div>
+  <div class="sidebar-footer">
+    <a href="#" id="sbFull" target="_self">Read full document →</a>
+  </div>
+</aside>
+
+<script>
+(function() {
+  document.body.classList.add('graph-full');
+})();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function() {
+  var stage = document.getElementById('graphStage');
+  var tooltip = document.getElementById('graphTooltip');
+  var sidebar = document.getElementById('nodeSidebar');
+  var sbClose = document.getElementById('sbClose');
+  var sbDocNum = document.getElementById('sbDocNum');
+  var sbTitle = document.getElementById('sbTitle');
+  var sbPromptIndex = document.getElementById('sbPromptIndex');
+  var sbBody = document.getElementById('sbBody');
+  var sbFull = document.getElementById('sbFull');
+  var meta = document.getElementById('graphMeta');
+  var width = window.innerWidth;
+  var height = window.innerHeight;
+
+  var EDGE_COLORS = {
+    ref: 0xfbbf24,
+    continuation: 0x7dd3fc,
+    temporal: 0x9ca3af
+  };
+  var EDGE_OPACITIES = {
+    ref: 0.85,
+    continuation: 0.55,
+    temporal: 0.18
+  };
+
+  var scene = new THREE.Scene();
+  var isLight = document.documentElement.classList.contains('theme-light');
+  scene.background = new THREE.Color(isLight ? 0xfafaf5 : 0x0a0a0f);
+
+  var camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 5000);
+  camera.position.set(0, 0, 360);
+
+  var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(width, height);
+  stage.appendChild(renderer.domElement);
+
+  // Camera controls — orbit + zoom + pan (mouse, wheel, and touch).
+  var rotateY = 0, rotateX = 0;
+  var targetRotY = 0, targetRotX = 0;
+  var dragging = false, lastX = 0, lastY = 0;
+  var distance = 360;
+  var targetDistance = 360;
+  var DIST_MIN = 60, DIST_MAX = 1400;
+  // Camera target — recentered by two-finger drag / right-click drag so the
+  // user can pan around the graph rather than always orbiting the origin.
+  var targetCx = 0, targetCy = 0, targetCz = 0;
+  var camCx = 0, camCy = 0, camCz = 0;
+
+  // ── Mouse ─────────────────────────────────────────────────────────────
+  renderer.domElement.addEventListener('mousedown', function(e) {
+    dragging = true; lastX = e.clientX; lastY = e.clientY;
+  });
+  window.addEventListener('mouseup', function() { dragging = false; });
+  window.addEventListener('mousemove', function(e) {
+    if (!dragging) return;
+    var dx = e.clientX - lastX, dy = e.clientY - lastY;
+    if (e.shiftKey || e.buttons === 2 || e.buttons === 4) {
+      // shift-drag (or middle/right button) pans the target.
+      var panScale = distance * 0.0018;
+      targetCx -= Math.cos(rotateY) * dx * panScale;
+      targetCx += Math.sin(rotateY) * Math.sin(rotateX) * dy * panScale;
+      targetCy += Math.cos(rotateX) * dy * panScale;
+      targetCz += Math.sin(rotateY) * dx * panScale;
+      targetCz += Math.cos(rotateY) * Math.sin(rotateX) * dy * panScale;
+    } else {
+      targetRotY += dx * 0.005;
+      targetRotX += dy * 0.005;
+      targetRotX = Math.max(-1.4, Math.min(1.4, targetRotX));
+    }
+    lastX = e.clientX; lastY = e.clientY;
+  });
+  renderer.domElement.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+  renderer.domElement.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    targetDistance *= (1 + e.deltaY * 0.001);
+    targetDistance = Math.max(DIST_MIN, Math.min(DIST_MAX, targetDistance));
+  }, { passive: false });
+
+  // ── Touch (mobile) ────────────────────────────────────────────────────
+  // 1 finger: orbit (drag).
+  // 2 fingers: pinch to zoom + drag both fingers to pan.
+  // Tap (no significant move) on a node opens the sidebar — handled in
+  // buildGraph's pick path via a synthetic click coordinate.
+  var touchMode = 'none';      // 'orbit' | 'pinch' | 'none'
+  var pinchStartDist = 0;
+  var pinchStartTargetDist = 0;
+  var pinchLastCx = 0, pinchLastCy = 0;
+  var tapStartX = 0, tapStartY = 0, tapStartT = 0, tapMoved = false;
+
+  function touchPinchDistance(t) {
+    var dx = t[0].clientX - t[1].clientX;
+    var dy = t[0].clientY - t[1].clientY;
+    return Math.sqrt(dx*dx + dy*dy);
+  }
+  function touchCenter(t) {
+    return { x: (t[0].clientX + t[1].clientX) * 0.5, y: (t[0].clientY + t[1].clientY) * 0.5 };
+  }
+
+  renderer.domElement.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    var t = e.touches;
+    if (t.length === 1) {
+      touchMode = 'orbit';
+      lastX = t[0].clientX; lastY = t[0].clientY;
+      tapStartX = t[0].clientX; tapStartY = t[0].clientY;
+      tapStartT = performance.now(); tapMoved = false;
+    } else if (t.length === 2) {
+      touchMode = 'pinch';
+      pinchStartDist = touchPinchDistance(t);
+      pinchStartTargetDist = targetDistance;
+      var c = touchCenter(t); pinchLastCx = c.x; pinchLastCy = c.y;
+      tapMoved = true; // two fingers = no tap
+    }
+  }, { passive: false });
+
+  renderer.domElement.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+    var t = e.touches;
+    if (touchMode === 'orbit' && t.length === 1) {
+      var dx = t[0].clientX - lastX, dy = t[0].clientY - lastY;
+      targetRotY += dx * 0.006;
+      targetRotX += dy * 0.006;
+      targetRotX = Math.max(-1.4, Math.min(1.4, targetRotX));
+      lastX = t[0].clientX; lastY = t[0].clientY;
+      // Track move-distance to disqualify a tap when the user drags more than ~10px.
+      var totalDx = t[0].clientX - tapStartX;
+      var totalDy = t[0].clientY - tapStartY;
+      if (Math.sqrt(totalDx*totalDx + totalDy*totalDy) > 10) tapMoved = true;
+    } else if (touchMode === 'pinch' && t.length === 2) {
+      var d = touchPinchDistance(t);
+      if (pinchStartDist > 0) {
+        targetDistance = pinchStartTargetDist * (pinchStartDist / d);
+        targetDistance = Math.max(DIST_MIN, Math.min(DIST_MAX, targetDistance));
+      }
+      // Two-finger drag pans the focal point in screen space.
+      var c = touchCenter(t);
+      var pdx = c.x - pinchLastCx, pdy = c.y - pinchLastCy;
+      var panScale = distance * 0.0024;
+      targetCx -= Math.cos(rotateY) * pdx * panScale;
+      targetCx += Math.sin(rotateY) * Math.sin(rotateX) * pdy * panScale;
+      targetCy += Math.cos(rotateX) * pdy * panScale;
+      targetCz += Math.sin(rotateY) * pdx * panScale;
+      targetCz += Math.cos(rotateY) * Math.sin(rotateX) * pdy * panScale;
+      pinchLastCx = c.x; pinchLastCy = c.y;
+    }
+  }, { passive: false });
+
+  renderer.domElement.addEventListener('touchend', function(e) {
+    if (touchMode === 'orbit' && !tapMoved && performance.now() - tapStartT < 300) {
+      // It was a tap, not a drag — fire a synthetic click for raycasting.
+      var ev = new MouseEvent('click', {
+        bubbles: true, cancelable: true, clientX: tapStartX, clientY: tapStartY,
+      });
+      renderer.domElement.dispatchEvent(ev);
+    }
+    if (e.touches.length === 0) touchMode = 'none';
+    else if (e.touches.length === 1) {
+      touchMode = 'orbit';
+      lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
+    }
+  });
+  renderer.domElement.addEventListener('touchcancel', function() { touchMode = 'none'; });
+
+  // Camera control buttons.
+  function bumpZoom(factor) {
+    targetDistance = Math.max(DIST_MIN, Math.min(DIST_MAX, targetDistance * factor));
+  }
+  document.getElementById('zoomInBtn').addEventListener('click', function() { bumpZoom(0.78); });
+  document.getElementById('zoomOutBtn').addEventListener('click', function() { bumpZoom(1.28); });
+  document.getElementById('resetBtn').addEventListener('click', function() {
+    targetRotY = 0; targetRotX = 0;
+    targetDistance = 360;
+    targetCx = 0; targetCy = 0; targetCz = 0;
+  });
+  document.getElementById('layoutBtn').addEventListener('click', function() {
+    if (typeof window._setLayout === 'function') {
+      window._setLayout(layoutMode === 'time' ? 'semantic' : 'time');
+    }
+  });
+
+  // Load data and build graph.
+  fetch('/resolve/prompt-graph.json').then(function(r) { return r.json(); }).then(function(data) {
+    if (!data || !data.nodes || data.nodes.length === 0) {
+      meta.textContent = 'no data';
+      return;
+    }
+    meta.textContent = data.node_count + ' prompts · ' + data.edge_count + ' edges · docs ' +
+      data.doc_range.first + '–' + data.doc_range.last;
+    buildGraph(data);
+  }).catch(function(err) {
+    console.error('failed to load prompt graph', err);
+    meta.textContent = 'load failed';
+  });
+
+  // Current layout mode. 'time' = doc_num along z + force-directed x-y;
+  // 'semantic' = each node placed at its doc's PCA position (3D embedding).
+  var layoutMode = 'time';
+  var layoutObjects = { promptSpheres: [], edgeLines: [], cloudPoints: null };
+
+  function buildGraph(data) {
+    var nodes = data.nodes;
+    var edges = data.edges;
+    var docCloud = data.doc_cloud || [];
+
+    var first = data.doc_range.first;
+    var last = data.doc_range.last;
+    var range = Math.max(1, last - first);
+
+    // Doc-slug → PCA position lookup (used for the Semantic layout).
+    var SEMANTIC_SCALE = 220; // doc PCA range is roughly ±1; scale to canvas units.
+    var pcaBySlug = {};
+    docCloud.forEach(function(d) {
+      pcaBySlug[d.doc_slug] = new THREE.Vector3(
+        d.pos[0] * SEMANTIC_SCALE,
+        d.pos[1] * SEMANTIC_SCALE,
+        d.pos[2] * SEMANTIC_SCALE
+      );
+    });
+
+    // Initialize each prompt node's two pre-computed positions, then start
+    // in time-axis layout. Force-directed placement is computed on first
+    // entry into time mode; the semantic layout reads PCA directly.
+    var nodeMap = {};
+    nodes.forEach(function(n, i) {
+      var t = (n.doc_num - first) / range;
+      var z = (t - 0.5) * 380;
+      var angle = (i * 137.5) * Math.PI / 180;
+      var radius = 50 + Math.random() * 90;
+      n._timePos = new THREE.Vector3(Math.cos(angle) * radius, Math.sin(angle) * radius, z);
+      n._semPos = pcaBySlug[n.doc_slug] || new THREE.Vector3(0, 0, z);
+      n._pos = n._timePos.clone();
+      n._vel = new THREE.Vector3(0, 0, 0);
+      nodeMap[n.id] = n;
+    });
+
+    // Build edge list with node references.
+    var edgeList = edges.map(function(e) {
+      return { from: nodeMap[e.from], to: nodeMap[e.to], kind: e.kind };
+    }).filter(function(e) { return e.from && e.to; });
+
+    // Force-directed iterations for the time layout. Few enough nodes that
+    // O(n^2) is fine. Result baked into n._timePos.
+    var iters = 220;
+    for (var it = 0; it < iters; it++) {
+      for (var i = 0; i < nodes.length; i++) {
+        for (var j = i + 1; j < nodes.length; j++) {
+          var a = nodes[i], b = nodes[j];
+          var dx = a._timePos.x - b._timePos.x;
+          var dy = a._timePos.y - b._timePos.y;
+          var dz = a._timePos.z - b._timePos.z;
+          var d2 = dx*dx + dy*dy + dz*dz + 0.01;
+          var d = Math.sqrt(d2);
+          var f = 800 / d2;
+          a._vel.x += (dx / d) * f;
+          a._vel.y += (dy / d) * f;
+          b._vel.x -= (dx / d) * f;
+          b._vel.y -= (dy / d) * f;
+        }
+      }
+      for (var k = 0; k < edgeList.length; k++) {
+        var e = edgeList[k];
+        var dx = e.to._timePos.x - e.from._timePos.x;
+        var dy = e.to._timePos.y - e.from._timePos.y;
+        var dz = e.to._timePos.z - e.from._timePos.z;
+        var d = Math.sqrt(dx*dx + dy*dy + dz*dz);
+        var stiffness = e.kind === 'ref' ? 0.04 : (e.kind === 'continuation' ? 0.025 : 0.005);
+        var rest = 60;
+        var f = stiffness * (d - rest);
+        if (d > 0.001) {
+          e.from._vel.x += (dx / d) * f;
+          e.from._vel.y += (dy / d) * f;
+          e.to._vel.x -= (dx / d) * f;
+          e.to._vel.y -= (dy / d) * f;
+        }
+      }
+      var damp = 0.65;
+      for (var i = 0; i < nodes.length; i++) {
+        var n = nodes[i];
+        var t = (n.doc_num - first) / range;
+        var targetZ = (t - 0.5) * 380;
+        n._timePos.x += n._vel.x * 0.05;
+        n._timePos.y += n._vel.y * 0.05;
+        n._timePos.z = targetZ;
+        n._vel.x *= damp;
+        n._vel.y *= damp;
+      }
+    }
+    // Initial display position = time layout.
+    nodes.forEach(function(n) { n._pos.copy(n._timePos); });
+
+    // Build three.js objects.
+    // Node spheres.
+    var sphereGeom = new THREE.SphereGeometry(3.2, 16, 12);
+    var raycastTargets = [];
+    nodes.forEach(function(n) {
+      var t = (n.doc_num - first) / range;
+      var hue = 0.62 - t * 0.55;
+      var color = new THREE.Color().setHSL(hue, 0.65, 0.55);
+      var mat = new THREE.MeshBasicMaterial({ color: color });
+      var sphere = new THREE.Mesh(sphereGeom, mat);
+      sphere.position.copy(n._pos);
+      sphere.userData = n;
+      scene.add(sphere);
+      raycastTargets.push(sphere);
+      layoutObjects.promptSpheres.push(sphere);
+    });
+
+    // Edges as lines.
+    var edgeLines = [];
+    edgeList.forEach(function(e) {
+      var geom = new THREE.BufferGeometry().setFromPoints([e.from._pos.clone(), e.to._pos.clone()]);
+      var mat = new THREE.LineBasicMaterial({
+        color: EDGE_COLORS[e.kind],
+        opacity: EDGE_OPACITIES[e.kind],
+        transparent: true
+      });
+      var line = new THREE.Line(geom, mat);
+      line.userData = e;
+      scene.add(line);
+      edgeLines.push(line);
+    });
+    layoutObjects.edgeLines = edgeLines;
+
+    // Doc-cloud backdrop (rendered only in semantic mode). All 460 docs as
+    // tiny faint dots positioned by PCA — the docs WITHOUT a prompt show as
+    // negative space the prompt-graph sits inside.
+    var cloudGeom = new THREE.BufferGeometry();
+    var cloudVerts = new Float32Array(docCloud.length * 3);
+    var cloudColors = new Float32Array(docCloud.length * 3);
+    docCloud.forEach(function(d, i) {
+      cloudVerts[i*3+0] = d.pos[0] * SEMANTIC_SCALE;
+      cloudVerts[i*3+1] = d.pos[1] * SEMANTIC_SCALE;
+      cloudVerts[i*3+2] = d.pos[2] * SEMANTIC_SCALE;
+      // Subtle: docs WITH prompts get slightly brighter than those without.
+      // (The actual prompt nodes are still drawn separately as full spheres.)
+      var v = d.has_prompt ? 0.42 : 0.22;
+      cloudColors[i*3+0] = v; cloudColors[i*3+1] = v; cloudColors[i*3+2] = v;
+    });
+    cloudGeom.setAttribute('position', new THREE.BufferAttribute(cloudVerts, 3));
+    cloudGeom.setAttribute('color', new THREE.BufferAttribute(cloudColors, 3));
+    var cloudMat = new THREE.PointsMaterial({
+      size: 2.4, vertexColors: true, transparent: true, opacity: 0.85, sizeAttenuation: true
+    });
+    var cloudPoints = new THREE.Points(cloudGeom, cloudMat);
+    cloudPoints.visible = false;
+    scene.add(cloudPoints);
+    layoutObjects.cloudPoints = cloudPoints;
+
+    // ── Layout switching ────────────────────────────────────────────────
+    // Animate prompt-node positions between time and semantic layouts; edges
+    // re-stream their endpoints from the underlying node objects each tick.
+    var morphFrom = nodes.map(function(n) { return n._timePos.clone(); });
+    var morphTo = nodes.map(function(n) { return n._timePos.clone(); });
+    var morphT = 1; // 0 = at morphFrom, 1 = at morphTo
+
+    function startMorph(target) {
+      nodes.forEach(function(n, i) {
+        morphFrom[i].copy(n._pos);
+        morphTo[i].copy(target === 'semantic' ? n._semPos : n._timePos);
+      });
+      morphT = 0;
+      layoutObjects.cloudPoints.visible = (target === 'semantic');
+    }
+
+    function setLayout(mode) {
+      if (mode === layoutMode) return;
+      layoutMode = mode;
+      startMorph(mode);
+      var btn = document.getElementById('layoutBtn');
+      if (btn) btn.textContent = mode === 'time' ? 'time' : 'semantic';
+    }
+    window._setLayout = setLayout; // exposed for the toolbar button
+    window._layoutTick = function() {
+      if (morphT < 1) {
+        morphT = Math.min(1, morphT + 0.04);
+        var ease = morphT < 0.5
+          ? 2 * morphT * morphT
+          : 1 - Math.pow(-2 * morphT + 2, 2) / 2;
+        nodes.forEach(function(n, i) {
+          n._pos.lerpVectors(morphFrom[i], morphTo[i], ease);
+        });
+        layoutObjects.promptSpheres.forEach(function(s, i) {
+          s.position.copy(nodes[i]._pos);
+        });
+        edgeLines.forEach(function(line) {
+          var e = line.userData;
+          var posAttr = line.geometry.getAttribute('position');
+          posAttr.setXYZ(0, e.from._pos.x, e.from._pos.y, e.from._pos.z);
+          posAttr.setXYZ(1, e.to._pos.x,   e.to._pos.y,   e.to._pos.z);
+          posAttr.needsUpdate = true;
+        });
+      }
+    };
+
+    // Raycasting for hover/click.
+    var raycaster = new THREE.Raycaster();
+    var mouse = new THREE.Vector2();
+    var hoveredNode = null;
+
+    function pick(x, y) {
+      mouse.x = (x / width) * 2 - 1;
+      mouse.y = -(y / height) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      var hits = raycaster.intersectObjects(raycastTargets);
+      return hits.length > 0 ? hits[0].object : null;
+    }
+
+    renderer.domElement.addEventListener('mousemove', function(e) {
+      var hit = pick(e.clientX, e.clientY);
+      if (hit) {
+        var n = hit.userData;
+        tooltip.innerHTML = '<div style="font-weight:600;">Doc ' + n.doc_num + (n.prompt_count_in_doc > 1 ? ' (' + n.prompt_index + '/' + n.prompt_count_in_doc + ')' : '') + '</div>' +
+          '<div style="opacity:0.85;">' + escapeHtml(n.doc_title) + '</div>';
+        tooltip.style.display = 'block';
+        tooltip.style.left = (e.clientX + 12) + 'px';
+        tooltip.style.top = (e.clientY + 12) + 'px';
+        renderer.domElement.style.cursor = 'pointer';
+        hoveredNode = n;
+      } else {
+        tooltip.style.display = 'none';
+        renderer.domElement.style.cursor = '';
+        hoveredNode = null;
+      }
+    });
+
+    renderer.domElement.addEventListener('click', function(e) {
+      var hit = pick(e.clientX, e.clientY);
+      if (hit) openSidebar(hit.userData);
+    });
+  }
+
+  function openSidebar(n) {
+    sbDocNum.textContent = 'Doc ' + n.doc_num;
+    sbTitle.textContent = n.doc_title;
+    sbPromptIndex.textContent = n.prompt_count_in_doc > 1 ? n.prompt_index + ' of ' + n.prompt_count_in_doc : '';
+    sbBody.textContent = n.prompt_text;
+    sbFull.href = '/resolve/doc/' + n.doc_slug;
+    sidebar.classList.add('open');
+  }
+
+  sbClose.addEventListener('click', function() { sidebar.classList.remove('open'); });
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function(c) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+    });
+  }
+
+  // Animation loop.
+  function animate() {
+    requestAnimationFrame(animate);
+    rotateX += (targetRotX - rotateX) * 0.08;
+    rotateY += (targetRotY - rotateY) * 0.08;
+    distance += (targetDistance - distance) * 0.08;
+    camCx += (targetCx - camCx) * 0.12;
+    camCy += (targetCy - camCy) * 0.12;
+    camCz += (targetCz - camCz) * 0.12;
+    var camX = camCx + distance * Math.sin(rotateY) * Math.cos(rotateX);
+    var camY = camCy + distance * Math.sin(rotateX);
+    var camZ = camCz + distance * Math.cos(rotateY) * Math.cos(rotateX);
+    camera.position.set(camX, camY, camZ);
+    camera.lookAt(camCx, camCy, camCz);
+    if (typeof window._layoutTick === 'function') window._layoutTick();
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', function() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    renderer.setSize(width, height);
+  });
+})();
+</script>

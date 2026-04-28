@@ -1,0 +1,148 @@
+<header class="presto-pretext">
+  <p class="presto-kicker">jaredfoy.com / presto</p>
+  <h1>PRESTO</h1>
+  <p class="presto-subtitle">Progressive Representational State Transfer with On-Demand Code</p>
+  <p class="presto-lede">In 2000, Roy Fielding named five mandatory constraints and one optional constraint for the architectural style of the Web. The mandatory five produced the Web we have. The optional sixth &mdash; code-on-demand &mdash; was adopted without being <em>mapped</em>. PRESTO is the architectural style that maps it, as a progressive spectrum rather than a binary.</p>
+  <p class="presto-scroll-hint" aria-hidden="true">&darr;</p>
+</header>
+
+<section class="presto-scroll-section" data-scene="rest" data-align="right">
+  <article class="presto-col">
+    <span class="presto-ordinal">01 &middot; The unexplored constraint</span>
+    <h3>The sixth</h3>
+    <p>REST's five mandatory constraints produced the Web: scalability, independent deployment, simplicity, modifiability. Code-on-demand was the optional sixth. The amber tile pulses because it's the one whose design space the field left unexplored.</p>
+    <p>Adoption was binary in practice: either the client runs no code (the old static web) or it runs <em>all</em> the code (the modern SPA, which violates the other five constraints to do so). Between them, a progressive spectrum was never mapped.</p>
+    <p>The claim of this work: PRESTO is that map.</p>
+    <a class="presto-featured-doc" href="/resolve/doc/193-htx-architecture">Doc 193 &rarr; The PRESTO White Paper</a>
+  </article>
+</section>
+
+<section class="presto-scroll-section" data-scene="source" data-align="left">
+  <article class="presto-col">
+    <span class="presto-ordinal">02 &middot; The bilateral boundary</span>
+    <h3>One string, two interpreters</h3>
+    <p>The central visual is an <code>.htx</code> template &mdash; a <em>source representation</em>. Look at the colors. <span style="color:#c38cff">Purple</span> directives (<code>htx:include</code>, <code>htx:data</code>, <code>htx:each</code>, <code>&lt;htx:v&gt;</code>, <code>htx:auth</code>, <code>htx:action</code>, <code>htx:script</code>) are consumed by the <strong>server</strong>. <span style="color:#ffd66b">Amber</span> attributes (<code>hx-get</code>, <code>hx-post</code>, <code>hx-target</code>) are addressed to the <strong>browser</strong>.</p>
+    <p>The server ignores the amber. The browser never sees the purple. Same document, two interpreters, mutual indifference &mdash; a structural property that's been operative in every server-rendered HTTP response since 1993.</p>
+    <p>This is the boundary REST didn't name. This is what PRESTO formalizes.</p>
+  </article>
+</section>
+
+<section class="presto-scroll-section" data-scene="pipeline" data-stage="pipeline" data-align="right">
+  <article class="presto-col">
+    <span class="presto-ordinal">03 &middot; The pipeline consumes</span>
+    <h3>The server's half resolves</h3>
+    <p>A resolution pipeline transforms the source. Includes fold in. Data queries materialize. Expressions evaluate &mdash; <code>&lt;htx:v&gt;post.title&lt;/htx:v&gt;</code> becomes an actual title, tinted green. Each-loops iterate. Auth conditionals resolve. Action tokens get minted.</p>
+    <p>Every purple directive is consumed. None of them reach the browser. The pipeline isn't a framework feature the developer has to orchestrate; it's the ordered sequence of resolutions the <em>style</em> specifies.</p>
+    <p>The pipeline is the mechanism by which the bilateral form becomes a unilateral form.</p>
+  </article>
+</section>
+
+<section class="presto-scroll-section" data-scene="resolved" data-stage="resolved" data-align="left">
+  <article class="presto-col">
+    <span class="presto-ordinal">04 &middot; The unilateral representation</span>
+    <h3>What the browser receives</h3>
+    <p>Terminal state. Pure HTML. The server's affordances have been consumed. Only the client's remain &mdash; as discoverable structure in the document. This is HATEOAS in its strongest form: the complete representation carries every affordance the client needs, and nothing it doesn't.</p>
+    <p>No build step. No bundler. No hydration. No "API contract" separate from the response. The document <em>is</em> the contract. The script that runs on click can reach any element, because the document is the shared state.</p>
+    <p>REST-conformant, because the resolved representation is what travels. REST-extending, because what gets constructed inside the server is now <em>formalized</em> too.</p>
+  </article>
+</section>
+
+<section class="presto-scroll-section" data-scene="layers" data-layer="0" data-align="right">
+  <article class="presto-col">
+    <span class="presto-ordinal">05 &middot; Layer 0</span>
+    <h3>Static hypermedia</h3>
+    <p>The foundation. Plain HTML. No JavaScript runtime, no build step, no bundler. Every browser since 1993 renders it, and every architecture above is additive &mdash; Layer 0 is never abandoned.</p>
+    <p>A complete HTML document is already a working application: readable, navigable, form-submittable. If the server returns a useful representation, the application works.</p>
+    <p>This is the claim that distinguishes PRESTO from frameworks that treat JavaScript as foundational. The foundation is the document.</p>
+  </article>
+</section>
+
+<section class="presto-scroll-section" data-scene="snippet" data-layer="0" data-align="center" aria-hidden="true"></section>
+
+<section class="presto-scroll-section" data-scene="layers" data-layer="1" data-align="left">
+  <article class="presto-col">
+    <span class="presto-ordinal">06 &middot; Layer 1</span>
+    <h3>Declarative attributes</h3>
+    <p><code>hx-get</code>, <code>hx-post</code>, <code>hx-target</code>, <code>hx-swap</code>. A small runtime (about 5 KB) watches for these attributes, fires the request the attribute declares, and swaps the returned HTML fragment into the target.</p>
+    <p>The server stays authoritative: it produces HTML fragments, not JSON. The client doesn't know about endpoints &mdash; it follows hypermedia.</p>
+    <p>Carson Gross demonstrated this portion of the space in htmx and <em>Hypermedia Systems</em>. PRESTO names it as the first rung above plain HTML and specifies its constraint cost.</p>
+  </article>
+</section>
+
+<section class="presto-scroll-section" data-scene="snippet" data-layer="1" data-align="center" aria-hidden="true"></section>
+
+<section class="presto-scroll-section" data-scene="layers" data-layer="2" data-align="right">
+  <article class="presto-col">
+    <span class="presto-ordinal">07 &middot; Layer 2</span>
+    <h3>Scoped behavioral units</h3>
+    <p>When an interaction needs logic that doesn't fit declarative attributes &mdash; keyboard handling, validation, local rearrangement &mdash; a short script bound to its component's scope does the work.</p>
+    <p>This is not a framework mounted at the page root. Each script is scoped to the element that owns it. <code>el</code> refers to that element. When the element is removed, the script has nothing to attach to, and the browser reclaims it.</p>
+    <p>Component-level behavior without a client-side runtime.</p>
+  </article>
+</section>
+
+<section class="presto-scroll-section" data-scene="snippet" data-layer="2" data-align="center" aria-hidden="true"></section>
+
+<section class="presto-scroll-section" data-scene="layers" data-layer="3" data-align="left">
+  <article class="presto-col">
+    <span class="presto-ordinal">08 &middot; Layer 3</span>
+    <h3>Server-pushed code</h3>
+    <p>A WebSocket opens after the initial response. The server can push new behaviors mid-session: a trading-dashboard module arrives when the user signs in; a richer editor arrives when the user opens a specific document.</p>
+    <p>The code is authorized by the server, not selected at build time by the client. Different users receive different capabilities based on context the server knows.</p>
+    <p>The REST representation is still the root: it embedded the WebSocket token that authorized the channel the code arrived on.</p>
+  </article>
+</section>
+
+<section class="presto-scroll-section" data-scene="snippet" data-layer="3" data-align="center" aria-hidden="true"></section>
+
+<section class="presto-scroll-section" data-scene="layers" data-layer="4" data-align="right">
+  <article class="presto-col">
+    <span class="presto-ordinal">09 &middot; Layer 4</span>
+    <h3>Authenticated data channels</h3>
+    <p>Server-issued JWT channel tokens (120-second default TTL) let the client open specific, typed data channels. The channel is scoped to a module name. The token expires quickly so an exfiltrated one is quickly useless.</p>
+    <p>The client doesn't hardcode channel URLs. It reads them from the representation, presents the token, opens the channel. Every capability traces back to an authorization in the initial HTTP response.</p>
+    <p>No extension exists that the representation did not mediate.</p>
+  </article>
+</section>
+
+<section class="presto-scroll-section" data-scene="snippet" data-layer="4" data-align="center" aria-hidden="true"></section>
+
+<section class="presto-scroll-section" data-scene="layers" data-layer="5" data-align="left">
+  <article class="presto-col">
+    <span class="presto-ordinal">10 &middot; Layer 5</span>
+    <h3>Binary delivery</h3>
+    <p>Images, audio, PDFs, arbitrary blobs &mdash; delivered as binary frames through an authenticated channel. No separate CDN auth flow. No signed-URL round-trip. The channel authorizes the delivery in the same act that granted the capability.</p>
+    <p>Useful for streaming large assets that need to be revocable, resized per-client, or gated by runtime context (role, subscription tier, geolocation) that a static URL cannot express.</p>
+  </article>
+</section>
+
+<section class="presto-scroll-section" data-scene="snippet" data-layer="5" data-align="center" aria-hidden="true"></section>
+
+<section class="presto-scroll-section" data-scene="layers" data-layer="6" data-align="right">
+  <article class="presto-col">
+    <span class="presto-ordinal">11 &middot; Layer 6</span>
+    <h3>WebAssembly</h3>
+    <p>Native-speed client compute. The server delivers a <code>.wasm</code> binary through the channel with a JSON manifest declaring its exported APIs. The module runs in the browser at near-native speed.</p>
+    <p>The sandbox is real: no filesystem, no network, no DOM unless explicitly granted, capability-scoped at the language level. The server decides, at resolution time, what this client should be able to do locally.</p>
+    <p>The end of the progressive spectrum. Nothing in this stack required the others to be abandoned.</p>
+  </article>
+</section>
+
+<section class="presto-scroll-section" data-scene="snippet" data-layer="6" data-align="center" aria-hidden="true"></section>
+
+<section class="presto-scroll-section" data-scene="impls" data-align="left">
+  <article class="presto-col">
+    <span class="presto-ordinal">12 &middot; Cross-language convergence</span>
+    <h3>Six implementations, one specification</h3>
+    <p>The seven layers above are the architectural claim. This is the empirical one. The specification (htxlang) is language-agnostic. Conformant engines have been independently implemented in TypeScript, Go, Elixir, Python, Rust, and C &mdash; each passing the same verification suite, each reasoning from the same constraints.</p>
+    <p>The convergence is the mechanism by which the specification discovers its own completeness. Each implementation, reasoning from the same constraints in a different paradigm, reveals consequences the previous missed. The specification is then refined, and the next implementation receives a tighter set of rules.</p>
+    <p>The smallest conformant engine fits in 3,122 lines of code, runs in 11 MB of memory, and requires zero build infrastructure. The full progressive spectrum operates within the resource budget of a single-board computer.</p>
+    <a class="presto-featured-doc" href="/resolve/doc/193-htx-architecture">Doc 193 &rarr; The full dissertation</a>
+  </article>
+</section>
+
+<footer class="presto-epilogue">
+  <p>PRESTO does not introduce new protocols or mechanisms. It maps the design space that REST's constraints already permit when code-on-demand is explored to its full extent. The absence of this path from the field's attention was not a limitation of REST. It was an unexplored region within it.</p>
+  <p>The boundary the style identifies &mdash; between a bilateral source representation and a unilateral resolved representation &mdash; has been operative in every server-rendered HTTP response since 1993. Naming it makes it teachable, portable, and composable with the stack of architectural styles that sit above and below it.</p>
+  <p class="presto-epilogue-note">This page entraces the reader into the style. The full technical argument, including the specification, the implementations, and the formal derivation of induced properties, is in <a href="/resolve/doc/193-htx-architecture" style="color:inherit;">Doc 193</a>. The broader corpus from which PRESTO emerged is at <a href="/" style="color:inherit;">jaredfoy.com</a>.</p>
+</footer>

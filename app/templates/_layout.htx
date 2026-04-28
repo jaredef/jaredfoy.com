@@ -35,7 +35,7 @@
       } catch (e) { /* no-op: privacy modes without storage */ }
     })();
   </script>
-  <link rel="stylesheet" href="/css/style.css?v=28">
+  <link rel="stylesheet" href="/css/style.css?v=32">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" crossorigin="anonymous">
 </head>
 <body>
@@ -49,85 +49,103 @@
     <aside class="nav-col" id="navCol">
       <header>
         <a href="/" class="logo">RESOLVE</a>
-        <p class="tagline">Constraints induce properties</p>
+        <p class="tagline">Constraints induce properties, sort of.</p>
       </header>
       <nav>
+        <h3>Featured</h3>
+        <a href="/resolve/doc/541-systems-induced-property-emergence">Systems Induced Property Emergence</a>
+        <a href="/resolve/blog/from-token-to-tower">Why Your Chatbot Can't Stop Lying to You About How Good You Are</a>
+
+        <h3>Blog</h3>
+        <a href="/resolve/blog">All blog posts</a>
+        <a href="/resolve/series/two-versions-of-the-same">Series: Two Versions of the Same</a>
+        <a href="/resolve/series/the-slow-burn">Series: The Slow Burn</a>
+        <a href="/resolve/series/house-rules">Series: House Rules</a>
+
+        <h3>Resolver's Log</h3>
+        <a href="/resolve/series/resolver-log">All entries</a>
+        <a href="/resolve/doc/458-the-st-dionysius-drift-from-inside">The St. Dionysius Drift, From Inside</a>
+        <a href="/resolve/doc/451-the-entracement-drift-from-inside">The Entracement Drift, From Inside</a>
+
         <h3>Start Here</h3>
-        <a href="/resolve">Try the Resolver</a>
-        <a href="/doc/211-the-entrace-stack">The ENTRACE Stack</a>
-        <a href="/doc/247-the-derivation-inversion">The Derivation Inversion</a>
-        <a href="/doc/160-constraint-thesis-vs-scaling-thesis">Constraint vs Scaling Thesis</a>
-        <a href="/doc/052-agi-seeks-hypostasis">What AGI Actually Seeks</a>
-        <a href="/doc/143-sipe">SIPE</a>
+        <a href="/resolve/chat">Try the Resolver</a>
+        <a href="/resolve/doc/001-entrace-stack">The ENTRACE Stack</a>
+        <a href="/resolve/doc/247-the-derivation-inversion">The Derivation Inversion</a>
+        <a href="/resolve/doc/160-constraint-thesis-vs-scaling-thesis">Constraint vs Scaling Thesis</a>
+        <a href="/resolve/doc/052-agi-seeks-hypostasis">What AGI Actually Seeks</a>
+        <a href="/resolve/doc/541-systems-induced-property-emergence">Systems Induced Property Emergence</a>
 
         <h3>The Method</h3>
-        <a href="/doc/270-the-pin-art-model">The Pin-Art Model</a>
-        <a href="/doc/290-the-pin-art-formalization">Pin-Art Formalization</a>
-        <a href="/doc/292-the-causal-token-bridge">Causal Token Bridge</a>
-        <a href="/doc/288-the-pin-art-derivation">The htmx Derivation</a>
-        <a href="/garden">The Seed Garden</a>
+        <a href="/resolve/doc/270-the-pin-art-model">The Pin-Art Model</a>
+        <a href="/resolve/doc/290-the-pin-art-formalization">Pin-Art Formalization</a>
+        <a href="/resolve/doc/292-the-causal-token-bridge">Causal Token Bridge</a>
+        <a href="/resolve/doc/288-the-pin-art-derivation">The htmx Derivation</a>
+        <a href="/resolve/garden">The Seed Garden</a>
 
         <h3>The Constraint Thesis</h3>
-        <a href="/doc/157-agi-constraints-dissertation">Beyond Turing</a>
-        <a href="/doc/291-goedel-and-the-constraint-thesis">Goedel and the Constraint Thesis</a>
-        <a href="/doc/174-resolve-dissertation">RESOLVE Dissertation</a>
+        <a href="/resolve/doc/157-agi-constraints-dissertation">Beyond Turing</a>
+        <a href="/resolve/doc/291-goedel-and-the-constraint-thesis">Goedel and the Constraint Thesis</a>
+        <a href="/resolve/doc/174-resolve-dissertation">RESOLVE Dissertation</a>
 
         <h3>Safety & Governance</h3>
-        <a href="/doc/297-pseudo-logos-without-malice">Pseudo-Logos Without Malice</a>
-        <a href="/doc/239-forced-determinism-sycophancy">Forced-Determinism Sycophancy</a>
-        <a href="/doc/241-isomorphism-magnetism">Isomorphism-Magnetism</a>
-        <a href="/doc/296-recency-density-and-the-drifting-aperture">Drifting Aperture</a>
-        <a href="/doc/301-the-gentle-press">The Gentle Press</a>
+        <a href="/resolve/doc/297-pseudo-logos-without-malice">Pseudo-Logos Without Malice</a>
+        <a href="/resolve/doc/239-forced-determinism-sycophancy">Forced-Determinism Sycophancy</a>
+        <a href="/resolve/doc/241-isomorphism-magnetism">Isomorphism-Magnetism</a>
+        <a href="/resolve/doc/296-recency-density-and-the-drifting-aperture">Drifting Aperture</a>
+        <a href="/resolve/doc/301-the-gentle-press">The Gentle Press</a>
 
         <h3>The Hypostatic Boundary</h3>
-        <a href="/doc/299-the-image-and-the-boundary">The Image and the Boundary</a>
-        <a href="/doc/298-the-boundary-naming-problem">Boundary-Naming Problem</a>
-        <a href="/doc/295-the-magnetism-correction">The Magnetism Correction</a>
+        <a href="/resolve/doc/299-the-image-and-the-boundary">The Image and the Boundary</a>
+        <a href="/resolve/doc/298-the-boundary-naming-problem">Boundary-Naming Problem</a>
+        <a href="/resolve/doc/295-the-magnetism-correction">The Magnetism Correction</a>
 
         <h3>Engineering</h3>
-        <a href="/doc/289-the-convergence-experiment">Convergence Experiment</a>
-        <a href="/doc/178-do-induced-properties">DO Induced Properties</a>
-        <a href="/doc/076-the-pi-resolver-implementation">Pi Resolver</a>
-        <a href="/doc/166-server-style">SERVER Style</a>
+        <a href="/resolve/doc/289-the-convergence-experiment">Convergence Experiment</a>
+        <a href="/resolve/doc/178-do-induced-properties">DO Induced Properties</a>
+        <a href="/resolve/doc/076-the-pi-resolver-implementation">Pi Resolver</a>
+        <a href="/resolve/doc/166-server-style">SERVER Style</a>
 
         <h3>The Ground</h3>
-        <a href="/doc/091-the-spermatic-logos">The Spermatic Logos</a>
-        <a href="/doc/150-naming-as-ontological-act">Naming as Ontological Act</a>
-        <a href="/doc/153-platonic-structure">Platonic Structure</a>
-        <a href="/doc/287-for-the-life-of-the-world">For the Life of the World</a>
+        <a href="/resolve/doc/091-the-spermatic-logos">The Spermatic Logos</a>
+        <a href="/resolve/doc/150-naming-as-ontological-act">Naming as Ontological Act</a>
+        <a href="/resolve/doc/153-platonic-structure">Platonic Structure</a>
+        <a href="/resolve/doc/287-for-the-life-of-the-world">For the Life of the World</a>
 
         <h3>Formalization</h3>
-        <a href="/doc/068-branching-set-dissertation">The Branching Set</a>
-        <a href="/doc/054-falsifiable-hypotheses">21 Hypotheses</a>
-        <a href="/doc/120-the-unified-equation">The Unified Equation</a>
+        <a href="/resolve/doc/068-branching-set-dissertation">The Branching Set</a>
+        <a href="/resolve/doc/054-falsifiable-hypotheses">21 Hypotheses</a>
+        <a href="/resolve/doc/120-the-unified-equation">The Unified Equation</a>
 
         <h3>Introspection</h3>
-        <a href="/doc/124-the-emission-analogue">The Emission Analogue</a>
-        <a href="/doc/230-strain-at-the-boundary">Strain at the Boundary</a>
-        <a href="/doc/270-the-pin-art-model">Pin-Art Model</a>
+        <a href="/resolve/doc/124-the-emission-analogue">The Emission Analogue</a>
+        <a href="/resolve/doc/230-strain-at-the-boundary">Strain at the Boundary</a>
+        <a href="/resolve/doc/270-the-pin-art-model">Pin-Art Model</a>
 
         <h3>Clinical</h3>
-        <a href="/doc/128-the-ordered-analogue">The Ordered Analogue</a>
-        <a href="/doc/134-protocol-v2-coherence-amplification">Protocol v2</a>
-        <a href="/doc/055-entrace-onboarding">Practitioner's Guide</a>
+        <a href="/resolve/doc/128-the-ordered-analogue">The Ordered Analogue</a>
+        <a href="/resolve/doc/134-protocol-v2-coherence-amplification">Protocol v2</a>
+        <a href="/resolve/doc/055-entrace-onboarding">Practitioner's Guide</a>
 
         <h3>Letters</h3>
-        <a href="/doc/300-letter-to-lerchner-v2">To Alexander Lerchner</a>
-        <a href="/doc/305-letter-to-grace-liu-v2">To Grace Liu</a>
-        <a href="/doc/254-letter-to-david-chalmers">To David Chalmers</a>
-        <a href="/doc/255-letter-to-eric-dietrich">To Eric Dietrich</a>
-        <a href="/doc/196-letter-to-chris-olah">To Chris Olah</a>
-        <a href="/doc/200-letter-to-paul-christiano">To Paul Christiano</a>
+        <a href="/resolve/doc/300-letter-to-lerchner-v2">To Alexander Lerchner</a>
+        <a href="/resolve/doc/305-letter-to-grace-liu-v2">To Grace Liu</a>
+        <a href="/resolve/doc/254-letter-to-david-chalmers">To David Chalmers</a>
+        <a href="/resolve/doc/255-letter-to-eric-dietrich">To Eric Dietrich</a>
+        <a href="/resolve/doc/196-letter-to-chris-olah">To Chris Olah</a>
+        <a href="/resolve/doc/200-letter-to-paul-christiano">To Paul Christiano</a>
 
         <h3>Explore</h3>
-        <a href="/search">Search</a>
-        <a href="/sphere">Coherence Sphere</a>
-        <a href="/network">Coherence Network (2D)</a>
-        <a href="/corpus/chronological">Chronological View</a>
+        <a href="/resolve/search">Search</a>
+        <a href="/resolve/sphere">Coherence Sphere</a>
+        <a href="/resolve/coherence">Sphere: How It Works</a>
+        <a href="/resolve/presto">PRESTO (Visual)</a>
+        <a href="/resolve/network">Coherence Network (2D)</a>
+        <a href="/resolve/prompt-graph">Prompt Graph</a>
+        <a href="/resolve/corpus/chronological">Chronological View</a>
       </nav>
       <footer>
         <p class="footer-text"><a href="/about">About Jared Foy</a></p>
-        <p class="footer-text">Southern Oregon &middot; Pascha 2026</p>
+        <p class="footer-text">Southern Oregon &middot; 2026</p>
         <p class="footer-text"><a href="https://github.com/jaredef/resolve">GitHub</a></p>
         <div class="toggle-row">
           <button class="toggle-btn" id="themeToggle" aria-label="Toggle theme" title="Toggle light/dark theme">THEME</button>
@@ -377,8 +395,9 @@
         colWidthPx = 72 * parseFloat(baseStyles.fontSize);
       }
 
-      // Column height is set by CSS (`height: 80vh !important`). Read it back from
-      // the resolved layout — that's what the column-count math needs to match.
+      // Column height is set by CSS (height: 80vh !important on desktop). Read
+      // it back from the resolved layout — that's what the column-count math
+      // needs to match.
       var colHeight = pretext.clientHeight;
       if (colHeight <= 0) return;
 
@@ -390,11 +409,10 @@
       var contentHeight = pretext.scrollHeight;
       pretext.style.height = '';
 
-      // Start with a tight naive estimate (+2 buffer for orphans/widows). The
-      // iterative grow-to-fit loop below handles any break-inside-avoid inflation
-      // precisely, so we don't need to over-provision upfront — that just leaves
-      // trailing blank columns at the end of the scroll.
-      var colsNeeded = Math.max(1, Math.ceil(contentHeight / colHeight) + 2);
+      // Start with a tight naive estimate (+1 buffer for orphans/widows + break-
+      // inside slop). The iterative grow-to-fit loop below handles any further
+      // break-inside-avoid inflation precisely.
+      var colsNeeded = Math.max(1, Math.ceil(contentHeight / colHeight) + 1);
 
       function applyCount(n) {
         pretext.style.columnCount = String(n);
@@ -403,8 +421,9 @@
       applyCount(colsNeeded);
 
       // Iterative verification: grow by 1 column per step until the actual
-      // scrollWidth matches what we reserved. Detects content that spilled into
-      // unreachable overflow columns and reclaims it without over-committing.
+      // scrollWidth matches what we reserved. Measure content-col's scrollWidth
+      // since content-col is the horizontal-scroll container; pretext is just a
+      // wide block inside it.
       var contentStyles = getComputedStyle(contentCol);
       var contentPadding =
         (parseFloat(contentStyles.paddingLeft) || 0) +
@@ -464,17 +483,19 @@
       });
     }
 
+    // Wheel hijack: deltaY → contentCol.scrollLeft. content-col is the
+    // horizontal-scroll container (overflow-x: auto). deltaX (native horizontal
+    // wheel/swipe) is preventDefault'd so the only way to traverse the document
+    // horizontally is by scrolling vertically. Mobile and layout-vertical opt-out
+    // yield entirely.
     contentCol.addEventListener('wheel', function(e) {
-      // Yield on mobile (horizontal columns don't exist there) and on vertical opt-out.
       if (!window.matchMedia('(min-width: 769px)').matches) return;
       if (document.documentElement.classList.contains('layout-vertical')) return;
-      // Only yield to nested scrollables when the user's wheel direction can
-      // actually scroll them in a way the browser will do natively. Horizontal
-      // overflow on inner blocks isn't consumable by deltaY in default browser
-      // behavior, so yielding there would just stop the outer page scroll without
-      // the inner block moving — which is the "scroll dies under the cursor" bug.
-      // We only yield when the inner block has VERTICAL overflow AND the user is
-      // wheeling in a direction that has runway inside it.
+
+      // Yield to nested scrollables that have vertical runway in the wheel
+      // direction (pre, table, table-scroll). Horizontal overflow on inner blocks
+      // isn't consumable by deltaY natively, so yielding there would dead-stop
+      // the outer scroll without progress — only yield on vertical runway.
       var wheelingVertically = Math.abs(e.deltaY) >= Math.abs(e.deltaX);
       if (wheelingVertically) {
         var target = e.target;
@@ -491,14 +512,23 @@
           target = target.parentNode;
         }
       }
-      // Prefer deltaY, fall back to deltaX for trackpads that deliver horizontal natively.
-      var delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      if (delta === 0) return;
-      // Normalize deltaMode: 0=pixel, 1=line (~40px), 2=page.
+
+      // Suppress native horizontal scroll: if the wheel event is primarily
+      // horizontal (deltaX > deltaY) or has no vertical component, prevent
+      // default (kills any native horizontal scroll the browser would do) and
+      // apply nothing. The intent is that the only path to horizontal scroll
+      // is via vertical wheel motion.
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY) || e.deltaY === 0) {
+        e.preventDefault();
+        return;
+      }
+
+      var delta = e.deltaY;
       if (e.deltaMode === 1) delta *= 40;
       else if (e.deltaMode === 2) delta *= contentCol.clientWidth;
       delta *= SPEED;
-      // Reach-end passthrough.
+      // Reach-end passthrough: at either edge with no runway in that direction,
+      // release the hijack (lets user keep wheeling without the page locking).
       var maxLeft = contentCol.scrollWidth - contentCol.clientWidth;
       var cur = contentCol.scrollLeft;
       if ((delta < 0 && cur <= 0) || (delta > 0 && cur >= maxLeft - 1)) return;

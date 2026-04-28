@@ -40,6 +40,11 @@ body {
   color: var(--fg);
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
+  /* Suppress the window-level horizontal scrollbar that otherwise appears when
+     a child element (pretext on doc pages) computes a width larger than the
+     viewport. The doc-page horizontal scroll happens inside .pretext only;
+     no other path to horizontal-overflow should exist. */
+  overflow-x: hidden;
 }
 
 /* === Canvas: Two Columns === */
@@ -163,12 +168,13 @@ footer {
   font-size: 0.85rem;
   color: var(--fg-dim);
   max-width: 60ch;
-  margin-bottom: 1.5rem;
+  margin: 0 auto 1.5rem;
 }
 
 .hero-actions {
   display: flex;
   gap: 1rem;
+  justify-content: center;
 }
 
 .btn {
@@ -396,6 +402,17 @@ footer {
   letter-spacing: 0.1em;
 }
 
+.doc-license {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--fg-dim);
+  font-size: 0.7rem;
+  color: var(--fg-dim);
+}
+
+.doc-license p { margin: 0; }
+.doc-license a { color: inherit; }
+
 /* === Pretext: Document Body === */
 
 .pretext {
@@ -412,6 +429,18 @@ footer {
 .pretext strong { color: var(--fg-bright); }
 .pretext em { color: var(--fg); font-style: italic; }
 
+/* Inline-styled notice divs (CANONICAL, DEPRECATED, drift notices, etc.) carry
+   their own color in the inline style attribute. Their <strong> headings need
+   to inherit that color rather than be overridden by the global .pretext strong
+   rule, since the notice backgrounds are light and var(--fg-bright) becomes
+   near-white in dark mode (illegible against light cyan/yellow/red panels). */
+.pretext div[style*="background"] strong,
+.pretext div[style*="background"] em,
+.pretext div[style*="background"] a,
+.pretext div[style*="background"] p {
+  color: inherit;
+}
+
 .pretext a { color: var(--accent); text-decoration: none; }
 .pretext a:hover { text-decoration: underline; }
 
@@ -427,7 +456,8 @@ footer {
 
 /* Reader's Introduction — first blockquote in document, distinct style */
 .pretext h1 + blockquote,
-.pretext h1 + p + blockquote {
+.pretext h1 + p + blockquote,
+.pretext h1 + h2 + blockquote {
   border-left: 3px solid #2dd4bf;
   background: rgba(45, 212, 191, 0.06);
   padding: 1rem 1.2rem;
@@ -436,19 +466,22 @@ footer {
   position: relative;
 }
 html.theme-light .pretext h1 + blockquote,
-html.theme-light .pretext h1 + p + blockquote {
+html.theme-light .pretext h1 + p + blockquote,
+html.theme-light .pretext h1 + h2 + blockquote {
   background: rgba(45, 212, 191, 0.08);
   border-left-color: #0d9488;
 }
 .pretext h1 + blockquote p,
-.pretext h1 + p + blockquote p {
+.pretext h1 + p + blockquote p,
+.pretext h1 + h2 + blockquote p {
   color: var(--fg);
   font-size: 0.92rem;
   line-height: 1.65;
 }
 /* Info icon + heading line for Reader's Introduction */
 .pretext h1 + blockquote p:first-child strong,
-.pretext h1 + p + blockquote p:first-child strong {
+.pretext h1 + p + blockquote p:first-child strong,
+.pretext h1 + h2 + blockquote p:first-child strong {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -459,11 +492,13 @@ html.theme-light .pretext h1 + p + blockquote {
   margin-bottom: 0.5rem;
 }
 html.theme-light .pretext h1 + blockquote p:first-child strong,
-html.theme-light .pretext h1 + p + blockquote p:first-child strong {
+html.theme-light .pretext h1 + p + blockquote p:first-child strong,
+html.theme-light .pretext h1 + h2 + blockquote p:first-child strong {
   color: #0d9488;
 }
 .pretext h1 + blockquote p:first-child strong::before,
-.pretext h1 + p + blockquote p:first-child strong::before {
+.pretext h1 + p + blockquote p:first-child strong::before,
+.pretext h1 + h2 + blockquote p:first-child strong::before {
   content: '';
   display: inline-block;
   width: 18px;
@@ -982,40 +1017,59 @@ html.theme-light .pretext h1 + p + blockquote p:first-child strong {
     background: var(--accent-dim);
   }
 
-  /* Document pages: content-col becomes a horizontally-scrolling multi-column canvas.
-     Applies only when .pretext is present (document pages), not to home/garden/about
-     which use sections and grids that don't cohere under column flow. */
+  /* Document pages, desktop. content-col is the horizontal-scroll container:
+     overflow-x: auto with the scrollbar visually hidden. Pretext is column-flowed
+     with explicit width set by layoutColumns() in JS; that width can be many
+     viewport-widths wide, and content-col's overflow-x: auto picks up the
+     horizontal scroll. The wheel handler hijacks deltaY → contentCol.scrollLeft;
+     deltaX is preventDefault'd to suppress native horizontal scroll/swipe.
+     body { overflow-x: hidden } prevents the window-level horizontal scrollbar.
+     The doc-body-wrapper is layout-transparent (display: contents) so the
+     doc-header and pretext are direct layout children of the article. */
   .content-col:has(.pretext) {
-    overflow-y: hidden;
     overflow-x: auto;
+    overflow-y: hidden;
     overflow-wrap: break-word;
-    /* 100dvh uses the *dynamic* viewport — excludes mobile browser chrome (URL bar etc.)
-       so the column height matches what's actually visible. Older browsers without dvh
-       support fall back to vh. */
+    /* 100dvh uses the dynamic viewport (excludes mobile browser chrome). Older
+       browsers without dvh support fall back to vh. */
     height: 100vh;
     height: 100dvh;
     max-width: none;
-    /* The horizontal scrollbar is hidden (see below) — the progress bar at the top of
-       the viewport serves as the position indicator. Bottom padding still gives the
-       last line clearance from the viewport edge. */
     padding: 0.3rem 3rem 1.25rem;
-    /* Hide the native horizontal scrollbar so it doesn't overlap or interfere with
-       column text. Wheel/trackpad and touch gestures continue to scroll normally;
-       the progress bar at the top of the viewport indicates position. */
-    scrollbar-width: none;          /* Firefox */
+    /* Hide content-col's scrollbar so the bottom-of-viewport scrollbar doesn't
+       appear. Wheel/trackpad gestures continue to scroll via the JS hijack;
+       the top progress bar is the position indicator. */
+    scrollbar-width: none;
   }
   .content-col:has(.pretext)::-webkit-scrollbar {
-    display: none;                  /* WebKit / Blink */
+    display: none;
     width: 0;
     height: 0;
   }
 
-  /* Pretext flows into fixed-width columns; total width grows horizontally.
-     Crude but reliable: 80vh leaves 20vh of bottom clearance, which absorbs the
-     scrollbar, padding, line-height alignment slop, and any browser/zoom variance.
-     !important is required to win over the JS inline-style override (the layout
-     routine sets height inline for legacy line-alignment math; that's harmless when
-     this rule wins). */
+  /* doc-body-wrapper is layout-transparent: doc-header and pretext appear in
+     the article's flow as direct children, preserving the proven scroll
+     mechanism while keeping the structural grouping the template provides. */
+  .doc-body-wrapper {
+    display: contents;
+  }
+
+  /* Doc-header is a banner block above the pretext. It inherits the article's
+     width (which is whatever the pretext makes it via column-flow). */
+  .content-col .doc-header {
+    box-sizing: border-box;
+    padding: 1.25rem 0 1rem;
+    margin: 0 0 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .content-col .doc-header .doc-header-inner {
+    max-width: 60rem;
+  }
+
+  /* Pretext: column-flow at 72ch, growing horizontally as content overflows.
+     Height: 80vh leaves bottom clearance so columns aren't clipped at viewport
+     edge after doc-header takes its natural height above. !important ensures
+     the inline-style override in layoutColumns() doesn't override this. */
   .content-col .pretext {
     column-width: 72ch;
     column-gap: 3rem;
@@ -1027,8 +1081,7 @@ html.theme-light .pretext h1 + p + blockquote p:first-child strong {
     widows: 2;
   }
 
-  /* Opt-out: user prefers vertical scroll on document pages. Undo the horizontal layout
-     and restore the default single-column scroll. */
+  /* Opt-out: user prefers vertical scroll on document pages. */
   html.layout-vertical .content-col:has(.pretext) {
     overflow-y: auto;
     overflow-x: visible;
@@ -1036,13 +1089,17 @@ html.theme-light .pretext h1 + p + blockquote p:first-child strong {
     max-width: 900px;
     padding: 3rem 4rem;
   }
+  html.layout-vertical .content-col .doc-header {
+    padding: 0 0 1.5rem;
+    margin: 0 0 2rem;
+  }
   html.layout-vertical .content-col .pretext {
     column-width: auto;
     column-count: 1;
     column-gap: normal;
     column-rule: none;
     column-fill: balance;
-    height: auto;
+    height: auto !important;
   }
   html.layout-vertical .content-col .pretext p { max-width: 65ch; }
 

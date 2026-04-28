@@ -1,0 +1,189 @@
+<style>
+  /* Medium-style blog post — serif body, vertical scroll, forced
+     single-column regardless of the site-wide columns/scroll toggle. */
+
+  /* Scope an override so blog pages always read top-to-bottom even
+     when the user's global preference is horizontal columns. The
+     .pretext class is what triggers column behavior on corpus pages;
+     the blog body deliberately does NOT use .pretext, and we also
+     pin the content column to vertical flow here. */
+  .content-col:has(.blog-post) {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    column-count: 1 !important;
+    columns: auto !important;
+    height: auto !important;
+    min-height: 100vh;
+  }
+
+  .blog-post {
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 5rem;
+    font-family: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+    color: var(--fg);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .blog-post .blog-kicker {
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--fg) 55%, transparent);
+    margin: 0 0 1.25rem;
+  }
+
+  .blog-post .blog-kicker a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px dotted currentColor;
+  }
+
+  .blog-post h1 {
+    font-family: inherit;
+    font-size: clamp(2rem, 4.5vw, 2.9rem);
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin: 0 0 2rem;
+  }
+
+  .blog-post .blog-body {
+    font-size: 1.2rem;
+    line-height: 1.75;
+  }
+
+  .blog-post .blog-body p {
+    margin: 0 0 1.6rem;
+  }
+
+  .blog-post .blog-body h2 {
+    font-family: inherit;
+    font-size: 1.55rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin: 2.8rem 0 1rem;
+  }
+
+  .blog-post .blog-body h3 {
+    font-family: inherit;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 2rem 0 0.75rem;
+  }
+
+  .blog-post .blog-body em { font-style: italic; }
+  .blog-post .blog-body strong { font-weight: 700; }
+
+  .blog-post .blog-body a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+
+  .blog-post .blog-body blockquote {
+    border-left: 3px solid var(--border);
+    margin: 2rem 0;
+    padding: 0.25rem 0 0.25rem 1.25rem;
+    color: color-mix(in srgb, var(--fg) 72%, transparent);
+    font-style: italic;
+    font-size: 1.1rem;
+  }
+
+  .blog-post .blog-body blockquote p { margin: 0 0 0.8rem; }
+  .blog-post .blog-body blockquote p:last-child { margin: 0; }
+
+  .blog-post .blog-body hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 3rem auto;
+    width: 40%;
+  }
+
+  .blog-post .blog-body ul,
+  .blog-post .blog-body ol {
+    margin: 0 0 1.6rem;
+    padding-left: 1.4rem;
+  }
+
+  .blog-post .blog-body li {
+    margin-bottom: 0.6rem;
+  }
+
+  .blog-post .series-nav {
+    display: flex;
+    gap: 0.75rem;
+    margin: 2.5rem 0;
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+  }
+  .blog-post .series-nav a {
+    flex: 1 1 0;
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.9rem 1.1rem;
+    text-decoration: none !important;
+    color: var(--fg);
+    transition: background 0.15s, border-color 0.15s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .blog-post .series-nav a:hover {
+    background: color-mix(in srgb, var(--fg) 6%, transparent);
+    border-color: color-mix(in srgb, var(--fg) 40%, transparent);
+  }
+  .blog-post .series-nav .nav-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--fg) 55%, transparent);
+  }
+  .blog-post .series-nav .nav-title {
+    font-family: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .blog-post .series-nav .prev { text-align: left; }
+  .blog-post .series-nav .next { text-align: right; margin-left: auto; }
+  .blog-post .series-nav:has(> a:only-child) .next { flex: 0 1 50%; }
+  @media (max-width: 640px) {
+    .blog-post .series-nav { flex-direction: column; }
+    .blog-post .series-nav .next { text-align: left; margin-left: 0; }
+  }
+
+  @media (max-width: 768px) {
+    .blog-post { padding: 1.75rem 1rem 4rem; }
+    .blog-post h1 { font-size: 1.8rem; margin-bottom: 1.5rem; }
+    .blog-post .blog-body { font-size: 1.1rem; line-height: 1.7; }
+    .blog-post .blog-body h2 { font-size: 1.35rem; }
+  }
+</style>
+
+<htx:type>blog</htx:type>
+<htx:slug>{{ route.slug }}</htx:slug>
+<htx>
+<htx:each>
+<article class="blog-post">
+  <p class="blog-kicker"><a href="/resolve/blog">← Blog</a></p>
+  <div class="blog-body">
+    __body_html__
+  </div>
+</article>
+</htx:each>
+<htx:none>
+<article class="blog-post">
+  <p class="blog-kicker"><a href="/resolve/blog">← Blog</a></p>
+  <div class="blog-body">
+    <h1>Post Not Found</h1>
+    <p>The requested post does not exist.</p>
+  </div>
+</article>
+</htx:none>
+</htx>
