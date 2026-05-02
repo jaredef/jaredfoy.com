@@ -297,6 +297,7 @@ const BLOG_SERIES: Record<string, { title: string; description: string; docs: st
     description: "A general-reader entracement to the corpus's novelty calculus — the tool the corpus uses to audit, with discipline rather than with hope, whether a candidate observation or claim is genuinely new or is an articulation of something already-published in vocabulary the observer had not yet recognized. The series walks the calculus's three-tier structure (plausibility / operational match / truth), the five target types it operates on, the licensing rules that distinguish what each tier-survival warrants, and the discipline of running it end-to-end on actual cases. The technical apparatus lives in Docs 445 (the formalism) and 503 (the iterative-application discipline); these essays render the same tool for the general reader, with worked examples from the corpus's own recent practice (the pin-art / Zadeh recovery in Post 1) and from external cases the calculus discriminates well. Read top-to-bottom for a continuous walk from the basic apparatus through to self-application; readers who want only the cognitive move can stop after Post 1 and still have the operational core.",
     docs: [
       "what-counts-as-new-1-the-novelty-calculus",
+      "what-counts-as-new-2-the-five-target-types",
     ],
   },
   "the-clankers-will-confess": {
