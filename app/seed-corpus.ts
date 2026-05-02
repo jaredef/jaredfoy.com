@@ -299,6 +299,7 @@ const BLOG_SERIES: Record<string, { title: string; description: string; docs: st
       "what-counts-as-new-1-the-novelty-calculus",
       "what-counts-as-new-2-the-five-target-types",
       "what-counts-as-new-3-an-audit-walked",
+      "what-counts-as-new-4-when-something-actually-is-new",
     ],
   },
   "the-clankers-will-confess": {
