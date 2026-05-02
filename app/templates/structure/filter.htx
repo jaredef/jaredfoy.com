@@ -1,0 +1,185 @@
+<style>
+  .sv { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .sv-head { border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+  .sv-kicker { font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: color-mix(in srgb, var(--fg) 55%, transparent); margin: 0 0 0.4rem; }
+  .sv-head h1 { font-size: clamp(1.7rem, 3.5vw, 2.2rem); margin: 0 0 0.5rem; letter-spacing: -0.02em; }
+  .sv-head p { font-size: 0.95rem; color: color-mix(in srgb, var(--fg) 78%, transparent); line-height: 1.55; max-width: 70ch; margin: 0; }
+  .sv-head a { color: var(--accent); }
+  .sv-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 2rem; padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 4px; background: color-mix(in srgb, var(--fg) 2%, transparent); }
+  .sv-nav .nl { font-family: var(--font-mono, monospace); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: color-mix(in srgb, var(--fg) 55%, transparent); margin-right: 0.5rem; }
+  .sv-nav a { font-size: 0.82rem; padding: 0.25rem 0.7rem; border-radius: 3px; border: 1px solid color-mix(in srgb, var(--fg) 18%, transparent); color: color-mix(in srgb, var(--fg) 80%, transparent); text-decoration: none; }
+  .sv-nav a:hover { border-color: var(--accent); }
+  .sv-nav a.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent); }
+
+  /* Filter view: faceted filters down the left, results grid on the right. */
+  .filter-layout { display: grid; grid-template-columns: 240px 1fr; gap: 1.5rem; }
+  @media (max-width: 760px) { .filter-layout { grid-template-columns: 1fr; } }
+  .facets { border: 1px solid var(--border); border-radius: 5px; padding: 1rem; background: color-mix(in srgb, var(--fg) 2%, transparent); align-self: start; position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow-y: auto; }
+  .facet { margin-bottom: 1.25rem; }
+  .facet h3 { font-family: var(--font-mono, monospace); font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: color-mix(in srgb, var(--fg) 60%, transparent); margin: 0 0 0.5rem; padding-bottom: 0.3rem; border-bottom: 1px solid color-mix(in srgb, var(--fg) 12%, transparent); }
+  .facet label { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; padding: 0.15rem 0; cursor: pointer; user-select: none; line-height: 1.3; }
+  .facet label .count { margin-left: auto; font-family: var(--font-mono, monospace); font-size: 0.68rem; color: color-mix(in srgb, var(--fg) 50%, transparent); }
+  .facet input[type="checkbox"] { transform: translateY(1px); }
+  .reset { display: block; width: 100%; padding: 0.5rem; background: var(--bg); border: 1px solid var(--border); border-radius: 3px; color: color-mix(in srgb, var(--fg) 80%, transparent); font-size: 0.78rem; cursor: pointer; }
+  .reset:hover { border-color: var(--accent); color: var(--accent); }
+  .results-meta { font-size: 0.85rem; color: color-mix(in srgb, var(--fg) 70%, transparent); margin-bottom: 0.85rem; }
+  .results { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.6rem; }
+  .rdoc { display: block; padding: 0.55rem 0.7rem; border: 1px solid var(--border); border-radius: 4px; background: var(--bg); text-decoration: none; color: inherit; }
+  .rdoc:hover { border-color: var(--accent); }
+  .rdoc .rn { font-family: var(--font-mono, monospace); font-size: 0.66rem; color: color-mix(in srgb, var(--fg) 55%, transparent); }
+  .rdoc .rt { display: block; font-size: 0.82rem; line-height: 1.3; margin: 0.2rem 0 0.4rem; }
+  .rdoc .rtags { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+  .rdoc .rtag { font-family: var(--font-mono, monospace); font-size: 0.6rem; padding: 0.08rem 0.3rem; border-radius: 2px; border: 1px solid color-mix(in srgb, var(--fg) 18%, transparent); color: color-mix(in srgb, var(--fg) 65%, transparent); }
+  #f-loading { padding: 2rem; text-align: center; color: color-mix(in srgb, var(--fg) 60%, transparent); font-style: italic; }
+</style>
+
+<div class="sv">
+  <header class="sv-head">
+    <p class="sv-kicker">Structure → Filter</p>
+    <h1>Faceted Filter</h1>
+    <p>Faceted-filter view of all 538 docs. Filter by Layer 1 structural role, Layer 2 lifecycle status, Layer 3 warrant tier, Layer 4 engagement thread, and Layer 5 phase. The left sidebar shows live counts per facet; the right grid shows matching docs. Default filter is Layer 2 = active/primary/log/observational/extension (hides historical). Reset at the bottom of the sidebar to clear all filters.</p>
+  </header>
+  <nav class="sv-nav">
+    <span class="nl">Views:</span>
+    <a href="/resolve/structure">Integrated</a>
+    <a href="/resolve/structure/schema">Schema Map</a>
+    <a href="/resolve/structure/threads">Threads</a>
+    <a href="/resolve/structure/tiers">Tiers</a>
+    <a href="/resolve/structure/entry-points">Entry-Points</a>
+    <a href="/resolve/structure/timeline">Timeline</a>
+    <a href="/resolve/structure/filter" class="active">Filter</a>
+  </nav>
+
+  <div id="f-loading">Loading manifest…</div>
+  <div class="filter-layout" id="filter-app" hidden>
+    <aside class="facets" id="facets"></aside>
+    <main>
+      <div class="results-meta" id="results-meta"></div>
+      <div class="results" id="results"></div>
+    </main>
+  </div>
+</div>
+
+<script>
+  (function() {
+    var ALL = [];
+    var STATE = {
+      layer_1: new Set(),
+      layer_2: new Set(['PRIMARY', 'ACTIVE', 'LOG', 'OBSERVATIONAL', 'EXTENSION']),
+      layer_3: new Set(),
+      threads: new Set(),
+      phase: new Set(),
+    };
+
+    fetch('/manifest.json').then(r => r.json()).then(data => {
+      ALL = data.docs.filter(d => d.doc !== null);
+      ALL.sort((a, b) => a.doc - b.doc);
+      buildFacets();
+      render();
+      document.getElementById('f-loading').hidden = true;
+      document.getElementById('filter-app').hidden = false;
+    }).catch(err => {
+      document.getElementById('f-loading').textContent = 'Failed to load manifest: ' + err.message;
+    });
+
+    function uniqueValues(field, asArray) {
+      var counts = {};
+      ALL.forEach(d => {
+        var vs = asArray ? (d[field] || []) : [d[field]];
+        vs.forEach(v => { if (v) counts[v] = (counts[v] || 0) + 1; });
+      });
+      return Object.keys(counts).sort().map(k => [k, counts[k]]);
+    }
+
+    function buildFacets() {
+      var facets = document.getElementById('facets');
+      facets.innerHTML = '';
+      [
+        ['layer_1', 'Layer 1 — Structural Role', false],
+        ['layer_2', 'Layer 2 — Lifecycle Status', false],
+        ['layer_3', 'Layer 3 — Warrant Tier', false],
+        ['threads', 'Layer 4 — Engagement Thread', true],
+        ['phase', 'Layer 5 — Phase', false],
+      ].forEach(spec => {
+        var field = spec[0], label = spec[1], asArray = spec[2];
+        var section = document.createElement('div');
+        section.className = 'facet';
+        var h = document.createElement('h3');
+        h.textContent = label;
+        section.appendChild(h);
+        var values = uniqueValues(field, asArray);
+        values.forEach(pair => {
+          var v = pair[0], n = pair[1];
+          var lbl = document.createElement('label');
+          var cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.dataset.field = field;
+          cb.dataset.value = v;
+          if (STATE[field].has(v)) cb.checked = true;
+          cb.addEventListener('change', function() {
+            if (this.checked) STATE[this.dataset.field].add(this.dataset.value);
+            else STATE[this.dataset.field].delete(this.dataset.value);
+            render();
+          });
+          lbl.appendChild(cb);
+          var span = document.createElement('span');
+          span.textContent = ' ' + v;
+          lbl.appendChild(span);
+          var ct = document.createElement('span');
+          ct.className = 'count';
+          ct.textContent = n;
+          lbl.appendChild(ct);
+          section.appendChild(lbl);
+        });
+        facets.appendChild(section);
+      });
+      var reset = document.createElement('button');
+      reset.className = 'reset';
+      reset.textContent = 'Reset all filters';
+      reset.addEventListener('click', function() {
+        Object.keys(STATE).forEach(k => STATE[k].clear());
+        buildFacets();
+        render();
+      });
+      facets.appendChild(reset);
+    }
+
+    function matches(d) {
+      if (STATE.layer_1.size && !STATE.layer_1.has(d.layer_1)) return false;
+      if (STATE.layer_2.size && !STATE.layer_2.has(d.layer_2)) return false;
+      if (STATE.layer_3.size && !STATE.layer_3.has(d.layer_3)) return false;
+      if (STATE.phase.size && !STATE.phase.has(d.phase)) return false;
+      if (STATE.threads.size) {
+        var ts = d.threads || [];
+        if (!ts.some(t => STATE.threads.has(t))) return false;
+      }
+      return true;
+    }
+
+    function render() {
+      var matched = ALL.filter(matches);
+      var meta = document.getElementById('results-meta');
+      meta.textContent = matched.length + ' of ' + ALL.length + ' documents match';
+      var results = document.getElementById('results');
+      results.innerHTML = '';
+      matched.forEach(d => {
+        var card = document.createElement('a');
+        card.className = 'rdoc';
+        card.href = '/resolve/doc/' + d.doc + '-' + d.slug;
+        var inner = '<span class="rn">Doc ' + d.doc + '</span>' +
+                    '<span class="rt">' + escapeHtml(d.title) + '</span>' +
+                    '<div class="rtags">' +
+                    '<span class="rtag">' + d.layer_1 + '</span>' +
+                    '<span class="rtag">' + d.layer_3 + '</span>' +
+                    (d.threads && d.threads.length ? '<span class="rtag">' + d.threads[0] + (d.threads.length > 1 ? '+' + (d.threads.length - 1) : '') + '</span>' : '') +
+                    '</div>';
+        card.innerHTML = inner;
+        results.appendChild(card);
+      });
+    }
+
+    function escapeHtml(s) {
+      return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+  })();
+</script>

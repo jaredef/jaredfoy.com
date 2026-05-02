@@ -1,0 +1,138 @@
+<style>
+  .sv { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .sv-head { border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+  .sv-kicker { font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: color-mix(in srgb, var(--fg) 55%, transparent); margin: 0 0 0.4rem; }
+  .sv-head h1 { font-size: clamp(1.7rem, 3.5vw, 2.2rem); margin: 0 0 0.5rem; letter-spacing: -0.02em; }
+  .sv-head p { font-size: 0.95rem; color: color-mix(in srgb, var(--fg) 78%, transparent); line-height: 1.55; max-width: 70ch; margin: 0; }
+  .sv-head a { color: var(--accent); }
+  .sv-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 2rem; padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 4px; background: color-mix(in srgb, var(--fg) 2%, transparent); }
+  .sv-nav .nl { font-family: var(--font-mono, monospace); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: color-mix(in srgb, var(--fg) 55%, transparent); margin-right: 0.5rem; }
+  .sv-nav a { font-size: 0.82rem; padding: 0.25rem 0.7rem; border-radius: 3px; border: 1px solid color-mix(in srgb, var(--fg) 18%, transparent); color: color-mix(in srgb, var(--fg) 80%, transparent); text-decoration: none; }
+  .sv-nav a:hover { border-color: var(--accent); }
+  .sv-nav a.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent); }
+
+  /* Threads-specific: each thread is a horizontal river of doc-cards in temporal order. */
+  .threads-list { display: grid; gap: 1.5rem; }
+  .thread { border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; background: color-mix(in srgb, var(--fg) 2%, transparent); }
+  .thread .th-head { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 0.7rem; flex-wrap: wrap; }
+  .thread .th-name { font-family: var(--font-mono, monospace); font-size: 0.78rem; letter-spacing: 0.1em; padding: 0.2rem 0.5rem; border: 1px solid var(--accent); color: var(--accent); border-radius: 3px; }
+  .thread .th-desc { font-size: 0.85rem; color: color-mix(in srgb, var(--fg) 75%, transparent); flex: 1; min-width: 200px; }
+  .thread .th-count { font-family: var(--font-mono, monospace); font-size: 0.7rem; color: color-mix(in srgb, var(--fg) 55%, transparent); }
+  .river { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem; }
+  .river::-webkit-scrollbar { height: 6px; }
+  .river::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--fg) 25%, transparent); border-radius: 3px; }
+  .rcard { flex: 0 0 auto; min-width: 180px; max-width: 240px; padding: 0.55rem 0.7rem; border: 1px solid var(--border); border-radius: 4px; background: var(--bg); text-decoration: none; color: inherit; }
+  .rcard:hover { border-color: var(--accent); }
+  .rcard .rn { font-family: var(--font-mono, monospace); font-size: 0.68rem; color: color-mix(in srgb, var(--fg) 55%, transparent); }
+  .rcard .rt { display: block; font-size: 0.82rem; line-height: 1.3; margin-top: 0.2rem; }
+  #threads-loading { padding: 2rem; text-align: center; color: color-mix(in srgb, var(--fg) 60%, transparent); font-style: italic; }
+</style>
+
+<div class="sv">
+  <header class="sv-head">
+    <p class="sv-kicker">Structure → Engagement Threads</p>
+    <h1>Engagement Threads</h1>
+    <p>The corpus organized as research conversations with specific external thinkers and internal discipline-areas. Each thread is a temporal stream of docs that advance one engagement. Per <a href="/resolve/doc/633-corpus-taxonomy-and-manifest-design">Doc 633</a> Layer 4 thread vocabulary.</p>
+  </header>
+  <nav class="sv-nav">
+    <span class="nl">Views:</span>
+    <a href="/resolve/structure">Integrated</a>
+    <a href="/resolve/structure/schema">Schema Map</a>
+    <a href="/resolve/structure/threads" class="active">Threads</a>
+    <a href="/resolve/structure/tiers">Tiers</a>
+    <a href="/resolve/structure/entry-points">Entry-Points</a>
+    <a href="/resolve/structure/timeline">Timeline</a>
+    <a href="/resolve/structure/filter">Filter</a>
+  </nav>
+
+  <div id="threads-loading">Loading manifest…</div>
+  <div class="threads-list" id="threads-list" hidden></div>
+</div>
+
+<script>
+  (function() {
+    var THREAD_DESCRIPTIONS = {
+      'THREAD-MISRA': "Misra Bayesian-mechanistic transformer attention work; cross-practitioner verification of corpus's per-step Bayesian-inference instance.",
+      'THREAD-PEARL': "Pearl causal-hierarchy work; rung-1/rung-2/rung-3 framing engaged across multiple corpus documents.",
+      'THREAD-LAKATOS': "Lakatosian research-programme framing; the structural shape the corpus has adopted for itself.",
+      'THREAD-AXE': "Axe protein-fold prevalence; the Doc 541 §3.1 cooperative-coupling SIPE-T sub-form's empirical instance.",
+      'THREAD-LARSSON': "Larsson long-horizon-reliability synthesis; substrate-plus-injection framing in physics-substrate language.",
+      'THREAD-PAGEAU': "Pageau symbolic-world thesis engagement; patristic-Platonist-tradition adjacencies.",
+      'THREAD-CHALMERS': "Chalmers strong-vs-weak emergence; Bedau/Chalmers gradient engaged in Doc 547.",
+      'THREAD-KELLY': "Kelly alignment-inception engagement; corpus safety architecture work.",
+      'THREAD-STROMINGER': "Strominger gluon-scattering substrate-plus-injection synthesis; physics-mechanism analogy.",
+      'THREAD-CHRISTIANO': "Christiano alignment-research engagement; AI-safety adjacencies.",
+      'THREAD-OLAH': "Olah interpretability engagement; mechanistic-interpretability adjacencies.",
+      'THREAD-LUPSASCA': "Lupsasca photon-ring threshold framing; physics threshold-emergence analogy.",
+      'THREAD-CONFAB': "Coherent-confabulation discipline; threshold-jump-in-dyad reading; Doc 627 conjecture cluster.",
+      'THREAD-PINART': "Pin-Art form (probe-impression boundary detection via hedge-clusters in dyadic LLM exchange).",
+      'THREAD-SIPE': "SIPE-T form (threshold-conditional emergence pattern over compositional constraints).",
+      'THREAD-COHERENCE-AMP': "Coherence-amplification dynamics; Doc 508 mechanism engaged across multiple sub-cases.",
+      'THREAD-BLOG-CEILING': "\"The Ceiling\" blog series — corpus-side anchors.",
+      'THREAD-BLOG-LADDER': "\"The Ladder\" blog series — Doc 548 entracement.",
+      'THREAD-BLOG-WCAN': "\"What Counts as New\" blog series — novelty-calculus entracement."
+    };
+
+    fetch('/manifest.json').then(r => r.json()).then(data => {
+      var docs = data.docs.filter(d => d.doc !== null && d.threads && d.threads.length);
+      // Group by thread
+      var byThread = {};
+      docs.forEach(d => {
+        d.threads.forEach(t => {
+          if (!byThread[t]) byThread[t] = [];
+          byThread[t].push(d);
+        });
+      });
+      // Sort docs within each thread by doc number
+      Object.keys(byThread).forEach(t => byThread[t].sort((a, b) => a.doc - b.doc));
+      // Sort threads by member count (descending)
+      var threadOrder = Object.keys(byThread).sort((a, b) => byThread[b].length - byThread[a].length);
+
+      var container = document.getElementById('threads-list');
+      var loading = document.getElementById('threads-loading');
+      threadOrder.forEach(threadKey => {
+        var threadDocs = byThread[threadKey];
+        var thread = document.createElement('section');
+        thread.className = 'thread';
+        var head = document.createElement('div');
+        head.className = 'th-head';
+        var name = document.createElement('span');
+        name.className = 'th-name';
+        name.textContent = threadKey;
+        var desc = document.createElement('span');
+        desc.className = 'th-desc';
+        desc.textContent = THREAD_DESCRIPTIONS[threadKey] || '';
+        var count = document.createElement('span');
+        count.className = 'th-count';
+        count.textContent = threadDocs.length + ' docs';
+        head.appendChild(name);
+        head.appendChild(desc);
+        head.appendChild(count);
+        thread.appendChild(head);
+
+        var river = document.createElement('div');
+        river.className = 'river';
+        threadDocs.forEach(d => {
+          var card = document.createElement('a');
+          card.className = 'rcard';
+          card.href = '/resolve/doc/' + d.doc + '-' + d.slug;
+          var n = document.createElement('span');
+          n.className = 'rn';
+          n.textContent = 'Doc ' + d.doc;
+          var t = document.createElement('span');
+          t.className = 'rt';
+          t.textContent = d.title;
+          card.appendChild(n);
+          card.appendChild(t);
+          river.appendChild(card);
+        });
+        thread.appendChild(river);
+        container.appendChild(thread);
+      });
+      loading.hidden = true;
+      container.hidden = false;
+    }).catch(err => {
+      document.getElementById('threads-loading').textContent = 'Failed to load manifest: ' + err.message;
+    });
+  })();
+</script>

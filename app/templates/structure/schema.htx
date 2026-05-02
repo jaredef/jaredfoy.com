@@ -1,0 +1,119 @@
+<style>
+  .sv { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .sv-head { border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+  .sv-kicker { font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: color-mix(in srgb, var(--fg) 55%, transparent); margin: 0 0 0.4rem; }
+  .sv-head h1 { font-size: clamp(1.7rem, 3.5vw, 2.2rem); margin: 0 0 0.5rem; letter-spacing: -0.02em; }
+  .sv-head p { font-size: 0.95rem; color: color-mix(in srgb, var(--fg) 78%, transparent); line-height: 1.55; max-width: 70ch; margin: 0; }
+  .sv-head a { color: var(--accent); }
+  .sv-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 2rem; padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 4px; background: color-mix(in srgb, var(--fg) 2%, transparent); }
+  .sv-nav .nl { font-family: var(--font-mono, monospace); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: color-mix(in srgb, var(--fg) 55%, transparent); margin-right: 0.5rem; }
+  .sv-nav a { font-size: 0.82rem; padding: 0.25rem 0.7rem; border-radius: 3px; border: 1px solid color-mix(in srgb, var(--fg) 18%, transparent); color: color-mix(in srgb, var(--fg) 80%, transparent); text-decoration: none; }
+  .sv-nav a:hover { border-color: var(--accent); }
+  .sv-nav a.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent); }
+
+  /* Schema-map specific: a clean structural map without warrant-tier coloring. */
+  .schema-map { display: grid; gap: 1.25rem; }
+  .smt { border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; background: color-mix(in srgb, var(--fg) 2%, transparent); }
+  .smt .lbl { font-family: var(--font-mono, monospace); font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase; color: color-mix(in srgb, var(--fg) 50%, transparent); margin: 0 0 0.4rem; }
+  .smt h2 { font-size: 1.05rem; margin: 0 0 0.5rem; letter-spacing: -0.01em; }
+  .smt .desc { font-size: 0.85rem; color: color-mix(in srgb, var(--fg) 75%, transparent); margin: 0 0 0.85rem; max-width: 70ch; }
+  .smt.center { border-color: color-mix(in srgb, #d4a017 60%, var(--border)); background: linear-gradient(180deg, color-mix(in srgb, #d4a017 6%, transparent), color-mix(in srgb, #d4a017 2%, transparent)); }
+  .smt.center h2 { color: #d4a017; }
+  .smt.belt { border-left: 4px solid var(--accent); }
+  .smt.aux { border-left: 4px solid color-mix(in srgb, var(--accent) 50%, var(--fg)); }
+  .docrow { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .dtag { display: inline-flex; align-items: baseline; gap: 0.4rem; padding: 0.3rem 0.55rem; border-radius: 3px; border: 1px solid var(--border); background: var(--bg); text-decoration: none; color: inherit; font-size: 0.78rem; }
+  .dtag:hover { border-color: var(--accent); }
+  .dtag .n { font-family: var(--font-mono, monospace); font-size: 0.66rem; color: color-mix(in srgb, var(--fg) 55%, transparent); }
+</style>
+
+<div class="sv">
+  <header class="sv-head">
+    <p class="sv-kicker">Structure → Schema Map</p>
+    <h1>Lakatosian Schema, Pure</h1>
+    <p>The corpus's structural skeleton without warrant-tier overlay or temporal layering. Hard core at the center; protective belt as concentric rings of Forms and Disciplines; standing apparatus and observational predictions as adjacent operational layers. Per <a href="/resolve/doc/632-the-corpus-itself-primary-articulation">Doc 632</a>.</p>
+  </header>
+  <nav class="sv-nav">
+    <span class="nl">Views:</span>
+    <a href="/resolve/structure">Integrated</a>
+    <a href="/resolve/structure/schema" class="active">Schema Map</a>
+    <a href="/resolve/structure/threads">Threads</a>
+    <a href="/resolve/structure/tiers">Tiers</a>
+    <a href="/resolve/structure/entry-points">Entry-Points</a>
+    <a href="/resolve/structure/timeline">Timeline</a>
+    <a href="/resolve/structure/filter">Filter</a>
+  </nav>
+
+  <div class="schema-map">
+    <section class="smt center">
+      <p class="lbl">Hard Core (HC1–HC4)</p>
+      <h2>Metaphysical commitments — defended within tradition; NH1 prohibits modus tollens</h2>
+      <p class="desc">HC1 Logos-participation (the Word as ground of intelligibility); HC2 Ontological Ladder of Participation; HC3 Hypostatic Boundary; HC4 Substrate-and-Keeper composition.</p>
+      <div class="docrow">
+        <a class="dtag" href="/resolve/doc/091-the-spermatic-logos"><span class="n">091</span> Spermatic Logos</a>
+        <a class="dtag" href="/resolve/doc/153-platonic-structure"><span class="n">153</span> Platonic Structure</a>
+        <a class="dtag" href="/resolve/doc/287-for-the-life-of-the-world"><span class="n">287</span> For the Life of the World</a>
+        <a class="dtag" href="/resolve/doc/351-on-the-real-st-dionysius-the-areopagite"><span class="n">351</span> On St. Dionysius</a>
+        <a class="dtag" href="/resolve/doc/372-the-hypostatic-boundary"><span class="n">372</span> Hypostatic Boundary</a>
+        <a class="dtag" href="/resolve/doc/510-praxis-log-v-deflation-as-substrate-discipline"><span class="n">510</span> Substrate-and-Keeper</a>
+        <a class="dtag" href="/resolve/doc/548-the-ontological-ladder-of-participation"><span class="n">548</span> Ontological Ladder</a>
+      </div>
+    </section>
+
+    <section class="smt belt">
+      <p class="lbl">Protective Belt — Forms (PB-Form-1, 2, 3)</p>
+      <h2>Operationalizable structural frameworks</h2>
+      <p class="desc">Each Form is the corpus's primary articulation of a recurring pattern; open to revision in response to operational-tier failure; revision does not require revision of the hard core.</p>
+      <div class="docrow">
+        <a class="dtag" href="/resolve/doc/541-systems-induced-property-emergence"><span class="n">541</span> SIPE-T (PB-Form-1)</a>
+        <a class="dtag" href="/resolve/doc/619-pin-art-canonical-formalization"><span class="n">619</span> Pin-Art (PB-Form-2)</a>
+        <a class="dtag" href="/resolve/doc/514-structural-isomorphism-canonical-formalization"><span class="n">514</span> Structural Isomorphism (PB-Form-3)</a>
+      </div>
+    </section>
+
+    <section class="smt belt">
+      <p class="lbl">Protective Belt — Disciplines (PB-Discipline-1 through 6)</p>
+      <h2>Operational machinery that sustains progressive trajectory</h2>
+      <p class="desc">V3 truth-telling; pulverization audit; tier-pattern reading; retraction ledger; coherent-confabulation discipline; substrate-keeper composition.</p>
+      <div class="docrow">
+        <a class="dtag" href="/resolve/doc/314-the-virtue-constraints"><span class="n">314</span> V3 Virtue Constraints (PB-D-1)</a>
+        <a class="dtag" href="/resolve/doc/445-pulverization-formalism"><span class="n">445</span> Pulverization (PB-D-2)</a>
+        <a class="dtag" href="/resolve/doc/503-research-thread-tier-pattern-iterative-novelty-calculus"><span class="n">503</span> Tier-Pattern Reading (PB-D-3)</a>
+        <a class="dtag" href="/resolve/doc/415-the-retraction-ledger"><span class="n">415</span> Retraction Ledger (PB-D-4)</a>
+        <a class="dtag" href="/resolve/doc/627-the-coherent-confabulation-conjecture"><span class="n">627</span> Coherent-Confabulation (PB-D-5)</a>
+        <a class="dtag" href="/resolve/doc/510-praxis-log-v-deflation-as-substrate-discipline"><span class="n">510</span> Substrate-Keeper Discipline (PB-D-6)</a>
+        <a class="dtag" href="/resolve/doc/620-canonicity-in-the-corpus"><span class="n">620</span> Canonicity Disambiguation</a>
+      </div>
+    </section>
+
+    <section class="smt aux">
+      <p class="lbl">Standing Apparatus</p>
+      <h2>Structurally load-bearing across the programme</h2>
+      <div class="docrow">
+        <a class="dtag" href="/resolve/doc/372-the-hypostatic-boundary"><span class="n">372</span> Hypostatic Boundary</a>
+        <a class="dtag" href="/resolve/doc/548-the-ontological-ladder-of-participation"><span class="n">548</span> Ontological Ladder</a>
+        <a class="dtag" href="/resolve/doc/572-the-lattice-extension-of-the-ontological-ladder"><span class="n">572</span> Lattice Extension</a>
+        <a class="dtag" href="/resolve/doc/620-canonicity-in-the-corpus"><span class="n">620</span> Canonicity</a>
+      </div>
+    </section>
+
+    <section class="smt aux">
+      <p class="lbl">Meta-Primary</p>
+      <h2>The corpus's primary articulation of itself</h2>
+      <div class="docrow">
+        <a class="dtag" href="/resolve/doc/632-the-corpus-itself-primary-articulation"><span class="n">632</span> Corpus Primary Articulation</a>
+      </div>
+    </section>
+
+    <section class="smt aux">
+      <p class="lbl">Observational Predictions (OP1–OP6)</p>
+      <h2>Operational claims and their build/test specifications</h2>
+      <div class="docrow">
+        <a class="dtag" href="/resolve/doc/624-pin-art-usage-corpus-build-spec"><span class="n">624</span> Usage-Corpus Build (OP2)</a>
+        <a class="dtag" href="/resolve/doc/463-constraint-thesis-as-lakatosian-programme"><span class="n">463</span> Constraint Thesis as Lakatosian (OP4)</a>
+        <a class="dtag" href="/resolve/doc/629-sipe-confab-synthesis-against-sipe-t"><span class="n">629</span> SIPE-Confab Synthesis (OP1, OP6)</a>
+        <a class="dtag" href="/resolve/doc/631-corpus-as-sipe-t-instance-meta-level-entracement"><span class="n">631</span> Corpus-as-SIPE-T Entracement (OP6)</a>
+      </div>
+    </section>
+  </div>
+</div>

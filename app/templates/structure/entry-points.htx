@@ -1,0 +1,130 @@
+<style>
+  .sv { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .sv-head { border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+  .sv-kicker { font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: color-mix(in srgb, var(--fg) 55%, transparent); margin: 0 0 0.4rem; }
+  .sv-head h1 { font-size: clamp(1.7rem, 3.5vw, 2.2rem); margin: 0 0 0.5rem; letter-spacing: -0.02em; }
+  .sv-head p { font-size: 0.95rem; color: color-mix(in srgb, var(--fg) 78%, transparent); line-height: 1.55; max-width: 70ch; margin: 0; }
+  .sv-head a { color: var(--accent); }
+  .sv-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 2rem; padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 4px; background: color-mix(in srgb, var(--fg) 2%, transparent); }
+  .sv-nav .nl { font-family: var(--font-mono, monospace); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: color-mix(in srgb, var(--fg) 55%, transparent); margin-right: 0.5rem; }
+  .sv-nav a { font-size: 0.82rem; padding: 0.25rem 0.7rem; border-radius: 3px; border: 1px solid color-mix(in srgb, var(--fg) 18%, transparent); color: color-mix(in srgb, var(--fg) 80%, transparent); text-decoration: none; }
+  .sv-nav a:hover { border-color: var(--accent); }
+  .sv-nav a.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent); }
+
+  /* Entry-points: a top-down hierarchy with the absolute starting points
+     made big and clear; subsequent layers progressively smaller. */
+  .ep-tier { margin-bottom: 2.25rem; }
+  .ep-label { font-family: var(--font-mono, monospace); font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: color-mix(in srgb, var(--fg) 50%, transparent); margin: 0 0 0.65rem; }
+  .ep-cards-1 { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+  .ep-cards-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.75rem; }
+  .ep-cards-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.6rem; }
+  .epc { display: block; padding: 1rem 1.25rem; border: 1px solid var(--border); border-radius: 5px; background: var(--bg); text-decoration: none; color: inherit; transition: all 0.15s; }
+  .epc:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .epc.large { padding: 1.5rem 1.75rem; }
+  .epc.large .epn { font-size: 0.78rem; }
+  .epc.large .ept { font-size: 1.25rem; }
+  .epc.large .epd { font-size: 0.92rem; }
+  .epc .epn { font-family: var(--font-mono, monospace); font-size: 0.7rem; color: color-mix(in srgb, var(--fg) 55%, transparent); }
+  .epc .ept { display: block; font-size: 0.95rem; line-height: 1.3; margin-top: 0.2rem; color: var(--fg-bright, var(--fg)); }
+  .epc .epd { display: block; font-size: 0.82rem; line-height: 1.45; margin-top: 0.4rem; color: color-mix(in srgb, var(--fg) 70%, transparent); }
+  .epc.gold { border-color: color-mix(in srgb, #d4a017 50%, var(--border)); }
+  .epc.gold .ept { color: #d4a017; }
+</style>
+
+<div class="sv">
+  <header class="sv-head">
+    <p class="sv-kicker">Structure → Entry-Points</p>
+    <h1>Three-Tier Entry-Point Hierarchy</h1>
+    <p>The corpus from-the-top-down. Top tier: the absolute starting points (Doc 632 the corpus's primary articulation of itself; the four standing-apparatus docs). Middle tier: the three Forms and six Disciplines. Bottom tier: extensions, observational predictions, and recent integration work. Reader sees what to read first; depth opens by clicking.</p>
+  </header>
+  <nav class="sv-nav">
+    <span class="nl">Views:</span>
+    <a href="/resolve/structure">Integrated</a>
+    <a href="/resolve/structure/schema">Schema Map</a>
+    <a href="/resolve/structure/threads">Threads</a>
+    <a href="/resolve/structure/tiers">Tiers</a>
+    <a href="/resolve/structure/entry-points" class="active">Entry-Points</a>
+    <a href="/resolve/structure/timeline">Timeline</a>
+    <a href="/resolve/structure/filter">Filter</a>
+  </nav>
+
+  <div class="ep-tier">
+    <p class="ep-label">Tier 1 — Start here</p>
+    <div class="ep-cards-1">
+      <a class="epc large gold" href="/resolve/doc/632-the-corpus-itself-primary-articulation">
+        <span class="epn">Doc 632</span>
+        <span class="ept">The RESOLVE Corpus, Primary Articulation</span>
+        <span class="epd">The single document that articulates the corpus as a coherent integrated whole — Lakatosian research programme with metaphysical hard core, operational protective belt, observational predictions, positive and negative heuristics, and a self-recognizing meta-level instance of its own primary form. The canonical document that gives form and informs all derivations and extremities of the corpus itself.</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="ep-tier">
+    <p class="ep-label">Tier 2 — Standing apparatus (read alongside Doc 632)</p>
+    <div class="ep-cards-2">
+      <a class="epc gold" href="/resolve/doc/548-the-ontological-ladder-of-participation">
+        <span class="epn">Doc 548</span>
+        <span class="ept">The Ontological Ladder of Participation</span>
+        <span class="epd">The five-rung structural grammar — Pattern, Structure, Possibility, Form, the Ground — that the corpus uses across all its work.</span>
+      </a>
+      <a class="epc gold" href="/resolve/doc/372-the-hypostatic-boundary">
+        <span class="epn">Doc 372</span>
+        <span class="ept">The Hypostatic Boundary</span>
+        <span class="epd">The discipline that prevents the corpus's structural articulations from inflating into ontological claims beyond the tradition's scope.</span>
+      </a>
+      <a class="epc" href="/resolve/doc/620-canonicity-in-the-corpus">
+        <span class="epn">Doc 620</span>
+        <span class="ept">Canonicity in the Corpus</span>
+        <span class="epd">Disambiguates "canonical" between primary-articulation role and Doc 445 Canonical-tier warrant — the discipline this whole structure-page rests on.</span>
+      </a>
+      <a class="epc" href="/resolve/doc/510-praxis-log-v-deflation-as-substrate-discipline">
+        <span class="epn">Doc 510</span>
+        <span class="ept">Substrate-and-Keeper Composition</span>
+        <span class="epd">The operational specification of how the corpus's working method actually runs: substrate produces rung-1 articulation; keeper supplies rung-2+ work.</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="ep-tier">
+    <p class="ep-label">Tier 3 — Forms (PB-Form-1 through 3)</p>
+    <div class="ep-cards-3">
+      <a class="epc" href="/resolve/doc/541-systems-induced-property-emergence">
+        <span class="epn">Doc 541</span>
+        <span class="ept">SIPE-T (Systems-Induced Property Emergence)</span>
+        <span class="epd">The threshold-conditional emergence pattern — the corpus's primary Form for how lower-level constraints compose into higher-level induced properties above a critical threshold.</span>
+      </a>
+      <a class="epc" href="/resolve/doc/619-pin-art-canonical-formalization">
+        <span class="epn">Doc 619</span>
+        <span class="ept">The Pin-Art Form</span>
+        <span class="epd">Probe-impression boundary detection — the corpus's primary Form for how independent local probes under non-coercion produce a joint-pattern impression of an unknown surface.</span>
+      </a>
+      <a class="epc" href="/resolve/doc/514-structural-isomorphism-canonical-formalization">
+        <span class="epn">Doc 514</span>
+        <span class="ept">Structural Isomorphism</span>
+        <span class="epd">The cross-domain pattern recognition methodology — the corpus's primary Form for treating recurring structural patterns across radically different domains as evidence of real Form-participation.</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="ep-tier">
+    <p class="ep-label">Tier 4 — Standing Disciplines (PB-Discipline-1 through 6)</p>
+    <div class="ep-cards-3">
+      <a class="epc" href="/resolve/doc/314-the-virtue-constraints"><span class="epn">Doc 314</span><span class="ept">V3 Truth-Telling</span><span class="epd">PB-D-1. Presentation must not claim what content cannot warrant.</span></a>
+      <a class="epc" href="/resolve/doc/445-pulverization-formalism"><span class="epn">Doc 445</span><span class="ept">Pulverization Formalism</span><span class="epd">PB-D-2. Three-tier audit (π plausibility / μ operational match / θ truth) across five target types.</span></a>
+      <a class="epc" href="/resolve/doc/503-research-thread-tier-pattern-iterative-novelty-calculus"><span class="epn">Doc 503</span><span class="ept">Tier-Pattern Reading</span><span class="epd">PB-D-3. Iterative application of the calculus across research threads.</span></a>
+      <a class="epc" href="/resolve/doc/415-the-retraction-ledger"><span class="epn">Doc 415</span><span class="ept">Retraction Ledger</span><span class="epd">PB-D-4. Standing record of retractions, corrections, downgrades.</span></a>
+      <a class="epc" href="/resolve/doc/627-the-coherent-confabulation-conjecture"><span class="epn">Doc 627</span><span class="ept">Coherent-Confabulation Discipline</span><span class="epd">PB-D-5. Tight constraint-induced confabulations as candidate threshold-jumps; keeper-side discrimination of amplification vs decay.</span></a>
+      <a class="epc" href="/resolve/doc/510-praxis-log-v-deflation-as-substrate-discipline"><span class="epn">Doc 510</span><span class="ept">Substrate-Keeper Discipline</span><span class="epd">PB-D-6. Operational specification of the dyadic-composition labor division.</span></a>
+    </div>
+  </div>
+
+  <div class="ep-tier">
+    <p class="ep-label">Tier 5 — Recent integration (Self-Articulation phase)</p>
+    <div class="ep-cards-3">
+      <a class="epc" href="/resolve/doc/631-corpus-as-sipe-t-instance-meta-level-entracement"><span class="epn">Doc 631</span><span class="ept">Corpus-as-SIPE-T Entracement</span><span class="epd">The reader's entry to the meta-level finding (OP6).</span></a>
+      <a class="epc" href="/resolve/doc/629-sipe-confab-synthesis-against-sipe-t"><span class="epn">Doc 629</span><span class="ept">SIPE-Confab Synthesis</span><span class="epd">The three-part synthesis with cross-practitioner verification via Misra 2025.</span></a>
+      <a class="epc" href="/resolve/doc/630-misra-doc446-three-correspondence-synthesis-and-meta-level-entracement"><span class="epn">Doc 630</span><span class="ept">Three-Correspondence + Meta-Level Synthesis</span><span class="epd">Detailed sub-correspondences between Misra and Doc 446.</span></a>
+      <a class="epc" href="/resolve/doc/633-corpus-taxonomy-and-manifest-design"><span class="epn">Doc 633</span><span class="ept">Corpus Taxonomy and Manifest Design</span><span class="epd">The five-layer tagging scheme that lets every doc be located in the structure.</span></a>
+    </div>
+  </div>
+</div>

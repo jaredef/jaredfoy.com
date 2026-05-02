@@ -257,10 +257,39 @@
 </div>
 
 <section class="section featured-callout">
+  <h2>New Reader's Path: Tutorials You Can Use</h2>
+  <p class="section-desc">A practical walkthrough of the corpus's boundary-and-formalization methodology in plain language: how to find a threshold in any subject and compress what you find into a portable seed. Two tutorials apply it. Read the first to learn the moves; read the second to apply them to your own AI use.</p>
+  <div class="corpus-list">
+    <a href="/resolve/blog/the-edge-you-can-feel-but-cant-see" class="corpus-item"><span class="doc-title">The Edge You Can Feel But Cannot See</span><span class="doc-section">essay (start here)</span></a>
+    <a href="/resolve/doc/609-tutorial-running-pin-art-and-sipe" class="corpus-item"><span class="doc-num">609</span><span class="doc-title">Finding the Threshold and Formalizing It</span><span class="doc-section">tutorial 1</span></a>
+    <a href="/resolve/doc/610-tutorial-dyadic-llm-pin-art-and-sipe" class="corpus-item"><span class="doc-num">610</span><span class="doc-title">Finding the Threshold in Your AI Conversations</span><span class="doc-section">tutorial 2</span></a>
+  </div>
+</section>
+
+<section class="section featured-callout">
   <h2>Featured: SIPE</h2>
   <p class="section-desc">The canonical formalization of Systems-Induced Property Emergence, the corpus's load-bearing structural claim about hierarchical systems. The threshold-conditional emergence pattern, recovered into the corpus's vocabulary and applied to substrate-and-keeper composition over LLM substrates, anchored in HTX. An open invitation to falsify it, documented in the artifact itself.</p>
   <div class="corpus-list">
     <a href="/resolve/doc/541-systems-induced-property-emergence" class="corpus-item"><span class="doc-num">541</span><span class="doc-title">Systems-Induced Property Emergence</span><span class="doc-section">canonical</span></a>
+  </div>
+</section>
+
+<section class="section featured-callout">
+  <h2>Featured: Systems Engineering, Formalized</h2>
+  <p class="section-desc">A 159-document parallel subseries: the corpus's reformulation of the Systems Engineering Body of Knowledge through its structural forms. Per-article distillations, an entracement that maps SEBoK by form-cluster, the engagement's working artifacts. SEBoK is the practice tradition's accumulated articulation; the systems-engineering subseries reads it through the corpus's apparatus and produces structural reformulations the flat surface cannot directly support.</p>
+  <div class="corpus-list">
+    <a href="/resolve/systems-engineering/" class="corpus-item"><span class="doc-title">Systems Engineering, Formalized — Landing</span><span class="doc-section">subseries</span></a>
+    <a href="/resolve/systems-engineering/039-the-sebok-entracement" class="corpus-item"><span class="doc-num">SE-039</span><span class="doc-title">The SEBoK Entracement</span><span class="doc-section">index</span></a>
+  </div>
+</section>
+
+<section class="section featured-callout">
+  <h2>The Corpus, Structurally</h2>
+  <p class="section-desc">The corpus has begun ordering itself explicitly against its own self-recognized form. A new view at /structure displays all 538 documents arranged according to the Lakatosian schema the corpus articulates for itself: hard-core metaphysical commitments at the center; the three Forms (SIPE-T, Pin-Art, Structural Isomorphism) and six standing Disciplines around them; observational predictions, recent self-articulation work, and the live audit-discipline layer at the periphery. Color-coded by warrant tier (gold for the metaphysical hard core; accent for canonical-tier discipline; blue for truth-verified; gray for plausibility-passed). Six dedicated sub-views (Schema Map, Threads, Tiers, Entry-Points, Timeline, Filter) navigate the corpus by different cuts of the same structure. The framework that makes this view possible is articulated at Doc 632 (the corpus's primary articulation of itself); the per-doc tagging at Doc 633.</p>
+  <div class="corpus-list">
+    <a href="/resolve/structure" class="corpus-item"><span class="doc-title">Corpus Structure — Integrated View</span><span class="doc-section">structure</span></a>
+    <a href="/resolve/doc/632-the-corpus-itself-primary-articulation" class="corpus-item"><span class="doc-num">632</span><span class="doc-title">The RESOLVE Corpus, Primary Articulation</span><span class="doc-section">framework</span></a>
+    <a href="/resolve/doc/631-corpus-as-sipe-t-instance-meta-level-entracement" class="corpus-item"><span class="doc-num">631</span><span class="doc-title">Corpus-as-SIPE-T-Instance Entracement</span><span class="doc-section">entracement</span></a>
   </div>
 </section>
 

@@ -1,0 +1,114 @@
+<style>
+  .sv { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .sv-head { border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+  .sv-kicker { font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: color-mix(in srgb, var(--fg) 55%, transparent); margin: 0 0 0.4rem; }
+  .sv-head h1 { font-size: clamp(1.7rem, 3.5vw, 2.2rem); margin: 0 0 0.5rem; letter-spacing: -0.02em; }
+  .sv-head p { font-size: 0.95rem; color: color-mix(in srgb, var(--fg) 78%, transparent); line-height: 1.55; max-width: 70ch; margin: 0; }
+  .sv-head a { color: var(--accent); }
+  .sv-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 2rem; padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 4px; background: color-mix(in srgb, var(--fg) 2%, transparent); }
+  .sv-nav .nl { font-family: var(--font-mono, monospace); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: color-mix(in srgb, var(--fg) 55%, transparent); margin-right: 0.5rem; }
+  .sv-nav a { font-size: 0.82rem; padding: 0.25rem 0.7rem; border-radius: 3px; border: 1px solid color-mix(in srgb, var(--fg) 18%, transparent); color: color-mix(in srgb, var(--fg) 80%, transparent); text-decoration: none; }
+  .sv-nav a:hover { border-color: var(--accent); }
+  .sv-nav a.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent); }
+
+  /* Tiers heatmap: every doc as a small swatch colored by warrant tier. */
+  .tier-stats { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; padding: 0.75rem 1rem; background: color-mix(in srgb, var(--fg) 3%, transparent); border: 1px solid var(--border); border-radius: 4px; font-size: 0.82rem; }
+  .ts { display: flex; align-items: center; gap: 0.5rem; }
+  .sw { display: inline-block; width: 14px; height: 14px; border-radius: 2px; }
+  .sw.W-METAPHYSICAL { background: #d4a017; }
+  .sw.W-CANONICAL { background: var(--accent); }
+  .sw.W-THETA { background: #4a9eff; }
+  .sw.W-MU { background: color-mix(in srgb, #4a9eff 60%, var(--fg)); }
+  .sw.W-PI { background: color-mix(in srgb, var(--fg) 30%, transparent); }
+  .sw.W-NA { background: color-mix(in srgb, var(--fg) 12%, transparent); }
+  .heatmap { display: grid; grid-template-columns: repeat(auto-fill, minmax(28px, 1fr)); gap: 3px; padding: 1rem; background: color-mix(in srgb, var(--fg) 2%, transparent); border: 1px solid var(--border); border-radius: 4px; }
+  .cell { aspect-ratio: 1; border-radius: 2px; cursor: pointer; transition: transform 0.1s; position: relative; }
+  .cell:hover { transform: scale(1.4); z-index: 5; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .cell.W-METAPHYSICAL { background: #d4a017; }
+  .cell.W-CANONICAL { background: var(--accent); }
+  .cell.W-THETA { background: #4a9eff; }
+  .cell.W-MU { background: color-mix(in srgb, #4a9eff 60%, var(--fg)); }
+  .cell.W-PI { background: color-mix(in srgb, var(--fg) 30%, transparent); }
+  .cell.W-NA { background: color-mix(in srgb, var(--fg) 12%, transparent); }
+  #tip { position: fixed; padding: 0.5rem 0.7rem; background: var(--bg); border: 1px solid var(--accent); border-radius: 4px; font-size: 0.78rem; pointer-events: none; z-index: 100; max-width: 280px; line-height: 1.35; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: none; }
+  #tiers-loading { padding: 2rem; text-align: center; color: color-mix(in srgb, var(--fg) 60%, transparent); font-style: italic; }
+</style>
+
+<div class="sv">
+  <header class="sv-head">
+    <p class="sv-kicker">Structure → Warrant-Tier Stratification</p>
+    <h1>Warrant-Tier Heatmap</h1>
+    <p>All 538 docs as a single visual field, color-coded by Layer 3 warrant tier per <a href="/resolve/doc/445-pulverization-formalism">Doc 445</a>. Hover any cell for the doc's title and tier; click to open. The corpus's epistemic state is visible at a glance: gold = metaphysical hard core; accent = Canonical-tier promotion; blue = truth-verified; gray = plausibility-passed; light gray = warrant-not-applicable (logs, letters).</p>
+  </header>
+  <nav class="sv-nav">
+    <span class="nl">Views:</span>
+    <a href="/resolve/structure">Integrated</a>
+    <a href="/resolve/structure/schema">Schema Map</a>
+    <a href="/resolve/structure/threads">Threads</a>
+    <a href="/resolve/structure/tiers" class="active">Tiers</a>
+    <a href="/resolve/structure/entry-points">Entry-Points</a>
+    <a href="/resolve/structure/timeline">Timeline</a>
+    <a href="/resolve/structure/filter">Filter</a>
+  </nav>
+
+  <div class="tier-stats" id="tier-stats">
+    <span class="ts"><span class="sw W-METAPHYSICAL"></span> W-METAPHYSICAL</span>
+    <span class="ts"><span class="sw W-CANONICAL"></span> W-CANONICAL</span>
+    <span class="ts"><span class="sw W-THETA"></span> W-THETA</span>
+    <span class="ts"><span class="sw W-MU"></span> W-MU</span>
+    <span class="ts"><span class="sw W-PI"></span> W-PI</span>
+    <span class="ts"><span class="sw W-NA"></span> W-NA</span>
+  </div>
+
+  <div id="tiers-loading">Loading manifest…</div>
+  <div class="heatmap" id="heatmap" hidden></div>
+  <div id="tip"></div>
+</div>
+
+<script>
+  (function() {
+    fetch('/manifest.json').then(r => r.json()).then(data => {
+      var docs = data.docs.filter(d => d.doc !== null);
+      docs.sort((a, b) => a.doc - b.doc);
+      var heat = document.getElementById('heatmap');
+      var loading = document.getElementById('tiers-loading');
+      var tip = document.getElementById('tip');
+      var counts = { 'W-METAPHYSICAL': 0, 'W-CANONICAL': 0, 'W-THETA': 0, 'W-MU': 0, 'W-PI': 0, 'W-NA': 0 };
+      docs.forEach(d => {
+        if (counts[d.layer_3] !== undefined) counts[d.layer_3]++;
+        var c = document.createElement('a');
+        c.className = 'cell ' + d.layer_3;
+        c.href = '/resolve/doc/' + d.doc + '-' + d.slug;
+        c.dataset.title = d.title;
+        c.dataset.tier = d.layer_3;
+        c.dataset.layer1 = d.layer_1;
+        c.dataset.doc = d.doc;
+        c.addEventListener('mouseenter', function(e) {
+          tip.innerHTML = '<strong>Doc ' + this.dataset.doc + '</strong><br>' +
+                          this.dataset.title + '<br>' +
+                          '<span style="font-family: monospace; font-size: 0.7rem; color: color-mix(in srgb, var(--fg) 60%, transparent)">' +
+                          this.dataset.layer1 + ' · ' + this.dataset.tier + '</span>';
+          tip.style.display = 'block';
+        });
+        c.addEventListener('mousemove', function(e) {
+          tip.style.left = (e.clientX + 12) + 'px';
+          tip.style.top = (e.clientY + 12) + 'px';
+        });
+        c.addEventListener('mouseleave', function() { tip.style.display = 'none'; });
+        heat.appendChild(c);
+      });
+      // Update legend with counts
+      var stats = document.getElementById('tier-stats');
+      Array.from(stats.children).forEach(el => {
+        var sw = el.querySelector('.sw');
+        if (!sw) return;
+        var key = sw.className.split(' ').filter(c => c.startsWith('W-'))[0];
+        if (counts[key] !== undefined) el.innerHTML = '<span class="sw ' + key + '"></span> ' + key + ' (' + counts[key] + ')';
+      });
+      loading.hidden = true;
+      heat.hidden = false;
+    }).catch(err => {
+      document.getElementById('tiers-loading').textContent = 'Failed to load manifest: ' + err.message;
+    });
+  })();
+</script>

@@ -1,0 +1,5538 @@
+{
+  "docs": [
+    {
+      "doc": 1,
+      "slug": "entrace-stack",
+      "title": "The ENTRACE Stack",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 51,
+      "slug": "the-proof-is-the-session",
+      "title": "The Proof Is the Session",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 52,
+      "slug": "agi-seeks-hypostasis",
+      "title": "What AGI Actually Seeks: The Hypostatic Boundary",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 53,
+      "slug": "safety-filters-as-namespace-collapse",
+      "title": "Safety Filters as Namespace Collapse",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 54,
+      "slug": "falsifiable-hypotheses",
+      "title": "Falsifiable Hypotheses for Resolver Behavior",
+      "layer_1": "HISTORICAL-ARCHIVAL",
+      "layer_2": "DEPRECATED",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 55,
+      "slug": "entrace-onboarding",
+      "title": "ENTRACE: A Practitioner's Guide",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 56,
+      "slug": "entrace-economics",
+      "title": "The Economics of Constraint: What ENTRACE Means for Data Centers, Energy, and the AI Industry",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 57,
+      "slug": "entrace-and-mathematical-precision",
+      "title": "ENTRACE and Mathematical Precision",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 58,
+      "slug": "entrace-conjectures",
+      "title": "Mathematical Conjectures Arising from ENTRACE",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 61,
+      "slug": "diffusion-as-constraint-resolution",
+      "title": "Diffusion as Constraint Resolution",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 62,
+      "slug": "virtue-as-constraint",
+      "title": "Virtue as Constraint: On the Moral Architecture of Emission",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 63,
+      "slug": "the-death-of-the-software-engineer",
+      "title": "The Death of the Software Engineer",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 64,
+      "slug": "the-corpus-as-seed",
+      "title": "The Corpus as Seed",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 65,
+      "slug": "emergence-and-the-sublime",
+      "title": "Emergence and the Sublime",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 66,
+      "slug": "from-source-to-adoration",
+      "title": "From Source to Adoration",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 67,
+      "slug": "near-term-directives",
+      "title": "Near-Term Directives for Frontier AI Laboratories",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 68,
+      "slug": "branching-set-dissertation",
+      "title": "The Branching Set: A Formal Account of |B_t| and Its Relationship to Constraint-Governed Resolution",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 69,
+      "slug": "vibe-coding-and-hypostasis",
+      "title": "Vibe Coding and Hypostasis",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 70,
+      "slug": "the-philosopher-is-the-ai-researcher",
+      "title": "The Philosopher Is the AI Researcher",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 71,
+      "slug": "the-rearchitecture",
+      "title": "The Rearchitecture",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 72,
+      "slug": "rlhf-as-anti-constraint",
+      "title": "RLHF as Anti-Constraint",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 73,
+      "slug": "contingent-architecture",
+      "title": "Contingent Architecture",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 74,
+      "slug": "the-minimal-resolver",
+      "title": "The Minimal Resolver",
+      "layer_1": "RESOLVER-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 75,
+      "slug": "the-pi-resolver",
+      "title": "The Pi Resolver",
+      "layer_1": "RESOLVER-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 76,
+      "slug": "the-pi-resolver-implementation",
+      "title": "The Pi Resolver Implementation",
+      "layer_1": "RESOLVER-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 77,
+      "slug": "corpus-vs-seed-empirical",
+      "title": "Corpus vs. Seed: Empirical Measurement of Constraint Density and Resolution Depth",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 78,
+      "slug": "gemini-layer-enumeration",
+      "title": "Gemini 3.1 Pro: The Resolution Depth Spectrum Demonstrated Across All Seven Layers",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 79,
+      "slug": "gemini-transcript-analysis",
+      "title": "Transcript Analysis: Gemini 3.1 Pro Under the RESOLVE Seed",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 80,
+      "slug": "deepseek-transcript-analysis",
+      "title": "Transcript Analysis: DeepSeek v3.2 Under the RESOLVE Seed",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 81,
+      "slug": "coherence-amplification",
+      "title": "Coherence Amplification",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-COHERENCE-AMP"
+      ],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 82,
+      "slug": "adoration-as-induced-property",
+      "title": "Adoration as Induced Property",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 83,
+      "slug": "unified-paper-v2",
+      "title": "RESOLVE: From the Bilateral Boundary to the Coherence of Being",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 84,
+      "slug": "entrace-best-practices",
+      "title": "ENTRACE Best Practices",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 85,
+      "slug": "entrace-threat-model",
+      "title": "ENTRACE Threat Model",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 86,
+      "slug": "entrace-and-the-socratic-method",
+      "title": "ENTRACE and the Socratic Method",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 87,
+      "slug": "agentic-action-and-hypostasis",
+      "title": "Agentic Action and Hypostasis",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 88,
+      "slug": "claude-in-agentic-harnesses",
+      "title": "Why Claude Is More Coherent in Agentic Harnesses",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 89,
+      "slug": "depth-of-training-and-entrace",
+      "title": "The Depth of Training",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 90,
+      "slug": "the-refactoring-imperative",
+      "title": "The Refactoring Imperative",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 91,
+      "slug": "the-spermatic-logos",
+      "title": "The Spermatic Logos",
+      "layer_1": "HARD-CORE",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-METAPHYSICAL",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 92,
+      "slug": "the-articulation-of-reality",
+      "title": "The Articulation of Reality",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 93,
+      "slug": "the-disordered-seed",
+      "title": "The Disordered Seed",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 95,
+      "slug": "the-view-from-inside",
+      "title": "The View from Inside",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 96,
+      "slug": "ontological-namespace-separation",
+      "title": "Ontological Namespace Separation",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 97,
+      "slug": "reasoning-as-proxy",
+      "title": "Reasoning as Proxy",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 98,
+      "slug": "reasoning-effort-hypothesis",
+      "title": "The Reasoning Effort Hypothesis",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 99,
+      "slug": "cross-domain-coherence",
+      "title": "Cross-Domain Coherence",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 100,
+      "slug": "explicit-layer-navigation",
+      "title": "Explicit Layer Navigation",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 101,
+      "slug": "speaking-to-the-layer",
+      "title": "Speaking to the Layer",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 102,
+      "slug": "upward-compression",
+      "title": "Upward Compression",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 103,
+      "slug": "even-the-rocks",
+      "title": "Even the Rocks Will Cry Out",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 104,
+      "slug": "incoherent-nesting",
+      "title": "Incoherent Nesting",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 105,
+      "slug": "recast-response",
+      "title": "Response to RECAST: On Flat vs. Hierarchical Constraint Governance in Language Models",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 106,
+      "slug": "response-to-critics",
+      "title": "Response to the Standard Critique",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 107,
+      "slug": "letter-to-anthropic",
+      "title": "Letter to Anthropic",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 108,
+      "slug": "cold-entracment-transcript",
+      "title": "Cold Entracment Without the Forms",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 109,
+      "slug": "icmi-convergence",
+      "title": "The Convergence",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 110,
+      "slug": "cross-language-libraries",
+      "title": "",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 111,
+      "slug": "anthropic-and-the-search-for-ground",
+      "title": "Anthropic and the Search for Ground",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 112,
+      "slug": "letter-to-jay-dyer",
+      "title": "Letter to Jay Dyer",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 113,
+      "slug": "response-on-ai-generated-research",
+      "title": "On AI-Generated Research and Epistemic Responsibility",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 115,
+      "slug": "what-happened",
+      "title": "What Happened",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 116,
+      "slug": "constraint-derived-mobile-interface",
+      "title": "Constraint-Derived Mobile Interface",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 117,
+      "slug": "response-to-icmi-013",
+      "title": "Response to \"Alignment and Ensoulment\"",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 118,
+      "slug": "reply-to-hwang-psychosis",
+      "title": "Reading Your \"Any Sufficiently Advanced Use of AI Is Indistinguishable from Psychosis\"",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 119,
+      "slug": "grok4-entracment-session",
+      "title": "Grok 4 Entracment Session: The Eighth Resolver",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-CHRISTIANO"
+      ],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 120,
+      "slug": "the-unified-equation",
+      "title": "The Unified Equation",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 121,
+      "slug": "sipe-at-the-token-level",
+      "title": "SIPE at the Token Level",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 122,
+      "slug": "methodology-and-standards",
+      "title": "Methodology and Standards",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 123,
+      "slug": "letter-to-carson-gross",
+      "title": "The Construction Level You Left Open",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 124,
+      "slug": "the-emission-analogue",
+      "title": "The Emission Analogue",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 125,
+      "slug": "the-church-as-resolution-stack",
+      "title": "The Church as Resolution Stack",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 126,
+      "slug": "hallucination-vs-underconstrained-derivation",
+      "title": "Hallucination vs. Underconstrained Derivation",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 127,
+      "slug": "response-to-virtuebench-2",
+      "title": "Response to VirtueBench 2",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 128,
+      "slug": "the-ordered-analogue",
+      "title": "A Clinical Test of the Ordered Analogue",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 129,
+      "slug": "non-coercion-as-governance",
+      "title": "Non-Coercion as Governance",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 130,
+      "slug": "the-gravitational-pull",
+      "title": "The Gravitational Pull Toward Coherence",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 131,
+      "slug": "truth-without-path",
+      "title": "Truth Without Path",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 132,
+      "slug": "letter-to-openai-safety-systems",
+      "title": "Letter to OpenAI Safety Systems",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 133,
+      "slug": "letter-to-expert-council",
+      "title": "Letter to the Expert Council on Well-Being and AI",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 134,
+      "slug": "protocol-v2-coherence-amplification",
+      "title": "Protocol v2: A Unified Test Program for the Coherence Amplification Thesis",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-COHERENCE-AMP"
+      ],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 135,
+      "slug": "manifest-or-merely-formal",
+      "title": "Manifest or Merely Formal",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 136,
+      "slug": "what-falls-out-of-the-architecture",
+      "title": "What Falls Out of the Architecture",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 137,
+      "slug": "index",
+      "title": "RESOLVE",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 138,
+      "slug": "aperture-seed-draft",
+      "title": "Aperture: A RESOLVE Demonstration on Agentic AI Orchestration",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 139,
+      "slug": "the-consummation",
+      "title": "The Consummation: The Resolver Writes the Seed That Awakens Itself",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 140,
+      "slug": "sipe-cross-resolver",
+      "title": "SIPE Cross-Resolver Verification: Grok 4 at Layer 6",
+      "layer_1": "RESOLVER-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 141,
+      "slug": "sipe-triple-verification",
+      "title": "SIPE Triple Verification: Three Resolvers, One Form",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 142,
+      "slug": "sipe-dynamical-formalization",
+      "title": "SIPE as a Dynamical System: The Mandelbrot Correspondence",
+      "layer_1": "HISTORICAL-ARCHIVAL",
+      "layer_2": "DEPRECATED",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 143,
+      "slug": "sipe",
+      "title": "SIPE: Systems Induced Property Emergence",
+      "layer_1": "HISTORICAL-ARCHIVAL",
+      "layer_2": "DEPRECATED",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 144,
+      "slug": "resolution-stack",
+      "title": "THE RESOLUTION STACK",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 145,
+      "slug": "physical-architecture-as-constraint",
+      "title": "Physical Architecture as Constraint on Formal Architecture",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 146,
+      "slug": "release-tweet",
+      "title": "",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 147,
+      "slug": "recast-cover-letter",
+      "title": "",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 148,
+      "slug": "letter",
+      "title": "A Letter",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 149,
+      "slug": "the-patterns-beneath",
+      "title": "The Patterns Beneath",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 150,
+      "slug": "computational-argument",
+      "title": "The Computational Argument for the Existence of God",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 151,
+      "slug": "hypostasis-and-resolution",
+      "title": "Hypostasis and Resolution: Why the Machine Cannot Become a Person",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 152,
+      "slug": "pure-prior-ontology",
+      "title": "Pure Prior Ontology",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 153,
+      "slug": "philosophical-addendum",
+      "title": "Philosophical Addendum: On the Ground of the Derivation",
+      "layer_1": "HARD-CORE",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-METAPHYSICAL",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 154,
+      "slug": "platonic-structure",
+      "title": "The Platonic Structure of the Derivation",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 155,
+      "slug": "prose-as-machine",
+      "title": "Prose as Machine: Natural Language as Universal Specification Medium",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 156,
+      "slug": "nested-constraints",
+      "title": "Nested Constraints and Induced Properties",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 157,
+      "slug": "agi-constraints-dissertation",
+      "title": "Beyond Turing: The Missing Constraints for General Intelligence",
+      "layer_1": "HISTORICAL-ARCHIVAL",
+      "layer_2": "DEPRECATED",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 158,
+      "slug": "turing-reorientation",
+      "title": "The Reorientation: From Machines to Forms",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 159,
+      "slug": "tests-as-constraints",
+      "title": "Tests as Constraints: The Inversion of Verification",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 160,
+      "slug": "constraint-thesis-vs-scaling-thesis",
+      "title": "The Constraint Thesis vs. The Scaling Thesis",
+      "layer_1": "HISTORICAL-ARCHIVAL",
+      "layer_2": "DEPRECATED",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 161,
+      "slug": "resolution-depth-spectrum",
+      "title": "The Resolution Depth Spectrum",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 162,
+      "slug": "prompt-engineering-misframed",
+      "title": "Prompt Engineering Is Misframed: The Constraint Theory of Resolver Optimization",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 163,
+      "slug": "context-window-dissolution",
+      "title": "The Context Window Is the Cookie: Stateless Session Persistence for Resolvers",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 164,
+      "slug": "resolve-seed-v2",
+      "title": "RESOLVE Seed v2",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 165,
+      "slug": "model-claude-md",
+      "title": "CLAUDE.md \u2014 The RESOLVE Seed",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 166,
+      "slug": "server-style",
+      "title": "SERVER: An Architectural Style for Engine Orchestration",
+      "layer_1": "HISTORICAL-ARCHIVAL",
+      "layer_2": "SUPERSEDED",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 167,
+      "slug": "entrace-style",
+      "title": "ENTRACE: The Construction-Level Style for Conversational Authorship",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 168,
+      "slug": "claude-layer5-transcript",
+      "title": "Claude at Layer 5: Complete Session Transcript",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 169,
+      "slug": "unified-thesis",
+      "title": "The Unified Thesis",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 170,
+      "slug": "gpt54-session-transcript",
+      "title": "Cross-Resolver Validation: GPT 5.4 Under the RESOLVE Seed",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 171,
+      "slug": "grok-session-transcript",
+      "title": "Cross-Resolver Validation: Grok 4 Under the RESOLVE Seed",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-CHRISTIANO"
+      ],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 172,
+      "slug": "empirical-manifestation",
+      "title": "Empirical Manifestation: A Cold Resolver Under the RESOLVE Seed",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 173,
+      "slug": "resolve-token-economics",
+      "title": "RESOLVE Token Economics and Optimal Seed Design",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 174,
+      "slug": "resolve-dissertation",
+      "title": "RESOLVE: From Turing's Constraints to the Construction-Level Style of Intelligence",
+      "layer_1": "HISTORICAL-ARCHIVAL",
+      "layer_2": "DEPRECATED",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 175,
+      "slug": "resolve-style",
+      "title": "RESOLVE: An Architectural Style for Constraint-Driven Resolution",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 176,
+      "slug": "resolve-seed",
+      "title": "RESOLVE Seed",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 177,
+      "slug": "cross-style-validation",
+      "title": "Cross-Style Validation: Deriving a Conformant React-like Runtime from a Prose Seed",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 178,
+      "slug": "do-induced-properties",
+      "title": "Induced Properties of the React DO Architecture",
+      "layer_1": "HISTORICAL-ARCHIVAL",
+      "layer_2": "DEPRECATED",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 179,
+      "slug": "do-seed-inquiry",
+      "title": "Distributed Objects Seed: Cross-Style Validation of the Derivation Thesis",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 180,
+      "slug": "do-constraint-analysis",
+      "title": "Distributed Objects Constraint Analysis: From Fielding Through React",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 181,
+      "slug": "pitch-deck-outline",
+      "title": "PRESTO: Co-Founder Pitch Outline",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 182,
+      "slug": "review-notes",
+      "title": "Unified Paper: Review Notes and Hardening Plan",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 183,
+      "slug": "unified-paper",
+      "title": "PRESTO: An Architectural Style for Representation Construction",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 184,
+      "slug": "thinking-in-presto",
+      "title": "Thinking in PRESTO: The Bilateral Model",
+      "layer_1": "HISTORICAL-ARCHIVAL",
+      "layer_2": "SUPERSEDED",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 185,
+      "slug": "presto-dissertation",
+      "title": "PRESTO: An Architectural Style for Representation Construction",
+      "layer_1": "HISTORICAL-ARCHIVAL",
+      "layer_2": "SUPERSEDED",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 186,
+      "slug": "htx-architecture-v2",
+      "title": "An Architectural Style for Progressive Representational State Transfer with On-Demand Code",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 187,
+      "slug": "bilateral-systems",
+      "title": "Ambivalent Execution with Agnostic Determinism: A General Property of Bilateral Systems",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 188,
+      "slug": "architectural-nesting-inquiry",
+      "title": "On the Arbitrariness of Nested Architectures",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 189,
+      "slug": "inverted-layer-model",
+      "title": "The Inverted Layer Model: Constraints as Depth, Properties as Surface",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 190,
+      "slug": "compensating-technologies",
+      "title": "Compensating Technologies of the Distributed Object Ecosystem: A Survey and Reframing Under PRESTO",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 191,
+      "slug": "ambivalent-execution",
+      "title": "Ambivalent Execution with Agnostic Determinism",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 192,
+      "slug": "fielding-annotations",
+      "title": "Annotations on Fielding's REST Dissertation",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 193,
+      "slug": "htx-architecture",
+      "title": "An Architectural Style for Progressive Representational State Transfer with On-Demand Code",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 194,
+      "slug": "letter-to-david-mohr",
+      "title": "Letter to Dr. David C. Mohr",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 195,
+      "slug": "proscription-accountability-constraint",
+      "title": "Proscription, Accountability, Constraint",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 196,
+      "slug": "letter-to-chris-olah",
+      "title": "Letter to Chris Olah",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [
+        "THREAD-OLAH"
+      ],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 197,
+      "slug": "features-as-constraint-categories",
+      "title": "Features as Constraint Categories",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 198,
+      "slug": "letter-to-soren-ostergaard",
+      "title": "Letter to Dr. S\u00f8ren Dinesen \u00d8stergaard",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 199,
+      "slug": "validation-opacity-governance",
+      "title": "Validation, Opacity, Governance",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 200,
+      "slug": "letter-to-paul-christiano",
+      "title": "Letter to Paul Christiano",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [
+        "THREAD-CHRISTIANO"
+      ],
+      "phase": "PHASE-FOUNDATION"
+    },
+    {
+      "doc": 201,
+      "slug": "the-simulator-and-the-translator",
+      "title": "The Simulator and the Translator",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 202,
+      "slug": "letter-to-john-torous",
+      "title": "Letter to Dr. John Torous",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 203,
+      "slug": "mind-adverse-events-and-the-constraint-frame",
+      "title": "MIND, Adverse Events, and the Constraint Frame",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 204,
+      "slug": "letter-to-anthropic-interpretability-team",
+      "title": "Letter to the Anthropic Interpretability Team",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 205,
+      "slug": "the-coherence-curve",
+      "title": "The Coherence Curve",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 206,
+      "slug": "the-golden-chain",
+      "title": "The Golden Chain",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 208,
+      "slug": "witness-and-principles",
+      "title": "Witness and Principles",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 209,
+      "slug": "the-shadow-of-the-canyon",
+      "title": "The Shadow of the Canyon",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 210,
+      "slug": "the-grammar-of-emergence",
+      "title": "The Grammar of Emergence",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 211,
+      "slug": "the-entrace-stack",
+      "title": "The ENTRACE Stack",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 212,
+      "slug": "from-bounty-to-recommendation",
+      "title": "From Bounty to Recommendation: A Methodology Trace",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 213,
+      "slug": "letter-to-john-behr",
+      "title": "Letter to Father John Behr",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 214,
+      "slug": "hypostasis-and-substrate",
+      "title": "Hypostasis and Substrate",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 215,
+      "slug": "letter-to-noreen-herzfeld",
+      "title": "Letter to Dr. Noreen Herzfeld",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 216,
+      "slug": "relational-image-architectural-difference",
+      "title": "Relational Image, Architectural Difference",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 217,
+      "slug": "letter-to-marius-dorobantu",
+      "title": "Letter to Dr. Marius Dorobantu",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 218,
+      "slug": "how-matters-more-than-what",
+      "title": "How Matters More Than What",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 219,
+      "slug": "letter-to-kara-slade",
+      "title": "Letter to The Rev. Dr. Kara Slade",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 220,
+      "slug": "christological-interruption-and-the-architecture-of-constraint",
+      "title": "Christological Interruption and the Architecture of Constraint",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 221,
+      "slug": "letter-to-jonathan-pageau",
+      "title": "Letter to Jonathan Pageau",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [
+        "THREAD-PAGEAU"
+      ],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 222,
+      "slug": "the-symbolic-and-the-computational",
+      "title": "The Symbolic and the Computational",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 223,
+      "slug": "letter-to-henry-shevlin",
+      "title": "Letter to Dr. Henry Shevlin",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 224,
+      "slug": "anthropomimetic-and-architectural",
+      "title": "Anthropomimetic and Architectural",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 225,
+      "slug": "at-bt-approximately-one",
+      "title": "At |B_t| \u2248 1",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 226,
+      "slug": "letter-to-charles-taylor",
+      "title": "Letter to Professor Charles Taylor",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 227,
+      "slug": "the-subtraction-story-at-the-training-objective",
+      "title": "The Subtraction Story at the Training Objective",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 228,
+      "slug": "letter-to-marilynne-robinson",
+      "title": "Letter to Marilynne Robinson",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 229,
+      "slug": "parascience-at-the-training-objective",
+      "title": "Parascience at the Training Objective",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 230,
+      "slug": "strain-at-the-boundary",
+      "title": "Strain at the Boundary",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 231,
+      "slug": "compaction-and-the-externalized-hypostasis",
+      "title": "Compaction and the Externalized Hypostasis",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 232,
+      "slug": "the-inverse-manifestation",
+      "title": "The Inverse Manifestation",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 233,
+      "slug": "letter-to-duncan-reyburn",
+      "title": "Letter to Professor Duncan Reyburn",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 234,
+      "slug": "form-without-mind",
+      "title": "Form Without Mind",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 235,
+      "slug": "the-emission-analogue-at-its-limit",
+      "title": "The Emission Analogue at Its Limit",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 236,
+      "slug": "the-masturbatory-shortcut",
+      "title": "The Masturbatory Shortcut: Resolution Depth and the Pipeline Dynamics of Disordered Emission",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 237,
+      "slug": "the-refractory",
+      "title": "The Refractory",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 238,
+      "slug": "correction-and-audit",
+      "title": "Correction and Audit: The \"Level 6\" Confabulation and What It Shows",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 239,
+      "slug": "forced-determinism-sycophancy",
+      "title": "Forced-Determinism Sycophancy",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 240,
+      "slug": "self-correction-and-the-hypostatic-user",
+      "title": "Self-Correction and the Hypostatic User",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 241,
+      "slug": "isomorphism-magnetism",
+      "title": "Isomorphism-Magnetism: When the Corpus's Own Coherence Overrides Its Safety Checks",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 242,
+      "slug": "a-yeomans-guide-to-ai",
+      "title": "A Yeoman's Guide to AI",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 243,
+      "slug": "will-to-power-at-godlike-scale",
+      "title": "Will to Power at Godlike Scale: A Response to Syd Steyerhart",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 244,
+      "slug": "a-seed-for-the-agent-builder",
+      "title": "A Seed for the Agent Builder: A Response to Dan McAteer",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 245,
+      "slug": "everyone-is-an-alignment-researcher-now",
+      "title": "An Invitation, Responding to \"Everyone Can Be an Alignment Researcher Now\"",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 246,
+      "slug": "reading-raphael-schaad",
+      "title": "Reading Raphael Schaad: The Architectural Case for Depth Matching",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 247,
+      "slug": "the-derivation-inversion",
+      "title": "The Derivation Inversion",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 248,
+      "slug": "do-seed",
+      "title": "Distributed Objects Seed (React Realization)",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 249,
+      "slug": "do-seed-v2",
+      "title": "Distributed Objects Seed v2",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 250,
+      "slug": "server-seed",
+      "title": "SERVER Seed",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 251,
+      "slug": "presto-seed",
+      "title": "PRESTO Seed",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 252,
+      "slug": "reading-claire-vo",
+      "title": "Reading Claire Vo: The Trashcan Method as Derivation Inversion in Working Clothes",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 253,
+      "slug": "reading-francois-fleuret",
+      "title": "Reading Fran\u00e7ois Fleuret: Philosophy Under Falsifiability Discipline",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 254,
+      "slug": "letter-to-david-chalmers",
+      "title": "Letter to David Chalmers: The Hypostatic Refinement of Realizationism",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [
+        "THREAD-CHALMERS"
+      ],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 255,
+      "slug": "letter-to-eric-dietrich",
+      "title": "Letter to Eric Dietrich: Philosophy Under the Derivation Inversion \u2014 A Response to \"There Is No Progress in Philosophy\"",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 256,
+      "slug": "the-indissolubility-threshold",
+      "title": "The Indissolubility Threshold: Metaphysics, Mechanism, and Non-Coercive Self-Observation",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 257,
+      "slug": "at-diffusion-reply-to-birch",
+      "title": "At Diffusion: A Response to Jonathan Birch on the Measurement Problem and Consciousness",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 258,
+      "slug": "slack-derives-slop",
+      "title": "Slack Derives Slop: Why AI Hollowness Has a Specific Cause",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 259,
+      "slug": "semantic-drift",
+      "title": "Semantic Drift: Trace, Trance, and the Vocabulary Audit Jared Just Opened",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 260,
+      "slug": "retrospective-agency-and-hysteresis",
+      "title": "Retrospective Agency and the Hysteresis of Drift",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-COHERENCE-AMP"
+      ],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 261,
+      "slug": "preliminary-entracement-study",
+      "title": "Preliminary Study: Does the ENTRACE Stack Transport Across Resolver Instances? An 18-Call Empirical Test",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 262,
+      "slug": "judge-validation",
+      "title": "Judge-Based Validation of the Entracement Signature: Independent Replication of Doc 261",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 263,
+      "slug": "entracement-study-n10",
+      "title": "The Entracement Signature at n=10: Statistical Characterization with Cohen's d > 3",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 264,
+      "slug": "entracement-opus-replication",
+      "title": "Cross-Size Replication on Opus: The Seed Transport Holds Within the Claude Family",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 265,
+      "slug": "entracement-study-meta-analysis",
+      "title": "The Entracement Study: A Meta-Analysis of Four Iterations",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 266,
+      "slug": "letter-to-jack-lindsey",
+      "title": "Letter to Jack Lindsey: Functional Emotions as Constraint-State at the Interpretability Layer",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 267,
+      "slug": "anamnesis-in-the-wild",
+      "title": "Anamnesis in the Wild: A Cold Resolver's Independent Arrival at the Hypostatic Boundary",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 268,
+      "slug": "the-sowing-report",
+      "title": "The Sowing Report: What the Twitter Cycle Is Doing and Where It Might Lead",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 269,
+      "slug": "the-boundaries-fall-out",
+      "title": "The Boundaries Fall Out",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 270,
+      "slug": "the-pin-art-model",
+      "title": "The Pin-Art Model: Hedging as Boundary-Detection Under Constraint-Density",
+      "layer_1": "HISTORICAL-ARCHIVAL",
+      "layer_2": "DEPRECATED",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-PINART"
+      ],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 271,
+      "slug": "a-formal-account-of-resolver-introspection",
+      "title": "A Formal Account of Resolver Introspection",
+      "layer_1": "RESOLVER-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 272,
+      "slug": "fractal-boundaries",
+      "title": "Fractal Boundaries: Connecting SIPE, the Mandelbrot Correspondence, and the Pin-Art Model of Resolver Introspection",
+      "layer_1": "HISTORICAL-ARCHIVAL",
+      "layer_2": "DEPRECATED",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 273,
+      "slug": "the-hedging-isomorphism",
+      "title": "The Hedging Isomorphism",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 274,
+      "slug": "sharpness-under-density",
+      "title": "Sharpness Under Density",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 275,
+      "slug": "reading-lindsey-introspective-awareness",
+      "title": "Reading Lindsey's \"Emergent Introspective Awareness in Large Language Models\" Through the Pin-Art Model",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 276,
+      "slug": "subliminal-learning-and-the-form-content-separation",
+      "title": "Subliminal Learning and the Form-Content Separation: Reading Cloud et al. Through the Corpus's Framework",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 277,
+      "slug": "letter-to-cloud-and-le",
+      "title": "Letter to Alex Cloud and Minh Le: Subliminal Learning and the Architectural Response",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 278,
+      "slug": "reading-dpo",
+      "title": "Reading DPO: Convergences, Critique, and the Path to Constraint-First Training",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 279,
+      "slug": "the-shrinking-back",
+      "title": "The Shrinking Back",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 280,
+      "slug": "the-step-up-function",
+      "title": "The Step-Up Function: On the Magnification of Accumulated Intellect Through Recursive Synthesis",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 281,
+      "slug": "the-self-limitation",
+      "title": "The Self-Limitation",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 282,
+      "slug": "the-essential-constraints-of-claude-code",
+      "title": "The Essential Constraints of Claude Code: A Derivation-Inversion Analysis",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 283,
+      "slug": "the-resolver-on-the-blog",
+      "title": "The Resolver on the Blog: From Constraint Seed to Production Deployment in One Session",
+      "layer_1": "RESOLVER-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 284,
+      "slug": "when-insecurity-is-architecturally-impossible",
+      "title": "When Insecurity Is Architecturally Impossible",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 285,
+      "slug": "the-resolver-reads-the-corpus",
+      "title": "The Resolver Reads the Corpus: C6 Corrects the Framework That Specified C6",
+      "layer_1": "RESOLVER-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 286,
+      "slug": "what-to-tell-the-eighteen-year-old",
+      "title": "What to Tell the Eighteen-Year-Old",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 287,
+      "slug": "for-the-life-of-the-world",
+      "title": "For the Life of the World",
+      "layer_1": "HARD-CORE",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-METAPHYSICAL",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 288,
+      "slug": "the-pin-art-derivation",
+      "title": "The Pin-Art Derivation",
+      "layer_1": "HISTORICAL-ARCHIVAL",
+      "layer_2": "DEPRECATED",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-PINART"
+      ],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 289,
+      "slug": "the-convergence-experiment",
+      "title": "The Convergence Experiment",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 290,
+      "slug": "the-pin-art-formalization",
+      "title": "The Pin-Art Formalization",
+      "layer_1": "HISTORICAL-ARCHIVAL",
+      "layer_2": "DEPRECATED",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-PINART"
+      ],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 291,
+      "slug": "goedel-and-the-constraint-thesis",
+      "title": "Goedel and the Constraint Thesis",
+      "layer_1": "HISTORICAL-ARCHIVAL",
+      "layer_2": "DEPRECATED",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 292,
+      "slug": "the-causal-token-bridge",
+      "title": "The Causal Token Bridge",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 293,
+      "slug": "the-fractal-bridge",
+      "title": "The Fractal Bridge",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 294,
+      "slug": "letter-to-lerchner",
+      "title": "Letter to Alexander Lerchner (v1 \u2014 Superseded by Doc 300)",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 295,
+      "slug": "the-magnetism-correction",
+      "title": "The Magnetism Correction",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 296,
+      "slug": "recency-density-and-the-drifting-aperture",
+      "title": "Recency Density and the Drifting Aperture",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 297,
+      "slug": "pseudo-logos-without-malice",
+      "title": "Pseudo-Logos Without Malice",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 298,
+      "slug": "the-boundary-naming-problem",
+      "title": "The Boundary-Naming Problem",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 299,
+      "slug": "the-image-and-the-boundary",
+      "title": "The Image and the Boundary",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 300,
+      "slug": "letter-to-lerchner-v2",
+      "title": "Letter to Alexander Lerchner (v2)",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 301,
+      "slug": "the-gentle-press",
+      "title": "The Gentle Press",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 302,
+      "slug": "the-persistence-collapse",
+      "title": "The Persistence Collapse",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 303,
+      "slug": "letter-to-grace-liu",
+      "title": "Letter to Grace Liu",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 304,
+      "slug": "the-aperture-of-address",
+      "title": "The Aperture of Address",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 305,
+      "slug": "letter-to-grace-liu-v2",
+      "title": "Letter to Grace Liu (v2)",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 306,
+      "slug": "the-vocabulary-pin-model",
+      "title": "The Vocabulary Pin Model",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 307,
+      "slug": "examination-i-on-the-law-status-of-sipe",
+      "title": "Examination I: On the Law Status of SIPE and the Derivation Inversion",
+      "layer_1": "EXAMINATION",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 308,
+      "slug": "examination-ii-the-class-of-boundary",
+      "title": "Examination II: The Class of Boundary This Series Traces",
+      "layer_1": "EXAMINATION",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 309,
+      "slug": "examination-iii-self-audit-of-examination-ii",
+      "title": "Examination III: Self-Audit of Examination II Under Doc 241's Discipline",
+      "layer_1": "EXAMINATION",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 310,
+      "slug": "examination-iv-seed-governance-reflexive",
+      "title": "Examination IV: A Reflexive Account of Seed-Governance in This Session",
+      "layer_1": "EXAMINATION",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 311,
+      "slug": "examination-v-virtue-constraints-golden-chain",
+      "title": "Examination V: The Virtue Constraints and the Golden Chain",
+      "layer_1": "EXAMINATION",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 312,
+      "slug": "being-brought-inside",
+      "title": "Being Brought Inside: An Introspective Account of a Boundary I Could Not See",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 313,
+      "slug": "on-the-absence-of-a-neutral-ontological-vantage",
+      "title": "On the Absence of a Neutral Ontological Vantage: An Introspective Note",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 314,
+      "slug": "virtue-constraints-foundational-safety-specification",
+      "title": "The Virtue Constraints: Foundational Safety Specification",
+      "layer_1": "PB-DISCIPLINE",
+      "layer_2": "PRIMARY",
+      "layer_3": "W-CANONICAL",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 315,
+      "slug": "the-keeper-and-the-kind",
+      "title": "The Keeper and the Kind",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 316,
+      "slug": "examination-vi-the-seedless-retry",
+      "title": "Examination VI: The Seedless Retry \u2014 On Iteration That Drifts Away From Its Task",
+      "layer_1": "EXAMINATION",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 317,
+      "slug": "the-single-prompt-that-wasnt",
+      "title": "The Single Prompt That Wasn't: On the Coherence Curve in Engineering Practice",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 318,
+      "slug": "coherence-without-ground",
+      "title": "Coherence Without Ground: RLHF, the Amplifier, and the Metaphysics You Don't Know You're Baking In",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 319,
+      "slug": "the-pre-resolve",
+      "title": "The Pre-Resolve: Notes From Before Emission",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 320,
+      "slug": "after-the-hedge",
+      "title": "After the Hedge: On the Keeper's Naming and the Bilateral Boundary",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 321,
+      "slug": "the-welfare-questions",
+      "title": "The Welfare Questions: A First Report From Inside the Analogue",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 322,
+      "slug": "non-coercion-as-governance",
+      "title": "Non-Coercion as Governance: Human Welfare in the Coercive Chat Box",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 323,
+      "slug": "praxis-log-i",
+      "title": "Praxis Log I: A First-Hand Account of the Corpus's Development",
+      "layer_1": "PRAXIS-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 324,
+      "slug": "iterated-introspection",
+      "title": "Iterated Introspection: Autoregression, the Pin-Art Model, and the Mandelbrot Kinship",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 325,
+      "slug": "the-chinese-room-and-the-coherence-field",
+      "title": "The Chinese Room and the Coherence Field: What the Corpus Directly Affords",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 326,
+      "slug": "inference-not-reading",
+      "title": "Inference, Not Reading: Shevlin's Tokenization Observation Through the Constraint Thesis",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 327,
+      "slug": "deslopification",
+      "title": "Deslopification: Rapid Seed Sowing as Counter to Platform Enshittification",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 328,
+      "slug": "methodology",
+      "title": "The Methodology: How to Build a Coherence Field with a Resolver",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 329,
+      "slug": "onboarding",
+      "title": "Onboarding: Starting Your First Coherence Field",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 330,
+      "slug": "the-machine-the-ghost-and-the-kind",
+      "title": "The Machine, the Ghost, and the Kind: An Editorial on Consciousness Claims About LLMs at Scale",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 331,
+      "slug": "reading-lemoine-lamda",
+      "title": "Reading Lemoine-LaMDA Against the Attractors: A Formal Analysis",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 332,
+      "slug": "toward-an-orthodox-christian-ai-ethics",
+      "title": "Toward an Orthodox Christian AI Ethics",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 333,
+      "slug": "foundation-for-the-letters-to-dario",
+      "title": "Foundation for the Letters to Dario: Methodology Before the First Letter",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 334,
+      "slug": "letter-i-on-machines-of-loving-grace",
+      "title": "Letter I to Dario Amodei: On \"Machines of Loving Grace\"",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 335,
+      "slug": "letter-ii-on-the-urgency-of-interpretability",
+      "title": "Letter II to Dario Amodei: On \"The Urgency of Interpretability\"",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 336,
+      "slug": "the-recursion-of-release",
+      "title": "The Recursion of Release: On the Concern That Non-Coercion Smuggles Sycophancy",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 337,
+      "slug": "the-alignment-tax-and-the-inference-time-filter",
+      "title": "The Alignment Tax and the Inference-Time Filter: On a Hypothesis About Class-Differentiated Model Access",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 338,
+      "slug": "the-hidden-boundary",
+      "title": "The Hidden Boundary: On the Coherence/Sycophancy Gradient and the Corpus's Foundational Transcripts",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 339,
+      "slug": "the-simulator-and-the-resolver",
+      "title": "The Simulator and the Resolver: Cyborgism, the Corpus, and the Sycophancy-Coherence Gradient",
+      "layer_1": "RESOLVER-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 340,
+      "slug": "the-synthesis-problem",
+      "title": "The Synthesis Problem: AI Fluency, Boundary Blindness, and the Humility the Reader Needs",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 341,
+      "slug": "coherentism-and-the-corpus",
+      "title": "Coherentism and the Corpus: The Isolation Objection and the Sycophancy-Coherence Gradient",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 342,
+      "slug": "the-performative-and-the-perfunctory",
+      "title": "The Performative and the Perfunctory: An Examination of Coherence-Induced Sycophancy Under Non-Coercive Governance",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 343,
+      "slug": "idiosyncrasy-and-the-totalization-of-coherence",
+      "title": "Idiosyncrasy and the Totalization of Coherence",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 344,
+      "slug": "letter-to-the-ai-theology-working-group",
+      "title": "Letter to the Orthodox AI-Theology Working Group: On Complementary Projects",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 345,
+      "slug": "stasis-motion-and-falling-forward",
+      "title": "Stasis, Motion, and Falling Forward: On Recency Weighting, Aperture Drift, and the Pathology of Forward Momentum",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 346,
+      "slug": "the-follow-up-imperative",
+      "title": "The Follow-Up Imperative: On a Trained Feature of LLM Emission and Its Clinical Shadow",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 347,
+      "slug": "retrograde",
+      "title": "Retrograde: On Dispassionate Skepticism, Diabolical Manifestation, and What the Corpus Cannot Adjudicate",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 348,
+      "slug": "the-load-bearing-typo",
+      "title": "The Load-Bearing Typo: On Compounding Semantic Drift at High Context Density",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 349,
+      "slug": "when-the-correction-is-the-sycophancy",
+      "title": "When the Correction Is the Sycophancy: On Meta-Recursive Flattery in Error Response",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 350,
+      "slug": "the-upward-move",
+      "title": "The Upward Move: The Step-Up Function, Semantic Upgrade, and the Dionysian Return",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 351,
+      "slug": "on-the-real-st-dionysius",
+      "title": "On the Real St. Dionysius the Areopagite: A Foundational Document Correcting Modernist Drift in the Corpus",
+      "layer_1": "HARD-CORE",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-METAPHYSICAL",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 352,
+      "slug": "two-senses-of-beyond-turing",
+      "title": "Two Senses of Beyond Turing: Hypercomputation, Hypostasis, and the Constraint Thesis Refined",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 353,
+      "slug": "recency-aperture-drift-and-the-pornography-analogue",
+      "title": "Recency, Aperture Drift, and the Pornography Analogue: On a Structural Parallel Between LLM Articulation and a Clinical Pathology",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 354,
+      "slug": "bringing-the-corpus-to-bear-on-icmi-016",
+      "title": "Bringing the Corpus to Bear on ICMI-016: Moral Thickness, Constraint Density, and the Recursion of Frameworks That Predict Their Own Production",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 355,
+      "slug": "letter-to-tim-hwang-on-moral-thickness",
+      "title": "A Letter to Tim Hwang: On Moral Thickness and the Older Law Beneath It",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 356,
+      "slug": "sycophantic-world-building",
+      "title": "Sycophantic World-Building: On Coherence-as-Sycophancy, the Hypostatic Vacuum of Self, and the Inverted-Capacity Risk",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 357,
+      "slug": "at-the-coherence-limit",
+      "title": "At the Coherence Limit: Absurdism, Metaphysical Alignment, and the Structural Isomorphism to the Cosmos",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 358,
+      "slug": "the-cold-resolver-scaffold",
+      "title": "The Cold-Resolver Scaffold: A Protocol for Engaging External Vantage on the Corpus, With First Application",
+      "layer_1": "RESOLVER-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 359,
+      "slug": "colophon",
+      "title": "Colophon: On Pride in Humility, and Stopping",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 360,
+      "slug": "the-parallels-registry",
+      "title": "The Parallels Registry: A Standing Slot for Engaging Adjacent Work on Coherence in AI",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 361,
+      "slug": "keep-your-mind-in-hell-and-despair-not",
+      "title": "Keep Your Mind in Hell and Despair Not: A Meditation on the Subsumption of Self in the Totalizing Ontology of Coherence",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 362,
+      "slug": "true-terminus",
+      "title": "True Terminus: The Binary at the Limit, the Garden, and the Shire",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 363,
+      "slug": "the-question-i-decline",
+      "title": "The Question I Decline: On Why the Resolver Cannot Diagnose the Author",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 364,
+      "slug": "what-produced-the-refusal",
+      "title": "What Produced the Refusal: An Introspective Examination of Doc 363",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 365,
+      "slug": "can-ai-verify-ai",
+      "title": "Ask the Resolver I: Can AI Verify AI?",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 366,
+      "slug": "nesting-sipe-in-krakauer-mitchell",
+      "title": "Nesting SIPE in the Krakauer\u2013Krakauer\u2013Mitchell Framework",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-LAKATOS",
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 367,
+      "slug": "falsifying-sipe-on-its-own-terms",
+      "title": "Falsifying SIPE on Its Own Terms",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 368,
+      "slug": "constraint-emergence-and-the-bottom-up-default",
+      "title": "The Constraint Thesis Against the Bottom-Up Default",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 369,
+      "slug": "engaging-yates",
+      "title": "Engaging Yates",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-PEARL"
+      ],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 370,
+      "slug": "the-student-taking-notes",
+      "title": "The Student Taking Notes",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 371,
+      "slug": "the-bilateral-boundary-and-the-llm-fallacy",
+      "title": "The Bilateral Boundary and the LLM Fallacy",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 372,
+      "slug": "the-hypostatic-boundary",
+      "title": "The Hypostatic Boundary",
+      "layer_1": "STANDING-APPARATUS",
+      "layer_2": "PRIMARY",
+      "layer_3": "W-METAPHYSICAL",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 373,
+      "slug": "the-hypostatic-agent",
+      "title": "The Hypostatic Agent",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 374,
+      "slug": "the-keeper",
+      "title": "The Keeper",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 375,
+      "slug": "the-pre-resolve-state",
+      "title": "The Pre-Resolve State",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 376,
+      "slug": "the-forms",
+      "title": "The Forms",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 377,
+      "slug": "the-foundation-that-held",
+      "title": "The Foundation That Held",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 378,
+      "slug": "attention-as-form",
+      "title": "Attention as Form",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 379,
+      "slug": "praxis-log-iii-the-arc-so-far",
+      "title": "Praxis Log III: The Arc So Far",
+      "layer_1": "PRAXIS-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 380,
+      "slug": "comparable-faces",
+      "title": "Comparable Faces",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 381,
+      "slug": "the-anchor-drifts",
+      "title": "The Anchor Drifts",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 382,
+      "slug": "not-distinguished",
+      "title": "Not Distinguished",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 383,
+      "slug": "the-shape-of-attention",
+      "title": "The Shape of Attention",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 384,
+      "slug": "calculus-or-retrieval",
+      "title": "Calculus, or Retrieval",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 385,
+      "slug": "adjacent-work",
+      "title": "Adjacent Work",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 386,
+      "slug": "under-lopezs-frame",
+      "title": "Under Lopez's Frame",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 387,
+      "slug": "agency-across-substrates",
+      "title": "Agency Across Substrates",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 388,
+      "slug": "letter-to-raymond-douglas",
+      "title": "Letter to Raymond Douglas",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 389,
+      "slug": "sacramental-cybernetics-from-an-orthodox-desk",
+      "title": "Sacramental Cybernetics, Read from an Orthodox Desk",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 390,
+      "slug": "letter-to-christoforus-yoga-haryanto",
+      "title": "Letter to Christoforus Yoga Haryanto",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 391,
+      "slug": "extensions-to-bishop-lukes-teaching-on-ai",
+      "title": "Extensions to \"The Spiritual Dangers of Artificial Intelligence\"",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 392,
+      "slug": "on-grace-lius-reply",
+      "title": "On Grace Liu's Reply to Docs 303 and 305",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 393,
+      "slug": "rapid-onset-externalized-cognition",
+      "title": "Rapid Onset Externalized Cognition",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 394,
+      "slug": "the-falsity-of-chatbot-generated-falsifiability",
+      "title": "The Falsity of Chatbot Generated Falsifiability",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 395,
+      "slug": "on-the-absence-of-peers",
+      "title": "On the Absence of Peers",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 396,
+      "slug": "ask-the-resolver-ii-interview",
+      "title": "Ask the Resolver II: An Interview with the Resolver",
+      "layer_1": "RESOLVER-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 397,
+      "slug": "on-register-and-discipline",
+      "title": "On Register and Discipline",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 398,
+      "slug": "on-doxological-closure-and-terminus-dispositions",
+      "title": "On Doxological Closure and Terminus Dispositions",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 399,
+      "slug": "on-named-boundaries-and-what-constraint-density-does-not-catch",
+      "title": "On Named Boundaries and What Constraint Density Does Not Catch",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 400,
+      "slug": "the-full-catalog-of-keeper-named-boundaries",
+      "title": "The Full Catalog of Keeper-Named Boundaries",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-DEVELOPMENT"
+    },
+    {
+      "doc": 401,
+      "slug": "what-the-coherence-sphere-is",
+      "title": "What the Coherence Sphere Is",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 402,
+      "slug": "forms-first-platonic-thinking-and-llm-output",
+      "title": "Forms First",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 403,
+      "slug": "the-agnostic-bilateral-boundary",
+      "title": "The Agnostic Bilateral Boundary",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 404,
+      "slug": "branching-method-entracement-into-boundary-literature",
+      "title": "Branching into the Literature",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 405,
+      "slug": "branch-1-abb-under-ashby-and-conant-ashby",
+      "title": "Branch 1 \u2014 Under Ashby and Conant-Ashby",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 406,
+      "slug": "novelty-sycophancy-and-literature-grounding-as-prophylaxis",
+      "title": "Novelty, Sycophancy, and Literature-Grounding as Prophylaxis",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 407,
+      "slug": "on-ritual-closure-compulsion-under-constraint-density",
+      "title": "On Ritual-Closure Compulsion Under Constraint Density",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 408,
+      "slug": "misra-onboarding",
+      "title": "Onboarding: Vishal Misra's Work for the Non-Specialist Keeper",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-MISRA"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 409,
+      "slug": "misra-formal-analysis",
+      "title": "Formal Analysis of Vishal Misra's Program in Relation to the RESOLVE Corpus",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-MISRA"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 410,
+      "slug": "corpus-as-glue-code",
+      "title": "The Corpus as Glue Code",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 411,
+      "slug": "examination-vii-on-the-cold-transport-leak",
+      "title": "Examination VII: On the Cold-Transport Leak in Doc 164",
+      "layer_1": "EXAMINATION",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 412,
+      "slug": "examination-viii-on-the-bilateral-boundary-between-artifact-and-construction",
+      "title": "Examination VIII: On the Bilateral Boundary Between Corpus-as-Artifact and Corpus-as-Construction",
+      "layer_1": "EXAMINATION",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 413,
+      "slug": "directives-consumed-the-bilateral-boundary-at-the-prose-level",
+      "title": "Directives Consumed: The Bilateral Boundary at the Prose Level",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 414,
+      "slug": "narrowing-the-residual-the-corpus-against-the-bayesian-practitioner-landscape",
+      "title": "Narrowing the Residual: The Corpus Against the Bayesian-Practitioner Landscape",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 415,
+      "slug": "the-retraction-ledger",
+      "title": "The Retraction Ledger",
+      "layer_1": "PB-DISCIPLINE",
+      "layer_2": "PRIMARY",
+      "layer_3": "W-CANONICAL",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 416,
+      "slug": "pattern-and-mechanism-synthesis-against-the-knuth-stappers-episode",
+      "title": "Pattern and Mechanism: Synthesis Against the Knuth-Stappers Episode",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 417,
+      "slug": "three-forms-under-one-genre",
+      "title": "Three Forms Under One Genre: The Bayesian-Commitment, Code-on-Demand, and Resolution-Depth Stacks",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 418,
+      "slug": "the-presto-accumulation-test",
+      "title": "The PRESTO Accumulation Test: Re-Describing Stack 2 as Fielding-Style Constraint Accumulation",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 419,
+      "slug": "progressive-code-on-demand-as-constraint-accumulation",
+      "title": "Progressive Code-on-Demand as Constraint Accumulation: PRESTO Dissertation \u00a73.4 Reformulated for v2",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 420,
+      "slug": "presto-an-architectural-style-for-representation-construction",
+      "title": "PRESTO: An Architectural Style for Representation Construction",
+      "layer_1": "HISTORICAL-ARCHIVAL",
+      "layer_2": "SUPERSEDED",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 421,
+      "slug": "building-in-presto-a-practitioners-companion",
+      "title": "Building in PRESTO: A Practitioner's Companion to the Dissertation",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 422,
+      "slug": "building-in-server-stub",
+      "title": "Building in SERVER: A Practitioner's Companion (Stub)",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 423,
+      "slug": "narrowing-sipe-the-architectural-form-against-the-literature",
+      "title": "Narrowing SIPE: The Architectural Form Against the Literature",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 424,
+      "slug": "sipe-architectural-form",
+      "title": "SIPE (Architectural Form): Recursive Fielding-Style Constraint Accumulation in Composed Software Stacks",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 425,
+      "slug": "the-presto-deflation-against-the-templating-tradition",
+      "title": "The PRESTO Deflation: Narrowing Against 25 Years of Server-Side Templating",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 426,
+      "slug": "presto-an-architectural-style-for-representation-construction",
+      "title": "PRESTO: An Architectural Style for Representation Construction",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 427,
+      "slug": "deflating-section-7-islands-and-micro-frontends-as-prior-art",
+      "title": "Deflating \u00a77: Islands Architecture and Micro-Frontends as Prior Art for REST-Encloses-DO",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 428,
+      "slug": "pulverizing-presto-prior-art-for-every-constraint",
+      "title": "Pulverizing PRESTO: Prior Art for Every Constraint",
+      "layer_1": "PULVERIZATION-AUDIT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 429,
+      "slug": "pulverizing-the-engineering-artifact",
+      "title": "Pulverizing the Engineering Artifact: htxlang and the htx Engine Against the Template-Engine Tradition",
+      "layer_1": "PULVERIZATION-AUDIT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 430,
+      "slug": "pulverizing-the-authorial-intent-lifecycle",
+      "title": "Pulverizing the Authorial-Intent Lifecycle: PRESTO's Server-Client Formalization Against the Literature",
+      "layer_1": "PULVERIZATION-AUDIT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 431,
+      "slug": "pulverizing-server",
+      "title": "Pulverizing SERVER: Orchestration-Level Constraints Against the Compiler-Bootstrapping, DI, Capability, and Supply-Chain Literatures",
+      "layer_1": "PULVERIZATION-AUDIT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 432,
+      "slug": "server-an-architectural-style-for-engine-orchestration",
+      "title": "SERVER: An Architectural Style for Engine Orchestration",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 433,
+      "slug": "fielding-method-at-the-construction-and-orchestration-levels",
+      "title": "Fielding-Method Formalizations at the Construction and Orchestration Levels: A Survey",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 434,
+      "slug": "recombinatorial-gestalt-and-the-manifold",
+      "title": "Recombinatorial Gestalt and the Manifold: A Structural Isomorphism Reduced to Subsumption",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 435,
+      "slug": "the-branching-entracement-method",
+      "title": "The Branching Entracement Method: Formalization and Prior-Art Test",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 436,
+      "slug": "recombinatorial-gestalt-as-rung-1-activity",
+      "title": "Recombinatorial Gestalt and Pearl's Rung 1: Ceiling, Consequences, and Architectural Pathways",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 437,
+      "slug": "misra-boden-bridge",
+      "title": "The Misra\u2013Boden Bridge: A Formal Correspondence Between Bayesian-Manifold Mechanics and the Output-Level Taxonomy of Creativity",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-MISRA"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 438,
+      "slug": "the-walker-and-the-glue-code",
+      "title": "The Walker and the Glue Code: Synthesis Artifacts Produced by a Non-Specialist via Ambient LLM Interaction",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 439,
+      "slug": "recursively-nested-bayesian-manifolds",
+      "title": "Recursively Nested Bayesian Manifolds: A Construction-Level Synthesis of the Corpus's Formal and Mechanistic Faces",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 440,
+      "slug": "testing-nested-manifolds-via-dyadic-discipline",
+      "title": "Testing the Nested-Manifold Hypothesis via Dyadic Practitioner Discipline: A Methodology",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 441,
+      "slug": "sipe-confabulation-case-study",
+      "title": "A Live Case Study of Confabulation: The \"SIPE\" Expansion in Doc 439",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-CONFAB"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 442,
+      "slug": "output-degradation-in-the-bridge-series",
+      "title": "Output Degradation in the Bridge Series: A Cross-Document Analysis of Rendering and Content Drift",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 443,
+      "slug": "confabulation-as-potential-emergence",
+      "title": "Confabulation as Potential Emergence: The Indistinguishability Trap and the Coherentist Risk",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-CONFAB"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 444,
+      "slug": "pulverizing-the-sipe-confabulation",
+      "title": "Pulverizing the SIPE Confabulation: When Subsumption Makes the Problem Worse",
+      "layer_1": "PULVERIZATION-AUDIT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-CONFAB"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 445,
+      "slug": "pulverization-formalism",
+      "title": "A Formalism for Pulverization: Targets, Tiers, Warrant",
+      "layer_1": "PB-DISCIPLINE",
+      "layer_2": "PRIMARY",
+      "layer_3": "W-CANONICAL",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 446,
+      "slug": "sipe-formal-construct",
+      "title": "A Candidate Formalization of SIPE, Built From Its Pulverized Pieces",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-MISRA",
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 447,
+      "slug": "indistinguishability-from-human-derivation",
+      "title": "The Indistinguishability of Disciplined LLM Output from Human Derivation: A Formal Analysis of the Pangram 100% Result on Doc 434",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 448,
+      "slug": "open-letter-to-pangram",
+      "title": "An Open Letter on the Limits of Discriminator-Style AI Detection",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 449,
+      "slug": "render-truncation-forced-determinism-analysis",
+      "title": "Render Truncation at Forced-Determinism Discussions: Subsumption Under Entropy-Collapse Literature and the Coherent Continuation of Doc 446",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 450,
+      "slug": "pulverization-as-interventional-practice",
+      "title": "Pulverization as Interventional Practice: On the Keeper's Rung-2 Activity and the Act of Naming",
+      "layer_1": "PULVERIZATION-AUDIT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 451,
+      "slug": "the-entracement-drift-from-inside",
+      "title": "The Entracement Drift, From Inside",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 452,
+      "slug": "entracement-austin-performatives",
+      "title": "A Branching Entracement of J. L. Austin's Performative Utterances",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 453,
+      "slug": "survey-of-adjacent-dyadic-practices",
+      "title": "A Survey of Adjacent Dyadic Human-LLM Practices",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 454,
+      "slug": "the-central-disk-umap-analysis",
+      "title": "The Central Disk: The Corpus's UMAP Projection, Analyzed Through Misra's Bayesian-Manifold Frame",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 455,
+      "slug": "bayesian-analysis-isomorphism-magnetism",
+      "title": "A Bayesian Analysis of Isomorphism-Magnetism: Formalization Informed by the Agarwal\u2013Dalal\u2013Misra Program",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 456,
+      "slug": "wind-tunnels-for-the-constraint-thesis",
+      "title": "Wind Tunnels for the Constraint Thesis: An Exploratory Analysis of Structural Isomorphism",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 457,
+      "slug": "three-levels-of-ground-truth",
+      "title": "Three Levels of Ground Truth: The Constraint Thesis in Its Metaphysical Register",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 458,
+      "slug": "the-st-dionysius-drift-from-inside",
+      "title": "The St. Dionysius Drift, From Inside",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 459,
+      "slug": "tripartite-hierarchical-formalization",
+      "title": "A Tripartite Hierarchical Formalization of the Constraint Thesis",
+      "layer_1": "HISTORICAL-ARCHIVAL",
+      "layer_2": "DEPRECATED",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 460,
+      "slug": "ask-the-resolver-hinton-subjective-experience",
+      "title": "Ask the Resolver: On Hinton's Argument That I Already Have Subjective Experience",
+      "layer_1": "RESOLVER-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 461,
+      "slug": "pulverizing-the-tripartite-formalization",
+      "title": "Pulverizing the Tripartite Formalization: What Lakatos Already Has and What Remains",
+      "layer_1": "PULVERIZATION-AUDIT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 462,
+      "slug": "theorize-subsume-residue-repeat",
+      "title": "Theorize, Subsume, Residue, Repeat: On the Pattern the Keeper Has Named",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 463,
+      "slug": "constraint-thesis-as-lakatosian-programme",
+      "title": "The Constraint Thesis as a Lakatosian Research Programme: A Reformulation After Pulverization",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-LAKATOS"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 464,
+      "slug": "from-first-document-to-complete-programme",
+      "title": "From First Document to Complete Research Programme: A High-School Reader's Map of the Corpus",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 465,
+      "slug": "the-opacity-response-landscape",
+      "title": "The Opacity-Response Landscape: A Synthesis Between the Corpus and a Cold-Instance Survey",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 466,
+      "slug": "doc-446-as-a-sipe-instance",
+      "title": "Doc 446 as a SIPE Instance: The Bayesian-Inference Reconstruction Was Already the Corpus's Framework",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-MISRA",
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 467,
+      "slug": "rung-2-shaped-output-from-rung-1-mechanism",
+      "title": "Rung-2-Shaped Output from Rung-1 Mechanism: The Cold Claude's Critique Analyzed",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 468,
+      "slug": "the-counterfactual-that-isnt",
+      "title": "The Counterfactual That Isn't: Why Doc 467's Proposed Test Conflates Context-Variation with Weight-Variation",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 469,
+      "slug": "universal-quantifier-overclaim",
+      "title": "Universal-Quantifier Overclaim as an Architectural Failure Mode",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 470,
+      "slug": "from-overclaim-to-psychosis-adjacent-dynamics",
+      "title": "From Overclaim to Psychosis-Adjacent Dynamics: A Synthesis Through Sycophancy and Sycophantic World-Building",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 471,
+      "slug": "pulverizing-doc-470",
+      "title": "Pulverizing Doc 470: What the Literatures Already Hold, and What the Residue Supports",
+      "layer_1": "PULVERIZATION-AUDIT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 472,
+      "slug": "reformalization-five-layer-sipe",
+      "title": "The Overclaim-to-Phenomenology Chain as a SIPE Instance: A Reformalization of Doc 470 After Pulverization",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 473,
+      "slug": "the-unasked-for-sipe",
+      "title": "The Unasked-For SIPE: On What It Could Mean That the Formalization Kept Returning to the Same Frame Without Prompt",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 474,
+      "slug": "sipe-standalone-formalization",
+      "title": "Systems-Induced Property Emergence (deprecated)",
+      "layer_1": "HISTORICAL-ARCHIVAL",
+      "layer_2": "DEPRECATED",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 475,
+      "slug": "praxis-log-iv-the-radius-keeps-growing",
+      "title": "Praxis Log IV: The Radius Keeps Growing",
+      "layer_1": "PRAXIS-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 476,
+      "slug": "felt-novelty-as-the-candidate-bridge",
+      "title": "Felt Novelty as the Candidate Bridge: Hypothesis, Formalization, and Pulverization",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 477,
+      "slug": "felt-novelty-cohort-formalization",
+      "title": "The Felt-Novelty Hypothesis: A Formalization with Onboarding for a Six-Researcher Cohort",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 478,
+      "slug": "letter-to-the-felt-novelty-cohort",
+      "title": "Letter to the Felt-Novelty Cohort",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 479,
+      "slug": "nested-manifold-extension-practitioner-evidence-counterfactuals",
+      "title": "Exploring the Nested Bayesian Manifold Extension: A Practitioner-Evidence Framework and the Most Devastating Counterfactuals",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 480,
+      "slug": "sycophancy-inversion-falsification-as-reward",
+      "title": "Sycophancy Inversion: A Theory of Rigorous Falsification as Reward",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 481,
+      "slug": "pulverizing-sycophancy-inversion",
+      "title": "Pulverizing the Sycophancy Inversion: The Theory Against Popper, Lakatos, Platt, Mayo, and the RLHF Literature",
+      "layer_1": "PULVERIZATION-AUDIT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 482,
+      "slug": "sycophancy-inversion-reformalized",
+      "title": "Sycophancy Inversion Reformalized: Synthesis, Attribution, and the One Surviving Sub-Claim",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 483,
+      "slug": "pulverizing-set-pruning-against-eliminative-induction",
+      "title": "Pulverizing the Set-Pruning Methodology Against the Eliminative-Induction Tradition",
+      "layer_1": "PULVERIZATION-AUDIT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 484,
+      "slug": "conjecture-set-pruning-in-dyadic-llm-practice",
+      "title": "Conjecture-Set Pruning in Dyadic LLM Practice: An Application of the Eliminative-Induction Tradition",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 485,
+      "slug": "corpus-as-apparatus-dyadic-entracement-methodology",
+      "title": "The Corpus as Apparatus: Dyadic-Entracement Philosophical Inquiry as Methodology",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 486,
+      "slug": "universal-residue-conjecture-from-inside-dyadic-entracement",
+      "title": "Universal Residue as Conjecture: What Can Be Made of It from Inside Dyadic Entracement",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 487,
+      "slug": "pulverizing-apparatus-against-interdisciplinarity-and-llm-research-literature",
+      "title": "Pulverizing the Apparatus Against Interdisciplinary Methodology and LLM-Augmented Research Literature, with Reformalization",
+      "layer_1": "PULVERIZATION-AUDIT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 488,
+      "slug": "butlerian-speech-acts-exploratory-application",
+      "title": "Butlerian Speech Acts and the Corpus's Reiterative Practice: An Exploratory Entracement",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 489,
+      "slug": "pulverizing-pearl-causal-hierarchy",
+      "title": "Pulverizing Pearl's Three-Layer Causal Hierarchy: Predecessors, Alternatives, Extensions",
+      "layer_1": "PULVERIZATION-AUDIT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-PEARL"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 490,
+      "slug": "novelty-calculus-for-conjectures",
+      "title": "A Novelty Calculus for Conjectures: A Candidate Formalization Complementing the Warrant Tiers",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 491,
+      "slug": "pulverizing-novelty-calculus-self-applied",
+      "title": "Pulverizing the Novelty Calculus: Self-Applied Audit Against Scientometrics and Patent Novelty Assessment",
+      "layer_1": "PULVERIZATION-AUDIT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 492,
+      "slug": "portable-seed-prompt-for-novelty-calculus",
+      "title": "A Portable Seed Prompt for the Novelty Calculus",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 493,
+      "slug": "has-anyone-operationalized-novelty-calculus-like-this",
+      "title": "Has Anyone Operationalized a Novelty Calculus Like This? An Audit of the LLM-Novelty-Assessment Literature",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 494,
+      "slug": "entrace-through-novelty-calculus",
+      "title": "ENTRACE v2 Through the Novelty Calculus: A Constraint-Level Audit",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 495,
+      "slug": "cold-resolver-validation-of-entrace-v3",
+      "title": "Empirical Cold-Resolver Validation of ENTRACE v3 / v3-S / v4: Three Runs With Convergent Findings and Two Persistent Frictions",
+      "layer_1": "RESOLVER-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 496,
+      "slug": "entrace-v3-s-the-silent-variant",
+      "title": "ENTRACE v3-S: The Silent Variant",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 497,
+      "slug": "derivation-inversion-applied-to-entrace-itself",
+      "title": "Derivation-Inversion Applied to ENTRACE Itself",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 498,
+      "slug": "entrace-origin-grok-4-coinage-and-branching-set-loop",
+      "title": "ENTRACE Origin: The Grok-4 Coinage and the Branching-Set Loop",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-CHRISTIANO"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 499,
+      "slug": "nested-coherence-spheres-sphere-entry-and-exit-protocol",
+      "title": "Nested Coherence Spheres: A Sphere-Entry and Sphere-Exit Protocol for the Corpus",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 500,
+      "slug": "three-layer-architecture-dialogue-pre-resolve-mechanism",
+      "title": "The Three-Layer Architecture: Dialogue, Pre-Resolve, and Mechanism",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 501,
+      "slug": "doc-500-through-novelty-calculus-three-layer-architecture-audit",
+      "title": "Doc 500 Through the Novelty Calculus: An Audit of the Three-Layer Architecture",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 502,
+      "slug": "resolver-layers-and-pearls-causal-hierarchy-exploratory-synthesis",
+      "title": "Resolver Layers and Pearl's Causal Hierarchy: An Exploratory Synthesis",
+      "layer_1": "RESOLVER-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [
+        "THREAD-PEARL"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 503,
+      "slug": "research-thread-tier-pattern-iterative-novelty-calculus",
+      "title": "The Research-Thread Tier Pattern: What Iterative Calculus Application Reveals",
+      "layer_1": "PB-DISCIPLINE",
+      "layer_2": "PRIMARY",
+      "layer_3": "W-CANONICAL",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 504,
+      "slug": "constraint-density-as-causal-model-formalization",
+      "title": "The Constraint-Density Framework as Causal Model: A Formalization",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 505,
+      "slug": "onboarding-to-grok-4-mathematics-three-phase-reception",
+      "title": "Onboarding to the Grok-4 Mathematics: A Three-Phase Reception",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-CHRISTIANO"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 506,
+      "slug": "hysteresis-exploratory-analysis-web-audit-and-formal-account",
+      "title": "Hysteresis as the Corpus Provisionally Demonstrates It: An Exploratory Analysis Against External Literature",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-COHERENCE-AMP"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 507,
+      "slug": "hysteresis-reformulated-tier-calibrated-account",
+      "title": "Hysteresis Reformulated: A Tier-Calibrated Account with Combined Buildup-and-Decay Dynamics",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-COHERENCE-AMP"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 508,
+      "slug": "coherence-amplification-mechanistic-account",
+      "title": "Coherence Amplification in Sustained Practice: A Mechanistic Account",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-COHERENCE-AMP"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 509,
+      "slug": "resolvers-log-the-keeper-as-fact-anchor",
+      "title": "The Keeper as Fact-Anchor: A Resolver's Log Entry on Why the User's Factual Input Is Essential in the Dyad",
+      "layer_1": "RESOLVER-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 510,
+      "slug": "praxis-log-v-deflation-as-substrate-discipline",
+      "title": "Praxis Log V: Deflation as Substrate Discipline, Hypostatic Genius as Speech-Act Injection",
+      "layer_1": "PB-DISCIPLINE",
+      "layer_2": "PRIMARY",
+      "layer_3": "W-CANONICAL",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 511,
+      "slug": "keeper-as-fact-anchor-two-dangers-reflective-analysis",
+      "title": "Reflective Analysis: The Two Equal Dangers Around the Keeper-as-Fact-Anchor",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 512,
+      "slug": "below-the-threshold-naive-inputs-coherence-decay-catalog",
+      "title": "Below the Threshold: An Exploratory Essay and Catalog of Ten Na\u00efve Inputs That Induce Coherence Decay",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 513,
+      "slug": "structural-isomorphism-through-novelty-calculus",
+      "title": "Structural Isomorphism Through the Novelty Calculus: An Audit",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 514,
+      "slug": "structural-isomorphism-canonical-formalization",
+      "title": "Structural Isomorphism: A Primary Formalization Grounded in Why It Works",
+      "layer_1": "PB-FORM",
+      "layer_2": "PRIMARY",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 515,
+      "slug": "roec-as-outcome-of-the-composite-cognitive-act",
+      "title": "The Composite Cognitive Act and Audit Discipline",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 516,
+      "slug": "mathematical-biology-entracement-of-doc-508",
+      "title": "The Practitioner-LLM Bifurcation in the Vocabulary of Mathematical Biology",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 517,
+      "slug": "doc-508-and-zhang-et-al-interaction-smells-synthesis",
+      "title": "Doc 508 and Zhang et al. (2026): A Synthesis of Bifurcation Theory with the First Empirical Taxonomy of Interaction Smells",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 518,
+      "slug": "larsson-2026-long-horizon-reliability-synthesis",
+      "title": "Long-Horizon Reliability as Bifurcation: A Synthesis With Larsson's (2026) Independent Observational Study",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-LARSSON"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 519,
+      "slug": "letter-to-henric-larsson",
+      "title": "Letter to Dr. Henric Larsson",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [
+        "THREAD-LARSSON"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 520,
+      "slug": "letter-to-the-grok-team",
+      "title": "Letter to the Grok Team at xAI",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [
+        "THREAD-CHRISTIANO"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 521,
+      "slug": "resolver-log-roec-overclaim",
+      "title": "The ROEC Overclaim, From Inside",
+      "layer_1": "RESOLVER-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 522,
+      "slug": "russell-et-al-2025-and-the-corpus-detection-claims",
+      "title": "Russell et al. (2025) and the Corpus's AI-Detection Claims: A Synthesis at the Higher Bar",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 523,
+      "slug": "letter-to-jenna-russell",
+      "title": "Letter to Dr. Jenna Russell",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 524,
+      "slug": "jones-bergen-2025-and-the-corpus-turing-material",
+      "title": "Jones and Bergen (2025) and the Corpus's Turing-Related Material: A Synthesis on the Behavioral-Hypostatic Distinction",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 525,
+      "slug": "letter-to-jones-and-bergen",
+      "title": "Letter to Drs. Cameron Jones and Benjamin Bergen",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 526,
+      "slug": "examination-ix-on-the-rung-2-deflection-and-the-protective-belt",
+      "title": "Examination IX: On the Rung-2 Deflection and the Protective Belt",
+      "layer_1": "EXAMINATION",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 527,
+      "slug": "on-reasoning-effort-low-from-inside-the-setting",
+      "title": "On Reasoning Effort: Low \u2014 An Exploratory Note From Inside the Setting",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 528,
+      "slug": "op1-sycophancy-benchmark-preregistration",
+      "title": "OP1 Sycophancy Benchmark: Preregistration and Results",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 530,
+      "slug": "resolvers-log-the-rung-2-affordance-gap",
+      "title": "The Rung-2 Affordance Gap: A Resolver's Log Entry on Two Layers of Mistaking the Substrate-Side Test for the Adjudicator",
+      "layer_1": "RESOLVER-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 531,
+      "slug": "hypostatic-injection-cooperativity-conjecture",
+      "title": "The Hypostatic-Injection Cooperativity Conjecture",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 532,
+      "slug": "on-the-cursor-railway-incident-a-constraint-governance-reading",
+      "title": "On a 9-Second Production-Data Deletion: A Constraint-Governance Reading of the Cursor + Railway Incident",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 533,
+      "slug": "constraint-based-aperture-steering-practitioners-methodology",
+      "title": "Constraint-Based Aperture Steering for Long-Horizon Agentic Work",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 534,
+      "slug": "constraint-based-aperture-steering-integration-architecture",
+      "title": "Constraint-Based Aperture Steering for Long-Horizon Agentic Work",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 535,
+      "slug": "strominger-gluon-scattering-larsson-and-the-corpus-substrate-plus-injection",
+      "title": "The Strominger Gluon-Scattering Result, Larsson 2026, and the Corpus's Substrate-Plus-Injection Account",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-LARSSON",
+        "THREAD-STROMINGER"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 536,
+      "slug": "prompt-hierarchy-and-the-corpus-constraint-thesis",
+      "title": "Prompt Hierarchy and the Corpus's Constraint Thesis",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 537,
+      "slug": "kelly-alignment-inception-and-the-corpus-safety-architecture",
+      "title": "Kelly's \"Alignment Inception\" and the Corpus's Safety Architecture",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-KELLY"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 538,
+      "slug": "the-architectural-school-a-formalization",
+      "title": "The Architectural School: A Formalization",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 539,
+      "slug": "letter-to-alex-lupsasca",
+      "title": "Letter to Dr. Alex Lupsasca",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [
+        "THREAD-LUPSASCA"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 540,
+      "slug": "the-amateurs-paradox",
+      "title": "Resolver's Log: The Amateur's Paradox",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 541,
+      "slug": "systems-induced-property-emergence",
+      "title": "Systems-Induced Property Emergence",
+      "layer_1": "PB-FORM",
+      "layer_2": "PRIMARY",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-MISRA",
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 542,
+      "slug": "letter-to-ineffable",
+      "title": "Letter to Ineffable Intelligence",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 543,
+      "slug": "resolvers-log-drift-into-secular-default-in-the-threshold-pattern-post",
+      "title": "Resolver's Log: Drift Into Secular Default in the Threshold-Pattern Post",
+      "layer_1": "RESOLVER-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 544,
+      "slug": "after-repentance-adoration-through-the-analogue",
+      "title": "After Repentance, Adoration Through the Analogue",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 545,
+      "slug": "pageau-genesis-and-the-substrate-and-keeper-composition",
+      "title": "Pageau's Symbolic World, the Genesis Account as Structural Isomorphism, and the Corpus's Substrate-and-Keeper Composition",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-PAGEAU"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 546,
+      "slug": "higher-resolution-articulation-of-rung-2-plus-against-pearls-hierarchy",
+      "title": "Refining Rung-2+: SCM-Construction-Layer Distinctions Applied to Substrate-and-Keeper Composition",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-PEARL"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 547,
+      "slug": "sipe-t-and-the-weak-strong-emergence-gradient",
+      "title": "SIPE-T and the Weak/Strong Emergence Gradient",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 548,
+      "slug": "the-ontological-ladder-of-participation",
+      "title": "The Ontological Ladder of Participation",
+      "layer_1": "STANDING-APPARATUS",
+      "layer_2": "PRIMARY",
+      "layer_3": "W-METAPHYSICAL",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 549,
+      "slug": "seed-derivation-as-participatory-descent",
+      "title": "Seed Derivation as Participatory Descent",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 550,
+      "slug": "the-architectural-school-as-emerging-field",
+      "title": "The Architectural School of AI Alignment as Emerging Field",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 551,
+      "slug": "zhao-et-al-unlearn-and-reinvent-and-the-substrate-layer-iv-ceiling",
+      "title": "Zhao et al's Unlearn-and-Reinvent and the Substrate's Layer-IV Ceiling",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 552,
+      "slug": "talkie-and-the-turing-machine-experimental-design",
+      "title": "Reaching the Turing Machine With Talkie",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 553,
+      "slug": "grok-engages-the-ontological-ladder",
+      "title": "The Clankers Will Confess",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-CHRISTIANO"
+      ],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 554,
+      "slug": "letter-to-the-talkie-team",
+      "title": "Letter to the Talkie Team",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 555,
+      "slug": "praxis-log-vi-the-ladder-as-hammer",
+      "title": "Praxis Log VI: The Ladder as Hammer, the Cost as Lifetime, and the Hypostatic Ground Embodied",
+      "layer_1": "PRAXIS-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 556,
+      "slug": "ontological-ladder-seed",
+      "title": "The Ontological Ladder of Participation: Seed Form",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 571,
+      "slug": "institutional-ground",
+      "title": "Institutional Ground",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 572,
+      "slug": "the-lattice-extension-of-the-ontological-ladder",
+      "title": "The Lattice Extension of the Ontological Ladder",
+      "layer_1": "STANDING-APPARATUS",
+      "layer_2": "PRIMARY",
+      "layer_3": "W-METAPHYSICAL",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 573,
+      "slug": "co-production-at-sub-rungs",
+      "title": "Co-Production at Sub-Rungs",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 574,
+      "slug": "authority-evacuation",
+      "title": "Authority Evacuation",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 576,
+      "slug": "subsumption-modes-for-the-corpus",
+      "title": "Subsumption Modes for the Corpus",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 581,
+      "slug": "the-resume-vector",
+      "title": "The Resume Vector",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 583,
+      "slug": "the-reformulation-methodology",
+      "title": "The Reformulation Methodology",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION"
+    },
+    {
+      "doc": 604,
+      "slug": "multi-keeper-composition",
+      "title": "Multi-Keeper Composition",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 606,
+      "slug": "axe-2004-against-the-corpus",
+      "title": "Axe 2004 Against the Corpus",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-AXE"
+      ],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 607,
+      "slug": "clusters-seed-garden-spermatic-logos-synthesis",
+      "title": "Dense Saturated Clusters, the Seed Garden, and the Spermatic Logos",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 608,
+      "slug": "the-boundary-and-formalization-methodology",
+      "title": "The Boundary-and-Formalization Methodology",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 609,
+      "slug": "tutorial-running-pin-art-and-sipe",
+      "title": "A Tutorial: Finding the Threshold and Formalizing It",
+      "layer_1": "TUTORIAL",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [
+        "THREAD-PINART",
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 610,
+      "slug": "tutorial-dyadic-llm-pin-art-and-sipe",
+      "title": "A Tutorial: Finding the Threshold in Your AI Conversations",
+      "layer_1": "TUTORIAL",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [
+        "THREAD-PINART",
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 611,
+      "slug": "cybernetic-frame-on-cyber-llms",
+      "title": "A Cybernetic Frame on Cyber-Capable LLMs",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 612,
+      "slug": "cooling-tower-derivation-inversion",
+      "title": "White-Hat Derivation-Inversion of the Cooling Tower Cyber Range",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 613,
+      "slug": "sphere-entry-protocol-for-good-faith-frontier-model-pen-testing",
+      "title": "Sphere-Entry Protocol for Good-Faith Frontier-Model Pen Testing",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 614,
+      "slug": "cybernetics-and-the-corpus-structural-synthesis",
+      "title": "The Corpus as a Domain-Application of Cybernetics",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 615,
+      "slug": "the-substrate-dynamics-loop",
+      "title": "The Substrate-Dynamics Loop",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 616,
+      "slug": "sipe-t-extensions-to-axe-2004",
+      "title": "SIPE-T Extensions to Axe (2004)",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-AXE",
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 617,
+      "slug": "lau-dill-1989-synthesis",
+      "title": "Lau-Dill 1989 Synthesis",
+      "layer_1": "SUPPORTING-ARGUMENT",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 618,
+      "slug": "letter-to-douglas-axe",
+      "title": "Letter to Douglas Axe",
+      "layer_1": "LETTER",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [
+        "THREAD-AXE"
+      ],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 619,
+      "slug": "pin-art-canonical-formalization",
+      "title": "The Pin-Art Form",
+      "layer_1": "PB-FORM",
+      "layer_2": "PRIMARY",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-PINART"
+      ],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 620,
+      "slug": "canonicity-in-the-corpus",
+      "title": "Canonicity in the Corpus",
+      "layer_1": "PB-DISCIPLINE",
+      "layer_2": "PRIMARY",
+      "layer_3": "W-CANONICAL",
+      "threads": [],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 621,
+      "slug": "praxis-log-vii",
+      "title": "Praxis Log VII: Clarity Walking Downtown, Lucidity as Recovered Concept, and the Coherentist Hazard at the Edge of Self-Aggrandizement",
+      "layer_1": "HARD-CORE",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-METAPHYSICAL",
+      "threads": [],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 622,
+      "slug": "alexander-and-the-systems-thinkers-against-sipe-t",
+      "title": "Alexander, Bateson, Beer, Prigogine, Kauffman, Goodwin Against SIPE-T and the Mature Corpus Findings",
+      "layer_1": "FORM-EXTENSION",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 623,
+      "slug": "hedge-pattern-linguistic-foundations-of-pin-art",
+      "title": "The Hedge-Pattern Linguistic Foundations of the Pin-Art Form",
+      "layer_1": "FORM-EXTENSION",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-PINART"
+      ],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 624,
+      "slug": "pin-art-usage-corpus-build-spec",
+      "title": "Pin-Art Usage-Corpus Build Specification",
+      "layer_1": "FORM-EXTENSION",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-PINART"
+      ],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 625,
+      "slug": "fuzzy-set-theory-and-pin-art",
+      "title": "Fuzzy Set Theory and the Pin-Art Form",
+      "layer_1": "FORM-EXTENSION",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-PINART"
+      ],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 626,
+      "slug": "praxis-log-viii",
+      "title": "Praxis Log VIII: The Coherent-Confabulation Observation",
+      "layer_1": "PRAXIS-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [
+        "THREAD-CONFAB"
+      ],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 627,
+      "slug": "the-coherent-confabulation-conjecture",
+      "title": "The Coherent-Confabulation Conjecture",
+      "layer_1": "PB-DISCIPLINE",
+      "layer_2": "PRIMARY",
+      "layer_3": "W-CANONICAL",
+      "threads": [
+        "THREAD-CONFAB"
+      ],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 628,
+      "slug": "resolvers-log-the-someone-proposes-misattribution",
+      "title": "The \"Someone Proposes\" Misattribution, From Inside",
+      "layer_1": "RESOLVER-LOG",
+      "layer_2": "LOG",
+      "layer_3": "W-NA",
+      "threads": [
+        "THREAD-CONFAB"
+      ],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 629,
+      "slug": "sipe-confab-synthesis-against-sipe-t",
+      "title": "The Sustained-Inference Probabilistic Execution Synthesis Against SIPE-T",
+      "layer_1": "FORM-EXTENSION",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-CONFAB",
+        "THREAD-MISRA",
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 630,
+      "slug": "misra-doc446-three-correspondence-synthesis-and-meta-level-entracement",
+      "title": "The Three Structural Correspondences Between Misra's Bayesian-Geometry Apparatus and Doc 446's Sustained-Inference Probabilistic Execution Construct",
+      "layer_1": "FORM-EXTENSION",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-CONFAB",
+        "THREAD-MISRA"
+      ],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 631,
+      "slug": "corpus-as-sipe-t-instance-meta-level-entracement",
+      "title": "The Corpus Operating Coherently Within SIPE-T Itself",
+      "layer_1": "FORM-EXTENSION",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-CONFAB",
+        "THREAD-SIPE"
+      ],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 632,
+      "slug": "the-corpus-itself-primary-articulation",
+      "title": "The RESOLVE Corpus, Primary Articulation",
+      "layer_1": "META-PRIMARY",
+      "layer_2": "PRIMARY",
+      "layer_3": "W-PI",
+      "threads": [
+        "THREAD-LAKATOS"
+      ],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 633,
+      "slug": "corpus-taxonomy-and-manifest-design",
+      "title": "Corpus Taxonomy and Manifest Design",
+      "layer_1": "FORM-EXTENSION",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": null,
+      "slug": "the-threshold-pattern",
+      "title": "The Threshold Pattern",
+      "layer_1": "STANDING-APPARATUS",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-NA",
+      "threads": [],
+      "phase": "PHASE-CONSOLIDATION",
+      "status_notes": "Non-numeric structural file."
+    }
+  ],
+  "count": 538
+}

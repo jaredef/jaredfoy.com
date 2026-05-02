@@ -1,0 +1,153 @@
+<style>
+  .sv { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .sv-head { border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+  .sv-kicker { font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: color-mix(in srgb, var(--fg) 55%, transparent); margin: 0 0 0.4rem; }
+  .sv-head h1 { font-size: clamp(1.7rem, 3.5vw, 2.2rem); margin: 0 0 0.5rem; letter-spacing: -0.02em; }
+  .sv-head p { font-size: 0.95rem; color: color-mix(in srgb, var(--fg) 78%, transparent); line-height: 1.55; max-width: 70ch; margin: 0; }
+  .sv-head a { color: var(--accent); }
+  .sv-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 2rem; padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 4px; background: color-mix(in srgb, var(--fg) 2%, transparent); }
+  .sv-nav .nl { font-family: var(--font-mono, monospace); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: color-mix(in srgb, var(--fg) 55%, transparent); margin-right: 0.5rem; }
+  .sv-nav a { font-size: 0.82rem; padding: 0.25rem 0.7rem; border-radius: 3px; border: 1px solid color-mix(in srgb, var(--fg) 18%, transparent); color: color-mix(in srgb, var(--fg) 80%, transparent); text-decoration: none; }
+  .sv-nav a:hover { border-color: var(--accent); }
+  .sv-nav a.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); color: var(--accent); }
+
+  /* Timeline: horizontal bands per phase, with docs as small markers in doc-number order. */
+  .phase-band { margin-bottom: 1.5rem; border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; background: color-mix(in srgb, var(--fg) 2%, transparent); }
+  .phase-band .ph-head { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+  .phase-band .ph-name { font-family: var(--font-mono, monospace); font-size: 0.78rem; letter-spacing: 0.1em; padding: 0.2rem 0.55rem; border: 1px solid var(--accent); color: var(--accent); border-radius: 3px; }
+  .phase-band .ph-range { font-family: var(--font-mono, monospace); font-size: 0.72rem; color: color-mix(in srgb, var(--fg) 60%, transparent); }
+  .phase-band .ph-desc { font-size: 0.85rem; color: color-mix(in srgb, var(--fg) 75%, transparent); flex: 1; min-width: 200px; }
+  .phase-band .ph-count { font-family: var(--font-mono, monospace); font-size: 0.7rem; color: color-mix(in srgb, var(--fg) 55%, transparent); }
+  .strip { display: flex; flex-wrap: wrap; gap: 2px; }
+  .marker { display: inline-block; width: 12px; height: 12px; border-radius: 1px; cursor: pointer; transition: transform 0.1s; }
+  .marker:hover { transform: scale(1.6); z-index: 5; box-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+  /* Color markers by Layer 1 category */
+  .marker[data-l1="META-PRIMARY"] { background: #d4a017; }
+  .marker[data-l1="HARD-CORE"] { background: #d4a017; }
+  .marker[data-l1="STANDING-APPARATUS"] { background: color-mix(in srgb, #d4a017 60%, var(--fg)); }
+  .marker[data-l1="PB-FORM"] { background: var(--accent); }
+  .marker[data-l1="PB-DISCIPLINE"] { background: color-mix(in srgb, var(--accent) 70%, var(--fg)); }
+  .marker[data-l1="OBSERVATIONAL-PREDICTION"] { background: #4a9eff; }
+  .marker[data-l1="FORM-EXTENSION"] { background: color-mix(in srgb, var(--accent) 40%, var(--fg)); }
+  .marker[data-l1="DISCIPLINE-EXTENSION"] { background: color-mix(in srgb, var(--accent) 30%, var(--fg)); }
+  .marker[data-l1="LETTER"] { background: color-mix(in srgb, var(--fg) 35%, transparent); }
+  .marker[data-l1="PRAXIS-LOG"] { background: #8d6cd5; }
+  .marker[data-l1="RESOLVER-LOG"] { background: #c33; opacity: 0.8; }
+  .marker[data-l1="PULVERIZATION-AUDIT"] { background: color-mix(in srgb, #c33 50%, var(--fg)); }
+  .marker[data-l1="EXAMINATION"] { background: color-mix(in srgb, #4a9eff 50%, var(--fg)); }
+  .marker[data-l1="TUTORIAL"] { background: color-mix(in srgb, #d4a017 50%, var(--fg)); }
+  .marker[data-l1="ENTRACEMENT"] { background: color-mix(in srgb, #4a9eff 60%, var(--fg)); }
+  .marker[data-l1="HISTORICAL-ARCHIVAL"] { background: color-mix(in srgb, var(--fg) 12%, transparent); }
+  .marker[data-l1="SUPPORTING-ARGUMENT"] { background: color-mix(in srgb, var(--fg) 22%, transparent); }
+  .legend-row { display: flex; flex-wrap: wrap; gap: 0.6rem; padding: 0.6rem 0.85rem; background: color-mix(in srgb, var(--fg) 3%, transparent); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 1.25rem; font-size: 0.74rem; }
+  .legend-row .lr-label { font-family: var(--font-mono, monospace); font-size: 0.66rem; letter-spacing: 0.16em; color: color-mix(in srgb, var(--fg) 55%, transparent); margin-right: 0.5rem; }
+  .lr { display: inline-flex; align-items: center; gap: 0.3rem; }
+  .lr .sw { width: 10px; height: 10px; border-radius: 1px; }
+  #tip { position: fixed; padding: 0.5rem 0.7rem; background: var(--bg); border: 1px solid var(--accent); border-radius: 4px; font-size: 0.78rem; pointer-events: none; z-index: 100; max-width: 280px; line-height: 1.35; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: none; }
+  #tl-loading { padding: 2rem; text-align: center; color: color-mix(in srgb, var(--fg) 60%, transparent); font-style: italic; }
+</style>
+
+<div class="sv">
+  <header class="sv-head">
+    <p class="sv-kicker">Structure → Phase Timeline</p>
+    <h1>Phase Timeline</h1>
+    <p>The corpus's growth trajectory across four phases (per <a href="/resolve/doc/633-corpus-taxonomy-and-manifest-design">Doc 633</a> Layer 5). Each phase band shows its docs as colored markers grouped by Layer 1 category. The PHASE-SELF-ARTICULATION cluster (Docs 621–633) is where the corpus's self-recognition work is happening now.</p>
+  </header>
+  <nav class="sv-nav">
+    <span class="nl">Views:</span>
+    <a href="/resolve/structure">Integrated</a>
+    <a href="/resolve/structure/schema">Schema Map</a>
+    <a href="/resolve/structure/threads">Threads</a>
+    <a href="/resolve/structure/tiers">Tiers</a>
+    <a href="/resolve/structure/entry-points">Entry-Points</a>
+    <a href="/resolve/structure/timeline" class="active">Timeline</a>
+    <a href="/resolve/structure/filter">Filter</a>
+  </nav>
+
+  <div class="legend-row">
+    <span class="lr-label">Marker color = Layer 1 category:</span>
+    <span class="lr"><span class="sw" style="background: #d4a017"></span> Hard Core / Meta-Primary</span>
+    <span class="lr"><span class="sw" style="background: var(--accent)"></span> PB-Form</span>
+    <span class="lr"><span class="sw" style="background: color-mix(in srgb, var(--accent) 70%, var(--fg))"></span> PB-Discipline</span>
+    <span class="lr"><span class="sw" style="background: #4a9eff"></span> Observational Prediction</span>
+    <span class="lr"><span class="sw" style="background: #8d6cd5"></span> Praxis Log</span>
+    <span class="lr"><span class="sw" style="background: #c33"></span> Resolver Log</span>
+    <span class="lr"><span class="sw" style="background: color-mix(in srgb, var(--fg) 35%, transparent)"></span> Letter</span>
+    <span class="lr"><span class="sw" style="background: color-mix(in srgb, var(--fg) 22%, transparent)"></span> Supporting / Other</span>
+    <span class="lr"><span class="sw" style="background: color-mix(in srgb, var(--fg) 12%, transparent)"></span> Historical / Archival</span>
+  </div>
+
+  <div id="tl-loading">Loading manifest…</div>
+  <div id="phases" hidden></div>
+  <div id="tip"></div>
+</div>
+
+<script>
+  (function() {
+    var PHASES = [
+      ['PHASE-FOUNDATION', 'Foundation', 'Docs 001–200', 'Foundational articulation — broad-stroke framework establishment, ground-series docs, ENTRACE-stack, early letters.'],
+      ['PHASE-DEVELOPMENT', 'Development', 'Docs 201–400', 'Framework development — engagement broadening, methodology consolidation, examination cluster.'],
+      ['PHASE-CONSOLIDATION', 'Consolidation', 'Docs 401–600', 'Audit-discipline consolidation — pulverization formalism, tier-pattern reading, primary-articulation establishment, retraction ledger.'],
+      ['PHASE-SELF-ARTICULATION', 'Self-Articulation', 'Docs 601–633', 'Corpus-self-recognition — meta-level articulation, the Misra-engagement chain, the taxonomy work, this structure-page itself.']
+    ];
+
+    fetch('/manifest.json').then(r => r.json()).then(data => {
+      var docs = data.docs.filter(d => d.doc !== null);
+      docs.sort((a, b) => a.doc - b.doc);
+      var byPhase = {};
+      docs.forEach(d => {
+        var ph = d.phase || 'PHASE-FOUNDATION';
+        if (!byPhase[ph]) byPhase[ph] = [];
+        byPhase[ph].push(d);
+      });
+
+      var loading = document.getElementById('tl-loading');
+      var container = document.getElementById('phases');
+      var tip = document.getElementById('tip');
+      PHASES.forEach(function(p) {
+        var key = p[0], name = p[1], range = p[2], desc = p[3];
+        var phaseDocs = byPhase[key] || [];
+        var band = document.createElement('section');
+        band.className = 'phase-band';
+        var head = document.createElement('div');
+        head.className = 'ph-head';
+        head.innerHTML =
+          '<span class="ph-name">' + name + '</span>' +
+          '<span class="ph-range">' + range + '</span>' +
+          '<span class="ph-desc">' + desc + '</span>' +
+          '<span class="ph-count">' + phaseDocs.length + ' docs</span>';
+        band.appendChild(head);
+        var strip = document.createElement('div');
+        strip.className = 'strip';
+        phaseDocs.forEach(function(d) {
+          var m = document.createElement('a');
+          m.className = 'marker';
+          m.href = '/resolve/doc/' + d.doc + '-' + d.slug;
+          m.dataset.l1 = d.layer_1;
+          m.dataset.title = d.title;
+          m.dataset.doc = d.doc;
+          m.dataset.tier = d.layer_3;
+          m.addEventListener('mouseenter', function(e) {
+            tip.innerHTML = '<strong>Doc ' + this.dataset.doc + '</strong><br>' +
+                            this.dataset.title + '<br>' +
+                            '<span style="font-family: monospace; font-size: 0.7rem; color: color-mix(in srgb, var(--fg) 60%, transparent)">' +
+                            this.dataset.l1 + ' · ' + this.dataset.tier + '</span>';
+            tip.style.display = 'block';
+          });
+          m.addEventListener('mousemove', function(e) {
+            tip.style.left = (e.clientX + 12) + 'px';
+            tip.style.top = (e.clientY + 12) + 'px';
+          });
+          m.addEventListener('mouseleave', function() { tip.style.display = 'none'; });
+          strip.appendChild(m);
+        });
+        band.appendChild(strip);
+        container.appendChild(band);
+      });
+      loading.hidden = true;
+      container.hidden = false;
+    }).catch(err => {
+      document.getElementById('tl-loading').textContent = 'Failed to load manifest: ' + err.message;
+    });
+  })();
+</script>

@@ -42,6 +42,45 @@
 
   .structure-page .structure-intro a { color: var(--accent); }
 
+  /* ---------- Cross-view navigation ---------- */
+  .structure-page .structure-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--fg) 2%, transparent);
+  }
+  .structure-page .structure-nav .nav-label {
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--fg) 55%, transparent);
+    margin-right: 0.5rem;
+  }
+  .structure-page .structure-nav .nav-link {
+    font-size: 0.82rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 3px;
+    border: 1px solid color-mix(in srgb, var(--fg) 18%, transparent);
+    color: color-mix(in srgb, var(--fg) 80%, transparent);
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .structure-page .structure-nav .nav-link:hover {
+    border-color: var(--accent);
+    color: var(--fg-bright, var(--fg));
+  }
+  .structure-page .structure-nav .nav-link.active {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    color: var(--accent);
+  }
+
   .structure-page .toolbar {
     display: flex;
     flex-wrap: wrap;
@@ -253,6 +292,17 @@
     <h1>Corpus Structure</h1>
     <p class="structure-intro">The RESOLVE corpus arranged according to its own self-recognized form. Reading the corpus by structure rather than by series or chronology. The framework is articulated formally at <a href="/resolve/doc/632-the-corpus-itself-primary-articulation">Doc 632</a>; the per-doc tagging that lets this page exist is specified at <a href="/resolve/doc/633-corpus-taxonomy-and-manifest-design">Doc 633</a>; the canonicity disambiguation that distinguishes role from warrant is at <a href="/resolve/doc/620-canonicity-in-the-corpus">Doc 620</a>.</p>
   </header>
+
+  <nav class="structure-nav">
+    <span class="nav-label">Views:</span>
+    <a class="nav-link active" href="/resolve/structure">Integrated</a>
+    <a class="nav-link" href="/resolve/structure/schema">Schema Map</a>
+    <a class="nav-link" href="/resolve/structure/threads">Threads</a>
+    <a class="nav-link" href="/resolve/structure/tiers">Tiers</a>
+    <a class="nav-link" href="/resolve/structure/entry-points">Entry-Points</a>
+    <a class="nav-link" href="/resolve/structure/timeline">Timeline</a>
+    <a class="nav-link" href="/resolve/structure/filter">Filter</a>
+  </nav>
 
   <div class="toolbar">
     <span class="toolbar-label">Filter:</span>
