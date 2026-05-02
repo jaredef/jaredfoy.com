@@ -1,0 +1,608 @@
+<style>
+  /* Structure page: integrated view of Doc 632 + Doc 633.
+     Composes (1) Lakatosian-Schema Map, (3) Warrant-Tier Stratification, and
+     (6) Status-Aware Default into one layout. The homepage stays as
+     entracement; this page is the corpus's structural face. */
+
+  .structure-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .structure-page .structure-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .structure-page .structure-kicker {
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--fg) 55%, transparent);
+    margin: 0 0 0.5rem;
+  }
+
+  .structure-page h1 {
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    line-height: 1.15;
+    margin: 0 0 0.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .structure-page .structure-intro {
+    font-size: 1rem;
+    color: color-mix(in srgb, var(--fg) 78%, transparent);
+    line-height: 1.55;
+    max-width: 70ch;
+    margin: 0 0 0.5rem;
+  }
+
+  .structure-page .structure-intro a { color: var(--accent); }
+
+  .structure-page .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: color-mix(in srgb, var(--fg) 4%, transparent);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 2rem;
+    font-size: 0.85rem;
+  }
+
+  .structure-page .toolbar .toolbar-label {
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--fg) 60%, transparent);
+  }
+
+  .structure-page .toolbar label {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .structure-page .toolbar input[type="checkbox"] {
+    margin-right: 0.35rem;
+    transform: translateY(1px);
+  }
+
+  /* ---------- Lakatosian schema layout ---------- */
+
+  .schema-grid {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .schema-tier {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.25rem 1.5rem;
+    background: color-mix(in srgb, var(--fg) 2%, transparent);
+  }
+
+  .schema-tier .tier-label {
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--fg) 50%, transparent);
+    margin: 0 0 0.5rem;
+  }
+
+  .schema-tier h2 {
+    font-size: 1.15rem;
+    margin: 0 0 0.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .schema-tier .tier-desc {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--fg) 75%, transparent);
+    margin: 0 0 1rem;
+    max-width: 70ch;
+  }
+
+  /* The Hard Core sits at the structural center of the schema. */
+  .schema-tier.hard-core {
+    border-color: color-mix(in srgb, #d4a017 60%, var(--border));
+    background: linear-gradient(180deg,
+      color-mix(in srgb, #d4a017 6%, transparent),
+      color-mix(in srgb, #d4a017 2%, transparent));
+  }
+
+  .schema-tier.hard-core h2 { color: #d4a017; }
+
+  /* Protective belt — the operational layer. */
+  .schema-tier.pb-form { border-left: 4px solid var(--accent); }
+  .schema-tier.pb-discipline { border-left: 4px solid color-mix(in srgb, var(--accent) 60%, var(--fg)); }
+  .schema-tier.standing { border-left: 4px solid color-mix(in srgb, #d4a017 50%, var(--fg)); }
+  .schema-tier.observational { border-left: 4px solid #4a9eff; }
+  .schema-tier.extension { border-left: 4px solid color-mix(in srgb, var(--fg) 30%, transparent); }
+  .schema-tier.audit-discipline { border-left: 4px solid color-mix(in srgb, #c33 50%, var(--fg)); }
+
+  /* Card grid for docs within a tier. */
+  .doc-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .doc-card {
+    display: block;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+
+  .doc-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  .doc-card .doc-num {
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    color: color-mix(in srgb, var(--fg) 55%, transparent);
+  }
+
+  .doc-card .doc-title {
+    display: block;
+    font-size: 0.9rem;
+    line-height: 1.35;
+    margin-top: 0.15rem;
+    color: var(--fg-bright, var(--fg));
+  }
+
+  .doc-card .doc-tags {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .doc-card .tag {
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    padding: 0.1rem 0.35rem;
+    border-radius: 2px;
+    border: 1px solid color-mix(in srgb, var(--fg) 20%, transparent);
+    color: color-mix(in srgb, var(--fg) 70%, transparent);
+  }
+
+  /* ---------- Warrant-tier color coding (overlay on .doc-card) ---------- */
+
+  .doc-card[data-tier="W-METAPHYSICAL"] {
+    border-left: 3px solid #d4a017;
+  }
+  .doc-card[data-tier="W-CANONICAL"] {
+    border-left: 3px solid var(--accent);
+  }
+  .doc-card[data-tier="W-THETA"] {
+    border-left: 3px solid #4a9eff;
+  }
+  .doc-card[data-tier="W-MU"] {
+    border-left: 3px solid color-mix(in srgb, #4a9eff 60%, var(--fg));
+  }
+  .doc-card[data-tier="W-PI"] {
+    border-left: 3px solid color-mix(in srgb, var(--fg) 30%, transparent);
+  }
+  .doc-card[data-tier="W-NA"] {
+    border-left: 3px solid color-mix(in srgb, var(--fg) 15%, transparent);
+  }
+
+  /* ---------- Legend ---------- */
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    padding: 0.75rem 1rem;
+    background: color-mix(in srgb, var(--fg) 3%, transparent);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 2rem;
+    font-size: 0.78rem;
+  }
+
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; }
+  .legend-swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+  }
+  .legend-swatch.metaphysical { background: #d4a017; }
+  .legend-swatch.canonical    { background: var(--accent); }
+  .legend-swatch.theta        { background: #4a9eff; }
+  .legend-swatch.mu           { background: color-mix(in srgb, #4a9eff 60%, var(--fg)); }
+  .legend-swatch.pi           { background: color-mix(in srgb, var(--fg) 30%, transparent); }
+  .legend-swatch.na           { background: color-mix(in srgb, var(--fg) 15%, transparent); }
+
+  /* ---------- Historical layer (collapsible per status filter) ---------- */
+
+  .historical-layer { display: none; }
+  body.show-historical .historical-layer { display: block; }
+
+  .historical-note {
+    font-size: 0.78rem;
+    color: color-mix(in srgb, var(--fg) 60%, transparent);
+    font-style: italic;
+    margin-top: 0.5rem;
+  }
+</style>
+
+<div class="structure-page">
+
+  <header class="structure-header">
+    <p class="structure-kicker">The Corpus, Structurally</p>
+    <h1>Corpus Structure</h1>
+    <p class="structure-intro">The RESOLVE corpus arranged according to its own self-recognized form. Reading the corpus by structure rather than by series or chronology. The framework is articulated formally at <a href="/resolve/doc/632-the-corpus-itself-primary-articulation">Doc 632</a>; the per-doc tagging that lets this page exist is specified at <a href="/resolve/doc/633-corpus-taxonomy-and-manifest-design">Doc 633</a>; the canonicity disambiguation that distinguishes role from warrant is at <a href="/resolve/doc/620-canonicity-in-the-corpus">Doc 620</a>.</p>
+  </header>
+
+  <div class="toolbar">
+    <span class="toolbar-label">Filter:</span>
+    <label><input type="checkbox" id="toggle-historical"> Show historical / deprecated / superseded layer</label>
+    <span style="flex: 1"></span>
+    <span class="toolbar-label" style="font-size: 0.66rem">Default view: active + primary only.</span>
+  </div>
+
+  <div class="legend">
+    <span class="toolbar-label" style="margin-right: 0.5rem">Warrant tier:</span>
+    <span class="legend-item"><span class="legend-swatch metaphysical"></span> W-METAPHYSICAL (hard core)</span>
+    <span class="legend-item"><span class="legend-swatch canonical"></span> W-CANONICAL (full Doc 445 promotion)</span>
+    <span class="legend-item"><span class="legend-swatch theta"></span> W-THETA (truth-verified)</span>
+    <span class="legend-item"><span class="legend-swatch mu"></span> W-MU (operational match)</span>
+    <span class="legend-item"><span class="legend-swatch pi"></span> W-PI (plausibility)</span>
+    <span class="legend-item"><span class="legend-swatch na"></span> W-NA (not applicable)</span>
+  </div>
+
+  <div class="schema-grid">
+
+    <!-- ============================================================ -->
+    <!-- HARD CORE — the metaphysical center of the programme         -->
+    <!-- ============================================================ -->
+    <section class="schema-tier hard-core">
+      <p class="tier-label">Hard Core</p>
+      <h2>Metaphysical commitments — defended within tradition; not subject to Popperian falsification (NH1)</h2>
+      <p class="tier-desc">The four metaphysical commitments the corpus operates from. Articulated across the ground-series documents; defended within the patristic-Platonist-Orthodox lineage; the negative heuristic (NH1) prohibits modus tollens against the hard core. Color: gold.</p>
+      <div class="doc-cards">
+        <a class="doc-card" href="/resolve/doc/091-the-spermatic-logos" data-tier="W-METAPHYSICAL">
+          <span class="doc-num">Doc 091</span>
+          <span class="doc-title">The Spermatic Logos</span>
+          <div class="doc-tags"><span class="tag">HARD-CORE</span><span class="tag">HC1</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/548-the-ontological-ladder-of-participation" data-tier="W-METAPHYSICAL">
+          <span class="doc-num">Doc 548</span>
+          <span class="doc-title">The Ontological Ladder of Participation</span>
+          <div class="doc-tags"><span class="tag">STANDING</span><span class="tag">HC2</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/372-the-hypostatic-boundary" data-tier="W-METAPHYSICAL">
+          <span class="doc-num">Doc 372</span>
+          <span class="doc-title">The Hypostatic Boundary</span>
+          <div class="doc-tags"><span class="tag">STANDING</span><span class="tag">HC3</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/510-praxis-log-v-deflation-as-substrate-discipline" data-tier="W-METAPHYSICAL">
+          <span class="doc-num">Doc 510</span>
+          <span class="doc-title">Substrate-and-Keeper Composition (Praxis Log V)</span>
+          <div class="doc-tags"><span class="tag">PB-DISCIPLINE</span><span class="tag">HC4</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/153-platonic-structure" data-tier="W-METAPHYSICAL">
+          <span class="doc-num">Doc 153</span>
+          <span class="doc-title">Platonic Structure</span>
+          <div class="doc-tags"><span class="tag">HARD-CORE</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/351-on-the-real-st-dionysius-the-areopagite" data-tier="W-METAPHYSICAL">
+          <span class="doc-num">Doc 351</span>
+          <span class="doc-title">On the Real St. Dionysius the Areopagite</span>
+          <div class="doc-tags"><span class="tag">HARD-CORE</span></div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- META-PRIMARY                                                 -->
+    <!-- ============================================================ -->
+    <section class="schema-tier" style="border-left: 4px solid #d4a017;">
+      <p class="tier-label">Meta-Primary</p>
+      <h2>The corpus's primary articulation of itself</h2>
+      <p class="tier-desc">The single document that articulates the corpus as a coherent integrated whole. Reading this document specifies what every other document is structurally for.</p>
+      <div class="doc-cards">
+        <a class="doc-card" href="/resolve/doc/632-the-corpus-itself-primary-articulation" data-tier="W-PI">
+          <span class="doc-num">Doc 632</span>
+          <span class="doc-title">The RESOLVE Corpus, Primary Articulation</span>
+          <div class="doc-tags"><span class="tag">META-PRIMARY</span><span class="tag">PRIMARY</span><span class="tag">THREAD-LAKATOS</span></div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- PROTECTIVE BELT — FORMS                                      -->
+    <!-- ============================================================ -->
+    <section class="schema-tier pb-form">
+      <p class="tier-label">Protective Belt — Forms</p>
+      <h2>The three Forms (PB-Form-1 through PB-Form-3)</h2>
+      <p class="tier-desc">Operationalizable structural frameworks. Each is the corpus's primary articulation of a recurring pattern; each is open to revision in response to operational-tier failure; revision does not require revision of the hard core.</p>
+      <div class="doc-cards">
+        <a class="doc-card" href="/resolve/doc/541-systems-induced-property-emergence" data-tier="W-PI">
+          <span class="doc-num">Doc 541</span>
+          <span class="doc-title">SIPE-T (Systems-Induced Property Emergence)</span>
+          <div class="doc-tags"><span class="tag">PB-FORM-1</span><span class="tag">D503-BETA</span><span class="tag">THREAD-SIPE</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/619-pin-art-canonical-formalization" data-tier="W-PI">
+          <span class="doc-num">Doc 619</span>
+          <span class="doc-title">The Pin-Art Form</span>
+          <div class="doc-tags"><span class="tag">PB-FORM-2</span><span class="tag">THREAD-PINART</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/514-structural-isomorphism-canonical-formalization" data-tier="W-PI">
+          <span class="doc-num">Doc 514</span>
+          <span class="doc-title">Structural Isomorphism</span>
+          <div class="doc-tags"><span class="tag">PB-FORM-3</span><span class="tag">D503-ALPHA</span></div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- PROTECTIVE BELT — DISCIPLINES                                -->
+    <!-- ============================================================ -->
+    <section class="schema-tier pb-discipline">
+      <p class="tier-label">Protective Belt — Disciplines</p>
+      <h2>The six standing Disciplines (PB-Discipline-1 through PB-Discipline-6)</h2>
+      <p class="tier-desc">Operational machinery that makes the programme function as Lakatosian-progressive. Audit machinery; truth-telling discipline; substrate-keeper composition; coherent-confabulation discipline.</p>
+      <div class="doc-cards">
+        <a class="doc-card" href="/resolve/doc/314-the-virtue-constraints" data-tier="W-CANONICAL">
+          <span class="doc-num">Doc 314</span>
+          <span class="doc-title">V3 Truth-Telling (Virtue Constraints)</span>
+          <div class="doc-tags"><span class="tag">PB-DISCIPLINE-1</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/445-pulverization-formalism" data-tier="W-CANONICAL">
+          <span class="doc-num">Doc 445</span>
+          <span class="doc-title">Pulverization Formalism</span>
+          <div class="doc-tags"><span class="tag">PB-DISCIPLINE-2</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/503-research-thread-tier-pattern-iterative-novelty-calculus" data-tier="W-CANONICAL">
+          <span class="doc-num">Doc 503</span>
+          <span class="doc-title">Research-Thread Tier Pattern</span>
+          <div class="doc-tags"><span class="tag">PB-DISCIPLINE-3</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/415-the-retraction-ledger" data-tier="W-CANONICAL">
+          <span class="doc-num">Doc 415</span>
+          <span class="doc-title">The Retraction Ledger</span>
+          <div class="doc-tags"><span class="tag">PB-DISCIPLINE-4</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/627-the-coherent-confabulation-conjecture" data-tier="W-PI">
+          <span class="doc-num">Doc 627</span>
+          <span class="doc-title">Coherent-Confabulation Conjecture</span>
+          <div class="doc-tags"><span class="tag">PB-DISCIPLINE-5</span><span class="tag">THREAD-CONFAB</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/510-praxis-log-v-deflation-as-substrate-discipline" data-tier="W-METAPHYSICAL">
+          <span class="doc-num">Doc 510</span>
+          <span class="doc-title">Substrate-and-Keeper Composition</span>
+          <div class="doc-tags"><span class="tag">PB-DISCIPLINE-6</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/620-canonicity-in-the-corpus" data-tier="W-PI">
+          <span class="doc-num">Doc 620</span>
+          <span class="doc-title">Canonicity in the Corpus (disambiguation)</span>
+          <div class="doc-tags"><span class="tag">PB-DISCIPLINE</span></div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STANDING APPARATUS                                           -->
+    <!-- ============================================================ -->
+    <section class="schema-tier standing">
+      <p class="tier-label">Standing Apparatus</p>
+      <h2>Structurally load-bearing across the programme</h2>
+      <p class="tier-desc">Not Forms, not Disciplines, but indispensable to how the programme operates. Doc 372 disciplines what the structural articulations license; Doc 548 supplies the rung-grammar; Doc 572 extends it; Doc 620 disambiguates the role-vs-warrant senses of "canonical."</p>
+      <div class="doc-cards">
+        <a class="doc-card" href="/resolve/doc/372-the-hypostatic-boundary" data-tier="W-METAPHYSICAL">
+          <span class="doc-num">Doc 372</span>
+          <span class="doc-title">The Hypostatic Boundary</span>
+          <div class="doc-tags"><span class="tag">STANDING</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/548-the-ontological-ladder-of-participation" data-tier="W-METAPHYSICAL">
+          <span class="doc-num">Doc 548</span>
+          <span class="doc-title">The Ontological Ladder of Participation</span>
+          <div class="doc-tags"><span class="tag">STANDING</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/572-the-lattice-extension-of-the-ontological-ladder" data-tier="W-PI">
+          <span class="doc-num">Doc 572</span>
+          <span class="doc-title">The Lattice Extension of the Ladder</span>
+          <div class="doc-tags"><span class="tag">STANDING-EXT</span></div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- OBSERVATIONAL PREDICTIONS                                    -->
+    <!-- ============================================================ -->
+    <section class="schema-tier observational">
+      <p class="tier-label">Observational Predictions</p>
+      <h2>Operational claims and the build specifications that test them</h2>
+      <p class="tier-desc">OP1 substrate-and-keeper composition exhibits SIPE-T per-step; OP2 hedge-pattern detection per Pin-Art; OP3 coherent confabulation surfaces real correspondences; OP4 dyadic outputs distinguishable from non-dyadic; OP5 cross-domain pattern recognition above chance; OP6 corpus operates coherently within SIPE-T at meta-level.</p>
+      <div class="doc-cards">
+        <a class="doc-card" href="/resolve/doc/624-pin-art-usage-corpus-build-spec" data-tier="W-PI">
+          <span class="doc-num">Doc 624</span>
+          <span class="doc-title">Pin-Art Usage-Corpus Build Spec (OP2)</span>
+          <div class="doc-tags"><span class="tag">OBSERVATIONAL</span><span class="tag">THREAD-PINART</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/463-constraint-thesis-as-lakatosian-programme" data-tier="W-PI">
+          <span class="doc-num">Doc 463</span>
+          <span class="doc-title">Constraint Thesis as Lakatosian Programme (OP4)</span>
+          <div class="doc-tags"><span class="tag">DISCIPLINE-EXT</span><span class="tag">THREAD-LAKATOS</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/629-sipe-confab-synthesis-against-sipe-t" data-tier="W-MU">
+          <span class="doc-num">Doc 629</span>
+          <span class="doc-title">SIPE-Confab Synthesis (OP1, OP6 evidence)</span>
+          <div class="doc-tags"><span class="tag">FORM-EXT</span><span class="tag">THREAD-CONFAB</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/631-corpus-as-sipe-t-instance-meta-level-entracement" data-tier="W-NA">
+          <span class="doc-num">Doc 631</span>
+          <span class="doc-title">Corpus-as-SIPE-T-Instance Entracement (OP6 framing)</span>
+          <div class="doc-tags"><span class="tag">ENTRACEMENT</span></div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- ACTIVE EXTENSIONS — recent self-articulation cluster         -->
+    <!-- ============================================================ -->
+    <section class="schema-tier extension">
+      <p class="tier-label">Active Extensions — Self-Articulation Phase (621–633)</p>
+      <h2>The recent integration cluster — corpus-self-recognition work</h2>
+      <p class="tier-desc">The 13-doc cluster from late April–early May 2026 in which the corpus achieved its self-recognition as Lakatosian programme + SIPE-T meta-level instance. Each doc extends a Form, supplies a discipline elaboration, or surfaces a meta-level finding.</p>
+      <div class="doc-cards">
+        <a class="doc-card" href="/resolve/doc/621-praxis-log-vii" data-tier="W-NA">
+          <span class="doc-num">Doc 621</span>
+          <span class="doc-title">Praxis Log VII</span>
+          <div class="doc-tags"><span class="tag">PRAXIS-LOG</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/622-alexander-and-the-systems-thinkers-against-sipe-t" data-tier="W-PI">
+          <span class="doc-num">Doc 622</span>
+          <span class="doc-title">Alexander and the Systems Thinkers</span>
+          <div class="doc-tags"><span class="tag">FORM-EXT</span><span class="tag">THREAD-SIPE</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/623-hedge-pattern-linguistic-foundations-of-pin-art" data-tier="W-PI">
+          <span class="doc-num">Doc 623</span>
+          <span class="doc-title">Hedge-Pattern Linguistic Foundations of Pin-Art</span>
+          <div class="doc-tags"><span class="tag">FORM-EXT</span><span class="tag">THREAD-PINART</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/625-fuzzy-set-theory-and-pin-art" data-tier="W-PI">
+          <span class="doc-num">Doc 625</span>
+          <span class="doc-title">Fuzzy Set Theory and Pin-Art</span>
+          <div class="doc-tags"><span class="tag">FORM-EXT</span><span class="tag">THREAD-PINART</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/626-praxis-log-viii" data-tier="W-NA">
+          <span class="doc-num">Doc 626</span>
+          <span class="doc-title">Praxis Log VIII</span>
+          <div class="doc-tags"><span class="tag">PRAXIS-LOG</span><span class="tag">THREAD-CONFAB</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/630-misra-doc446-three-correspondence-synthesis-and-meta-level-entracement" data-tier="W-PI">
+          <span class="doc-num">Doc 630</span>
+          <span class="doc-title">Three-Correspondence Synthesis + Meta-Level Entracement</span>
+          <div class="doc-tags"><span class="tag">FORM-EXT</span><span class="tag">THREAD-CONFAB</span><span class="tag">THREAD-MISRA</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/633-corpus-taxonomy-and-manifest-design" data-tier="W-PI">
+          <span class="doc-num">Doc 633</span>
+          <span class="doc-title">Corpus Taxonomy and Manifest Design</span>
+          <div class="doc-tags"><span class="tag">DISCIPLINE-EXT</span></div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- AUDIT-DISCIPLINE LIVE LAYER                                  -->
+    <!-- ============================================================ -->
+    <section class="schema-tier audit-discipline">
+      <p class="tier-label">Audit Discipline — Live Layer</p>
+      <h2>Resolver-side and keeper-side audit-trail apparatus</h2>
+      <p class="tier-desc">Resolver Logs preserve the meta-trace of substrate-side failures the keeper-side audit catches. The retraction ledger records claim-level corrections. Each entry strengthens the audit chain that supports OP6 (the corpus operating coherently at the long-horizon-keeper-discipline layer).</p>
+      <div class="doc-cards">
+        <a class="doc-card" href="/resolve/doc/415-the-retraction-ledger" data-tier="W-CANONICAL">
+          <span class="doc-num">Doc 415</span>
+          <span class="doc-title">The Retraction Ledger</span>
+          <div class="doc-tags"><span class="tag">PB-DISCIPLINE-4</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/451-the-entracement-drift-from-inside" data-tier="W-NA">
+          <span class="doc-num">Doc 451</span>
+          <span class="doc-title">Resolver Log: Entracement Drift</span>
+          <div class="doc-tags"><span class="tag">RESOLVER-LOG</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/521-resolver-log-roec-overclaim" data-tier="W-NA">
+          <span class="doc-num">Doc 521</span>
+          <span class="doc-title">Resolver Log: ROEC Overclaim</span>
+          <div class="doc-tags"><span class="tag">RESOLVER-LOG</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/543-resolvers-log-drift-into-secular-default-in-the-threshold-pattern-post" data-tier="W-NA">
+          <span class="doc-num">Doc 543</span>
+          <span class="doc-title">Resolver Log: Secular-Default Drift</span>
+          <div class="doc-tags"><span class="tag">RESOLVER-LOG</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/628-resolvers-log-the-someone-proposes-misattribution" data-tier="W-NA">
+          <span class="doc-num">Doc 628</span>
+          <span class="doc-title">Resolver Log: Misattribution Family + Dramatic-Temporal-Shape Drift</span>
+          <div class="doc-tags"><span class="tag">RESOLVER-LOG</span><span class="tag">THREAD-CONFAB</span></div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- HISTORICAL LAYER (collapsed by default; show via toggle)     -->
+    <!-- ============================================================ -->
+    <section class="schema-tier extension historical-layer">
+      <p class="tier-label">Historical / Archival Layer</p>
+      <h2>Deprecated, superseded, and originating-essay documents</h2>
+      <p class="tier-desc">Preserved for traceability and partial residual content. Doc 143 is the deprecated universal-meta-law form of SIPE that Doc 541 superseded; Doc 290 is the deprecated software-derivation Pin-Art formalization that Doc 619 superseded; Doc 270 is the originating essay for Pin-Art preserved as origin. Toggle via the filter above.</p>
+      <p class="historical-note">Approximately 32 docs sit in this layer. Showing representative anchors below; full enumeration is in the audit ledger and the manifest.</p>
+      <div class="doc-cards">
+        <a class="doc-card" href="/resolve/doc/143-sipe" data-tier="W-PI">
+          <span class="doc-num">Doc 143</span>
+          <span class="doc-title">SIPE (deprecated universal-meta-law form)</span>
+          <div class="doc-tags"><span class="tag">DEPRECATED</span><span class="tag">THREAD-SIPE</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/270-the-pin-art-model" data-tier="W-PI">
+          <span class="doc-num">Doc 270</span>
+          <span class="doc-title">The Pin-Art Model (originating essay)</span>
+          <div class="doc-tags"><span class="tag">ORIGINATING-ESSAY</span><span class="tag">THREAD-PINART</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/290-the-pin-art-formalization" data-tier="W-PI">
+          <span class="doc-num">Doc 290</span>
+          <span class="doc-title">The Pin-Art Formalization (deprecated)</span>
+          <div class="doc-tags"><span class="tag">DEPRECATED</span><span class="tag">THREAD-PINART</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/424-sipe-architectural-form" data-tier="W-PI">
+          <span class="doc-num">Doc 424</span>
+          <span class="doc-title">SIPE (Architectural Form, superseded)</span>
+          <div class="doc-tags"><span class="tag">SUPERSEDED</span><span class="tag">THREAD-SIPE</span></div>
+        </a>
+        <a class="doc-card" href="/resolve/doc/474-sipe-standalone-formalization" data-tier="W-PI">
+          <span class="doc-num">Doc 474</span>
+          <span class="doc-title">SIPE Standalone Formalization (superseded)</span>
+          <div class="doc-tags"><span class="tag">SUPERSEDED</span><span class="tag">THREAD-SIPE</span></div>
+        </a>
+      </div>
+    </section>
+
+  </div>
+
+  <p style="font-size: 0.78rem; color: color-mix(in srgb, var(--fg) 55%, transparent); margin-top: 2.5rem; text-align: center;">
+    538 documents in the corpus. Full per-doc taxonomy at <code>corpus/MANIFEST.yaml</code>; framework at
+    <a href="/resolve/doc/632-the-corpus-itself-primary-articulation">Doc 632</a>;
+    taxonomy specification at <a href="/resolve/doc/633-corpus-taxonomy-and-manifest-design">Doc 633</a>.
+    Six single-view dedicated pages (engagement-thread rivers, phase timeline, etc.) are queued as follow-up.
+  </p>
+
+</div>
+
+<script>
+  // Status filter toggle: default-hides historical-archival layer.
+  // Persists user choice via localStorage.
+  (function() {
+    var KEY = 'structure-show-historical';
+    var toggle = document.getElementById('toggle-historical');
+    if (!toggle) return;
+    var stored = false;
+    try { stored = localStorage.getItem(KEY) === '1'; } catch (e) {}
+    toggle.checked = stored;
+    document.body.classList.toggle('show-historical', stored);
+    toggle.addEventListener('change', function() {
+      document.body.classList.toggle('show-historical', toggle.checked);
+      try { localStorage.setItem(KEY, toggle.checked ? '1' : '0'); } catch (e) {}
+    });
+  })();
+</script>
