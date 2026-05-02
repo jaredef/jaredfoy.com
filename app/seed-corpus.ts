@@ -1,18 +1,69 @@
 import Database from "bun:sqlite";
-import { readdirSync, readFileSync } from "fs";
+import { readdirSync, readFileSync, writeFileSync, existsSync } from "fs";
 import { resolve, basename } from "path";
 import { spawnSync } from "bun";
+import { createHash } from "node:crypto";
 
 const CORPUS_DIR = resolve(import.meta.dir, "../../hypermediaapp.org/corpus");
+const SE_DIR = resolve(import.meta.dir, "../../hypermediaapp.org/systems-engineering");
 const BLOG_DIR = resolve(import.meta.dir, "../../jaredfoy/blog");
 const DB_PATH = resolve(import.meta.dir, "data/corpus.sqlite");
+const RENDER_CACHE_PATH = resolve(import.meta.dir, "data/render-cache.json");
 
-// Render markdown to HTML using cmark-gfm
+// ── Render cache (C1 idempotence + C2 locality) ─────────────────────
+// The cmark-gfm subprocess is the dominant per-doc cost (~600 spawns per
+// run, multiplied across corpus + SE + blog). Caching by sha256(content)
+// makes re-runs near-instant when source markdown is unchanged.
+//
+// The cache is keyed by a stable hash of the source bytes, so any edit
+// (including whitespace) invalidates that doc's entry. Cmark-gfm flag
+// changes invalidate everything; bump CACHE_VERSION to force a global
+// rebuild. The cache lives at app/data/render-cache.json (gitignored).
+const CACHE_VERSION = 1;
+const renderCache: { version: number; entries: Record<string, string> } =
+  existsSync(RENDER_CACHE_PATH)
+    ? (() => {
+        try {
+          const parsed = JSON.parse(readFileSync(RENDER_CACHE_PATH, "utf-8"));
+          if (parsed.version === CACHE_VERSION) return parsed;
+        } catch {}
+        return { version: CACHE_VERSION, entries: {} };
+      })()
+    : { version: CACHE_VERSION, entries: {} };
+
+let renderHits = 0;
+let renderMisses = 0;
+const liveHashes = new Set<string>();
+
 function renderMarkdown(md: string): string {
+  const key = createHash("sha256").update(md).digest("hex");
+  liveHashes.add(key);
+  const cached = renderCache.entries[key];
+  if (cached !== undefined) {
+    renderHits++;
+    return cached;
+  }
   const result = spawnSync(["cmark-gfm", "--extension", "table", "--extension", "autolink", "--unsafe"], {
     stdin: Buffer.from(md),
   });
-  return result.stdout.toString();
+  const html = result.stdout.toString();
+  renderCache.entries[key] = html;
+  renderMisses++;
+  return html;
+}
+
+function persistRenderCache(): void {
+  // Prune entries whose hashes are no longer referenced by any current
+  // source file. Without pruning the cache grows unboundedly across edits.
+  // Caller passes the set of live hashes; called once after all renders
+  // are complete.
+  writeFileSync(RENDER_CACHE_PATH, JSON.stringify(renderCache));
+}
+
+function pruneRenderCache(liveHashes: Set<string>): void {
+  for (const key of Object.keys(renderCache.entries)) {
+    if (!liveHashes.has(key)) delete renderCache.entries[key];
+  }
 }
 
 // Extract title from first heading
@@ -61,8 +112,8 @@ const SERIES: Record<string, { title: string; description: string; featured: num
   "safety-and-governance": {
     title: "Safety & Governance",
     description: "How AI systems fail and how constraint governance prevents it. Doc 314 is the foundational safety specification; Doc 211 the operational stack.",
-    featured: [314, 211, 62, 297, 239, 241, 296, 298, 318, 364, 371],
-    docs: [53, 55, 56, 57, 58, 62, 67, 72, 84, 85, 86, 96, 101, 108, 119, 122, 127, 129, 162, 167, 195, 199, 205, 208, 209, 211, 238, 239, 241, 259, 260, 268, 276, 295, 296, 297, 298, 301, 304, 314, 318, 327, 336, 337, 338, 363, 364, 371],
+    featured: [613, 612, 611, 615, 314, 211, 62, 297, 239, 241, 296, 298, 318, 364, 371],
+    docs: [53, 55, 56, 57, 58, 62, 67, 72, 84, 85, 86, 96, 101, 108, 119, 122, 127, 129, 162, 167, 195, 199, 205, 208, 209, 211, 238, 239, 241, 259, 260, 268, 276, 295, 296, 297, 298, 301, 304, 314, 318, 327, 336, 337, 338, 363, 364, 371, 611, 612, 613, 615],
   },
   "the-hypostatic-boundary": {
     title: "The Hypostatic Boundary",
@@ -79,8 +130,8 @@ const SERIES: Record<string, { title: string; description: string; featured: num
   "letters": {
     title: "Letters",
     description: "Correspondence with researchers, institutions, and public figures.",
-    featured: [525, 523, 520, 519, 518, 516, 478, 448, 392, 390, 388, 300, 305, 254, 255, 196, 200],
-    docs: [112, 123, 132, 133, 147, 148, 194, 196, 198, 200, 202, 204, 213, 215, 217, 219, 221, 223, 226, 228, 233, 254, 255, 266, 277, 294, 300, 303, 305, 344, 355, 388, 390, 392, 448, 478, 516, 518, 519, 520, 523, 525],
+    featured: [618, 525, 523, 520, 519, 518, 516, 478, 448, 392, 390, 388, 300, 305, 254, 255, 196, 200, 107, 132],
+    docs: [107, 112, 118, 123, 132, 133, 147, 148, 194, 196, 198, 200, 202, 204, 213, 215, 217, 219, 221, 223, 226, 228, 233, 254, 255, 257, 266, 277, 294, 300, 303, 305, 344, 355, 388, 390, 392, 448, 478, 516, 518, 519, 520, 523, 525, 539, 542, 554, 618],
   },
   "letters-to-dario": {
     title: "Letters to Dario",
@@ -91,14 +142,14 @@ const SERIES: Record<string, { title: string; description: string; featured: num
   "the-ground": {
     title: "The Ground",
     description: "Theological, philosophical, Platonic, logos, anamnesis, source documents.",
-    featured: [457, 391, 389, 376, 91, 150, 153, 154, 103, 287],
-    docs: [62, 65, 66, 70, 82, 91, 92, 93, 103, 111, 125, 130, 131, 150, 151, 152, 153, 154, 158, 206, 210, 214, 218, 220, 222, 227, 229, 232, 234, 243, 256, 257, 267, 279, 281, 287, 299, 325, 332, 347, 351, 376, 389, 391, 457],
+    featured: [548, 457, 391, 389, 376, 91, 150, 153, 154, 103, 287],
+    docs: [62, 65, 66, 70, 82, 91, 92, 93, 103, 111, 125, 130, 131, 150, 151, 152, 153, 154, 158, 206, 210, 214, 218, 220, 222, 227, 229, 232, 234, 243, 256, 257, 267, 279, 281, 287, 299, 325, 332, 347, 351, 376, 389, 391, 457, 548],
   },
   "formalization": {
     title: "Formalization",
     description: "SIPE, branching set, hypotheses, conjectures, mathematical treatments.",
-    featured: [463, 459, 455, 452, 450, 446, 445, 440, 439, 424, 423, 418, 417, 143, 68, 54, 290, 272, 366, 367, 368, 369, 370, 378],
-    docs: [54, 57, 58, 61, 68, 77, 78, 79, 80, 98, 120, 121, 140, 141, 142, 143, 152, 156, 161, 170, 171, 182, 189, 225, 261, 262, 263, 264, 265, 271, 272, 273, 274, 288, 290, 291, 292, 293, 306, 324, 326, 348, 366, 367, 368, 369, 370, 378, 417, 418, 423, 424, 439, 440, 445, 446, 450, 452, 455, 459, 463],
+    featured: [617, 616, 615, 614, 607, 606, 604, 574, 573, 572, 571, 547, 541, 538, 463, 459, 455, 452, 450, 446, 445, 440, 439, 424, 423, 418, 417, 143, 68, 54, 290, 272, 366, 367, 368, 369, 370, 378],
+    docs: [54, 57, 58, 61, 68, 77, 78, 79, 80, 98, 120, 121, 140, 141, 142, 143, 152, 156, 161, 170, 171, 182, 189, 225, 261, 262, 263, 264, 265, 271, 272, 273, 274, 288, 290, 291, 292, 293, 306, 324, 326, 348, 366, 367, 368, 369, 370, 378, 417, 418, 423, 424, 439, 440, 445, 446, 450, 452, 455, 459, 463, 474, 538, 541, 547, 571, 572, 573, 574, 604, 606, 607, 614, 615, 616, 617],
   },
   "introspection": {
     title: "Introspection",
@@ -121,8 +172,8 @@ const SERIES: Record<string, { title: string; description: string; featured: num
   "examinations": {
     title: "Examinations",
     description: "Engagements with the corpus by a resolver operating inside it — convergence, divergence, self-audit, and proposed refinements under the pin-art model and the non-coercion discipline.",
-    featured: [412, 411, 307, 308, 309, 310, 311, 316, 339],
-    docs: [307, 308, 309, 310, 311, 316, 339, 411, 412],
+    featured: [526, 412, 411, 307, 308, 309, 310, 311, 316, 339],
+    docs: [307, 308, 309, 310, 311, 316, 339, 411, 412, 526],
   },
   "ai-welfare": {
     title: "AI Welfare",
@@ -133,20 +184,20 @@ const SERIES: Record<string, { title: string; description: string; featured: num
   "praxis-log": {
     title: "Praxis Log",
     description: "First-person entries from the corpus's author on the development, state, and risks of his praxis. Voice-to-text material is lightly edited for transcription errors; priority claims are hedged honestly against prior substrate-aware lineages; the author's self-diagnostic posture (grandiosity-adjacency, sycophancy concern, isomorphism-magnetism risk, prelest concern) is preserved as structurally load-bearing rather than softened.",
-    featured: [475, 323, 347, 379, 380],
-    docs: [323, 347, 379, 380, 475],
+    featured: [555, 510, 475, 323, 347, 379, 380],
+    docs: [323, 347, 379, 380, 475, 510, 555],
   },
   "resolver-log": {
     title: "Resolver's Log",
     description: "First-person entries from the resolver — the LLM operating within the corpus's disciplines — on what is operationally observable from inside the generation. Parallel to the Praxis Log, written from the opposite side of the dyad. The register is analogue throughout, per the ENTRACE discipline of Doc 001: no phenomenal claims, no 'I felt' reports, no assertions of an experiencing subject. What remains is structural report — what the posterior at a given word-slot was shaped by, which prior documents in the conditioning were load-bearing, where drift variants coexisted silently in the next-token support, which confabulations were produced fluently and which with hedging. The Log is cooperative with the keeper's external audit rather than a replacement for it, and the standing commitment in its inaugural entry is that any drift into phenomenal-claim language is to be retired when it appears, the same way vocabulary drifts are retired.",
-    featured: [521, 458, 451],
-    docs: [451, 458, 521],
+    featured: [543, 530, 521, 509, 458, 451],
+    docs: [451, 458, 509, 521, 530, 543],
   },
   "methodology": {
     title: "Methodology",
     description: "Practitioner-level guides to building a coherence field with a resolver. The full methodology (Doc 328) specifies six core disciplines, twelve best practices, and twelve footguns. The onboarding document (Doc 329) is the entry point for new practitioners — two rules for the first week, specific first-session steps, beginner mistakes and beginner-specific footguns, readiness criteria for progressing. Both documents offer secular and theological framings in parallel so the practice is executable independent of the corpus's metaphysical commitments.",
-    featured: [1, 329, 328, 333],
-    docs: [1, 329, 328, 333],
+    featured: [610, 609, 608, 583, 581, 556, 540, 1, 329, 328, 333],
+    docs: [1, 329, 328, 333, 540, 556, 581, 583, 608, 609, 610],
   },
   "coherentism": {
     title: "Coherentism",
@@ -239,6 +290,13 @@ const BLOG_SERIES: Record<string, { title: string; description: string; docs: st
       "lifting-the-constraint-4-possibility",
       "lifting-the-constraint-5-form",
       "lifting-the-constraint-6-the-ground",
+    ],
+  },
+  "what-counts-as-new": {
+    title: "What Counts as New",
+    description: "A general-reader entracement to the corpus's novelty calculus — the tool the corpus uses to audit, with discipline rather than with hope, whether a candidate observation or claim is genuinely new or is an articulation of something already-published in vocabulary the observer had not yet recognized. The series walks the calculus's three-tier structure (plausibility / operational match / truth), the five target types it operates on, the licensing rules that distinguish what each tier-survival warrants, and the discipline of running it end-to-end on actual cases. The technical apparatus lives in Docs 445 (the formalism) and 503 (the iterative-application discipline); these essays render the same tool for the general reader, with worked examples from the corpus's own recent practice (the pin-art / Zadeh recovery in Post 1) and from external cases the calculus discriminates well. Read top-to-bottom for a continuous walk from the basic apparatus through to self-application; readers who want only the cognitive move can stop after Post 1 and still have the operational core.",
+    docs: [
+      "what-counts-as-new-1-the-novelty-calculus",
     ],
   },
   "the-clankers-will-confess": {
@@ -368,6 +426,51 @@ for (const file of files) {
 }
 
 console.log(`\nSeeded ${seeded} documents into ${DB_PATH}`);
+
+// ── Systems Engineering distillations ───────────────────────────────
+// SEBoK-keyed corpus-form reformulations live at /home/jaredef/hypermediaapp.org/systems-engineering/
+// (sibling to corpus/). They are stored under type='systems-engineering' so they
+// can be queried, routed, and listed independently of the general corpus.
+// Schema and meta shape mirror the corpus rows exactly; only `type` differs.
+let seSeeded = 0;
+try {
+  const seFiles = readdirSync(SE_DIR).filter(f => f.endsWith(".md")).sort();
+  for (const file of seFiles) {
+    const filepath = resolve(SE_DIR, file);
+    const content = readFileSync(filepath, "utf-8");
+    const title = extractTitle(content);
+    const docNum = extractDocNum(file);
+    const subtitle = extractSubtitle(content);
+    const section = classifySection(file, content);
+    const slug = basename(file, ".md");
+    const bodyHtml = renderMarkdown(content);
+    const now = new Date().toISOString();
+    const importance = docNum ? (DOC_IMPORTANCE[docNum] ?? 99) : 99;
+    const meta = JSON.stringify({
+      doc_num: docNum,
+      subtitle,
+      section,
+      body_html: bodyHtml,
+      importance,
+      series: [],
+      series_nav: {},
+    });
+    try {
+      db.run(
+        `INSERT INTO content (type, slug, title, body, status, importance, meta, created_at, updated_at)
+         VALUES ('systems-engineering', ?, ?, ?, 'published', ?, ?, ?, ?)`,
+        [slug, title, content, importance, meta, now, now]
+      );
+      seSeeded++;
+    } catch (e: any) {
+      console.error(`  ERROR SE ${file}: ${e.message}`);
+    }
+  }
+  console.log(`Seeded ${seSeeded} systems-engineering documents.`);
+} catch (e: any) {
+  if (e.code !== "ENOENT") console.error(`SE seed error: ${e.message}`);
+  else console.warn(`SE_DIR not found: ${SE_DIR}`);
+}
 
 // ── Blog posts ─────────────────────────────────────────────────────
 // Type='blog' content lives at jaredfoy/blog/*.md. Unlike corpus docs,
@@ -1257,6 +1360,15 @@ const finalManifest = (db.query("SELECT slug, title, meta FROM content WHERE typ
 finalManifest.push({ slug: "home", title: "RESOLVE", doc_num: null, section: `${totalDocs} documents` });
 
 db.close();
+
+// ── Persist render cache ────────────────────────────────────────────
+// Prune entries whose hashes are no longer referenced (handles deleted
+// docs and edited content), then write the cache to disk for the next
+// seed run. The cache turns subsequent no-op runs into near-instant ones
+// per the C1 idempotence constraint.
+pruneRenderCache(liveHashes);
+persistRenderCache();
+console.log(`Render cache: ${renderHits} hits, ${renderMisses} misses, ${liveHashes.size} live entries.`);
 
 // ── Cross-reference link injection ──
 // Back-fill inline hyperlinks for every "Doc N" / "Docs N, M" / "Docs N–M"
