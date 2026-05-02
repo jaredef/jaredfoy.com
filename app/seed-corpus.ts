@@ -300,6 +300,7 @@ const BLOG_SERIES: Record<string, { title: string; description: string; docs: st
       "what-counts-as-new-2-the-five-target-types",
       "what-counts-as-new-3-an-audit-walked",
       "what-counts-as-new-4-when-something-actually-is-new",
+      "what-counts-as-new-5-the-plausibility-trap",
     ],
   },
   "the-clankers-will-confess": {
