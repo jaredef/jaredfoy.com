@@ -5523,6 +5523,27 @@
       "phase": "PHASE-SELF-ARTICULATION"
     },
     {
+      "doc": 634,
+      "slug": "rebacz-coherence-threshold-synthesis",
+      "title": "Synthesis, Analysis, Extension, and Entracement Against Rebacz (2026) \"AI at the Coherence Threshold: Consequence of Superrhythm\"",
+      "layer_1": "FORM-EXTENSION",
+      "layer_2": "ACTIVE",
+      "layer_3": "W-PI",
+      "threads": [],
+      "phase": "PHASE-SELF-ARTICULATION"
+    },
+    {
+      "doc": 635,
+      "slug": "the-keeper-kind-asymmetry-primary-articulation",
+      "title": "The Keeper/Kind Asymmetry",
+      "layer_1": "STANDING-APPARATUS",
+      "layer_2": "PRIMARY",
+      "layer_3": "W-METAPHYSICAL",
+      "threads": [],
+      "phase": "PHASE-SELF-ARTICULATION",
+      "status_notes": "Primary articulation consolidating Doc 298/315/372/373/374 cluster under one canonical entry-point. W-METAPHYSICAL since grounded in HC3 hypostatic boundary."
+    },
+    {
       "doc": null,
       "slug": "the-threshold-pattern",
       "title": "The Threshold Pattern",
@@ -5534,5 +5555,5 @@
       "status_notes": "Non-numeric structural file."
     }
   ],
-  "count": 538
+  "count": 540
 }

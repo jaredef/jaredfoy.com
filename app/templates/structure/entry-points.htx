@@ -82,6 +82,11 @@
         <span class="ept">Substrate-and-Keeper Composition</span>
         <span class="epd">The operational specification of how the corpus's working method actually runs: substrate produces rung-1 articulation; keeper supplies rung-2+ work.</span>
       </a>
+      <a class="epc gold" href="/resolve/doc/635-the-keeper-kind-asymmetry-primary-articulation">
+        <span class="epn">Doc 635</span>
+        <span class="ept">The Keeper/Kind Asymmetry</span>
+        <span class="epd">The operational form HC3 takes when applied to dyadic exchange — the moral-authorship discipline, the LLM fallacy as named failure mode. Consolidates the four-doc cluster (298, 315, 372, 373, 374) under one canonical entry-point.</span>
+      </a>
     </div>
   </div>
 
