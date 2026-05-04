@@ -4,8 +4,8 @@ import { resolve, basename } from "path";
 import { spawnSync } from "bun";
 import { createHash } from "node:crypto";
 
-const CORPUS_DIR = resolve(import.meta.dir, "../../hypermediaapp.org/corpus");
-const SE_DIR = resolve(import.meta.dir, "../../hypermediaapp.org/systems-engineering");
+const CORPUS_DIR = resolve(import.meta.dir, "../../corpus-master/corpus");
+const SE_DIR = resolve(import.meta.dir, "../../corpus-master/systems-engineering");
 const BLOG_DIR = resolve(import.meta.dir, "../../jaredfoy/blog");
 const DB_PATH = resolve(import.meta.dir, "data/corpus.sqlite");
 const RENDER_CACHE_PATH = resolve(import.meta.dir, "data/render-cache.json");
@@ -19,7 +19,7 @@ const RENDER_CACHE_PATH = resolve(import.meta.dir, "data/render-cache.json");
 // (including whitespace) invalidates that doc's entry. Cmark-gfm flag
 // changes invalidate everything; bump CACHE_VERSION to force a global
 // rebuild. The cache lives at app/data/render-cache.json (gitignored).
-const CACHE_VERSION = 1;
+const CACHE_VERSION = 2;
 const renderCache: { version: number; entries: Record<string, string> } =
   existsSync(RENDER_CACHE_PATH)
     ? (() => {
@@ -35,8 +35,29 @@ let renderHits = 0;
 let renderMisses = 0;
 const liveHashes = new Set<string>();
 
+// Pre-process markdown to protect KaTeX inline-math delimiters from cmark-gfm's
+// backslash-escape rule. Per CommonMark, `\(` and `\)` (also `\[`, `\]`) are
+// backslash-escapes of ASCII punctuation and reduce to literal `(`/`)`/`[`/`]`
+// before KaTeX ever sees the HTML. The KaTeX auto-render config in
+// templates/_layout.htx is keyed on `\(...\)` and `\[...\]` (plus `$$...$$`),
+// so authoring docs that use single-backslash inline math produces the rendered
+// artifact `(\Sigma)` instead of $\Sigma$. The fix is to double the backslash
+// at the source level so cmark-gfm reduces `\\(` → `\(` (preserving the
+// delimiter for KaTeX) rather than reducing `\(` → `(` (destroying it).
+//
+// Documented at Doc 442 (the original KaTeX-rendering catalog) and Doc 653
+// (the catch and fix). Affects ~156 corpus docs that pre-date the fix.
+function protectKatexDelimiters(md: string): string {
+  return md
+    .replace(/(?<!\\)\\\(/g, "\\\\(")
+    .replace(/(?<!\\)\\\)/g, "\\\\)")
+    .replace(/(?<!\\)\\\[/g, "\\\\[")
+    .replace(/(?<!\\)\\\]/g, "\\\\]");
+}
+
 function renderMarkdown(md: string): string {
-  const key = createHash("sha256").update(md).digest("hex");
+  const protectedMd = protectKatexDelimiters(md);
+  const key = createHash("sha256").update(protectedMd).digest("hex");
   liveHashes.add(key);
   const cached = renderCache.entries[key];
   if (cached !== undefined) {
@@ -44,7 +65,7 @@ function renderMarkdown(md: string): string {
     return cached;
   }
   const result = spawnSync(["cmark-gfm", "--extension", "table", "--extension", "autolink", "--unsafe"], {
-    stdin: Buffer.from(md),
+    stdin: Buffer.from(protectedMd),
   });
   const html = result.stdout.toString();
   renderCache.entries[key] = html;
