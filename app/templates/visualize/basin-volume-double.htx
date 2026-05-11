@@ -1,0 +1,436 @@
+<style>
+  body { margin: 0; height: 100vh; background: #0b0d12; color: #ddd;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    display: flex; flex-direction: column; overflow: hidden; }
+  header { padding: 12px 20px; border-bottom: 1px solid #222;
+    display: flex; gap: 16px; align-items: baseline; flex-wrap: wrap; }
+  header h1 { margin: 0; font-size: 14px; font-weight: normal; }
+  header a { color: #88aaff; text-decoration: none; font-size: 12px; }
+  .crumbs { font-size: 12px; color: #667; margin-right: auto; }
+  .crumbs a { color: #88aaff; margin: 0 6px; }
+  .crumbs .sep { color: #444; }
+  main { flex: 1; display: grid; grid-template-columns: 1fr 320px;
+    overflow: hidden; min-height: 0; }
+  #plot-wrap { padding: 16px; overflow: hidden; min-height: 0;
+    display: flex; align-items: stretch; justify-content: stretch; }
+  canvas { background: #14171f; border-radius: 6px; width: 100%; height: 100%; }
+  aside { padding: 14px 16px; border-left: 1px solid #222;
+    overflow-y: auto; font-size: 12px; line-height: 1.5; min-height: 0; }
+  fieldset { border: 1px solid #2a2e38; border-radius: 6px;
+    margin: 0 0 12px; padding: 8px 12px; }
+  fieldset legend { color: #8a92a8; padding: 0 6px; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.5px; }
+  label { display: flex; justify-content: space-between; align-items: center;
+    margin: 4px 0; gap: 12px; }
+  input[type=number], select { background: #1a1d24; color: #ddd; border: 1px solid #333;
+    border-radius: 3px; padding: 3px 6px; width: 90px; font: inherit; font-size: 12px; }
+  button { background: #1a1d24; color: #ddd; border: 1px solid #444;
+    padding: 7px 14px; border-radius: 4px; font: inherit; font-size: 12px;
+    cursor: pointer; width: 100%; margin-top: 6px; }
+  button:hover:enabled { background: #242833; }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button.primary { border-color: #ffaa00; color: #ffaa00; }
+  #status { color: #aab; min-height: 1.4em; margin: 6px 0 12px; font-size: 11px; }
+  .stat { display: flex; justify-content: space-between; padding: 2px 0; }
+  .stat .v { color: #ffaa00; }
+  p.note { color: #778; font-size: 11px; line-height: 1.5; margin: 8px 0 0; }
+
+  html, body { overflow: visible !important; height: auto !important; background: var(--bg) !important; }
+  body { margin: 0; }
+  .viz-stage {
+    position: fixed; inset: 0;
+    background: #0b0d12; color: #ddd;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    overflow: hidden; z-index: 1;
+  }
+  .viz-stage canvas { display: block; }
+</style>
+<div class="viz-stage">
+
+
+
+
+<header>
+  <span class="crumbs">
+    <a href="../index.html">Resolve</a><span class="sep">/</span>
+    <a href="./index.html">Visualize</a><span class="sep">/</span>
+    <span>Basin-volume (double)</span>
+  </span>
+  <h1>V(k) on the inverted double pendulum</h1>
+  <a href="./basin-volume.html">← triple-pendulum probe</a>
+  <a href="./triple-pendulum.html">interactive demo</a>
+</header>
+
+<main>
+  <div id="plot-wrap"><canvas id="plot"></canvas></div>
+
+  <aside>
+    <fieldset>
+      <legend>Sweep parameters</legend>
+      <label>k_min <input id="kmin" type="number" value="6" step="1" /></label>
+      <label>k_max <input id="kmax" type="number" value="36" step="1" /></label>
+      <label>k samples <input id="nk" type="number" value="40" step="1" min="5" /></label>
+      <label>Trials per k <input id="ntrials" type="number" value="60" step="10" min="10" /></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Initial-condition box</legend>
+      <label>θ range (rad) <input id="thRange" type="number" value="0.6" step="0.05" /></label>
+      <label>ω range (rad/s) <input id="omRange" type="number" value="2.0" step="0.1" /></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Trial criterion</legend>
+      <label>Sim duration (s) <input id="tmax" type="number" value="3" step="0.5" /></label>
+      <label>Failure |θ| (rad) <input id="failTh" type="number" value="1.0" step="0.05" /></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Controller family</legend>
+      <label>Profile <select id="profile">
+        <option value="uniform">uniform [k, k]</option>
+        <option value="scaled" selected>scaled [k, k/3]</option>
+      </select></label>
+      <label>ζ <input id="zeta" type="number" value="0.7" step="0.1" /></label>
+    </fieldset>
+
+    <button id="run" class="primary">Run sweep</button>
+    <button id="cancel" disabled>Cancel</button>
+
+    <div id="status">Idle.</div>
+
+    <fieldset>
+      <legend>Results</legend>
+      <div class="stat"><span>k_c (V = 0.5)</span><span class="v" id="kc">—</span></div>
+      <div class="stat"><span>k_c (linear stab.)</span><span class="v" id="kc_lin">—</span></div>
+      <div class="stat"><span>Fitted β</span><span class="v" id="beta">—</span></div>
+      <div class="stat"><span>R² of fit</span><span class="v" id="r2">—</span></div>
+    </fieldset>
+
+    <p class="note">
+      Same probe as the triple-pendulum sweep, on a mechanically dissimilar
+      system (different mass matrix, different gravity scales, different
+      Coriolis structure). If β here matches the triple-pendulum β within
+      noise, candidate ρ(C) survives one universality test. If they diverge,
+      the exponent is system-specific and SIPE-T's universality framing
+      falsifies on its first attempt.
+    </p>
+  </aside>
+</main>
+
+<script type="module">
+// ---- Double-pendulum dynamics: full coupled Lagrangian, RK4 ---------------
+// Two uniform rods, length L, mass m. Absolute angles θ_i from upright.
+//   M_dim = [[4/3,           (1/2)cos(θ_1-θ_2)],
+//            [(1/2)cos(...), 1/3              ]]   in mL² units
+//   G_dim = [(3/2) sinθ_1, (1/2) sinθ_2]            in mgL units
+//   C_dim = [ (1/2)ω_2² sin(θ_1-θ_2), -(1/2)ω_1² sin(θ_1-θ_2) ] in mL² units
+//   M θ̈ = (g/L) G_dim − C_dim + τ_eff
+const GRAVITY = 9.81, LINK_LEN = 1.2;
+
+function massMatrix(th) {
+  const c12 = Math.cos(th[0] - th[1]);
+  return [
+    [ 4/3,        0.5*c12 ],
+    [ 0.5*c12,    1/3     ],
+  ];
+}
+function coriolisVec(th, om) {
+  const s12 = Math.sin(th[0] - th[1]);
+  return [
+     0.5 * om[1]*om[1] * s12,
+    -0.5 * om[0]*om[0] * s12,
+  ];
+}
+function gravityVec(th) {
+  return [ 1.5*Math.sin(th[0]), 0.5*Math.sin(th[1]) ];
+}
+function solve2(M, b) {
+  const det = M[0][0]*M[1][1] - M[0][1]*M[1][0];
+  const inv = 1 / det;
+  return [
+    ( M[1][1]*b[0] - M[0][1]*b[1]) * inv,
+    (-M[1][0]*b[0] + M[0][0]*b[1]) * inv,
+  ];
+}
+function angularAccel(th, om, tau) {
+  const Cv = coriolisVec(th, om), Gv = gravityVec(th);
+  const gOverL = GRAVITY / LINK_LEN;
+  const rhs = [
+    gOverL*Gv[0] - Cv[0] + tau[0],
+    gOverL*Gv[1] - Cv[1] + tau[1],
+  ];
+  return solve2(massMatrix(th), rhs);
+}
+
+// ---- Controller family parameterised by (k, profile, ζ) -------------------
+function makeController(k, profile, zeta) {
+  const kp = profile === 'uniform' ? [k, k] : [k, k/3];
+  const dp = kp.map(g => 2 * Math.sqrt(g) * zeta);
+  return { kp, dp };
+}
+function controllerTau(th, om, ctrl) {
+  return [
+    -ctrl.kp[0]*th[0] - ctrl.dp[0]*om[0],
+    -ctrl.kp[1]*th[1] - ctrl.dp[1]*om[1],
+  ];
+}
+
+// One Monte-Carlo trial: returns true iff all |θ_i| stayed below failTh for tMax.
+function simulateTrial(theta0, omega0, ctrl, tMax, failTh, dt) {
+  const th = theta0.slice(), om = omega0.slice();
+  const N = Math.ceil(tMax / dt);
+  for (let n = 0; n < N; n++) {
+    const tau1 = controllerTau(th, om, ctrl);
+    const k1th = om.slice(), k1om = angularAccel(th, om, tau1);
+    const th2 = [th[0]+0.5*dt*k1th[0], th[1]+0.5*dt*k1th[1]];
+    const om2 = [om[0]+0.5*dt*k1om[0], om[1]+0.5*dt*k1om[1]];
+    const tau2 = controllerTau(th2, om2, ctrl);
+    const k2th = om2.slice(), k2om = angularAccel(th2, om2, tau2);
+    const th3 = [th[0]+0.5*dt*k2th[0], th[1]+0.5*dt*k2th[1]];
+    const om3 = [om[0]+0.5*dt*k2om[0], om[1]+0.5*dt*k2om[1]];
+    const tau3 = controllerTau(th3, om3, ctrl);
+    const k3th = om3.slice(), k3om = angularAccel(th3, om3, tau3);
+    const th4 = [th[0]+dt*k3th[0], th[1]+dt*k3th[1]];
+    const om4 = [om[0]+dt*k3om[0], om[1]+dt*k3om[1]];
+    const tau4 = controllerTau(th4, om4, ctrl);
+    const k4th = om4.slice(), k4om = angularAccel(th4, om4, tau4);
+    const sixth = dt / 6;
+    for (let i = 0; i < 2; i++) {
+      th[i] += sixth * (k1th[i] + 2*k2th[i] + 2*k3th[i] + k4th[i]);
+      om[i] += sixth * (k1om[i] + 2*k2om[i] + 2*k3om[i] + k4om[i]);
+    }
+    if (Math.abs(th[0]) > failTh || Math.abs(th[1]) > failTh) return false;
+  }
+  return true;
+}
+
+// ---- Sweep loop ----------------------------------------------------------
+let cancelled = false, running = false;
+const $ = id => document.getElementById(id);
+
+async function runSweep() {
+  if (running) return;
+  running = true; cancelled = false;
+  $('run').disabled = true; $('cancel').disabled = false;
+
+  const kmin = +$('kmin').value, kmax = +$('kmax').value;
+  const nk = +$('nk').value | 0, nTrials = +$('ntrials').value | 0;
+  const thRange = +$('thRange').value, omRange = +$('omRange').value;
+  const tMax = +$('tmax').value, failTh = +$('failTh').value;
+  const profile = $('profile').value, zeta = +$('zeta').value;
+  const dt = 1 / 200;
+
+  const data = [];
+  const t0 = performance.now();
+  for (let i = 0; i < nk; i++) {
+    if (cancelled) break;
+    const k = kmin + (kmax - kmin) * i / (nk - 1);
+    const ctrl = makeController(k, profile, zeta);
+    let success = 0;
+    for (let t = 0; t < nTrials; t++) {
+      const theta0 = [(Math.random()*2-1)*thRange, (Math.random()*2-1)*thRange];
+      const omega0 = [(Math.random()*2-1)*omRange, (Math.random()*2-1)*omRange];
+      if (simulateTrial(theta0, omega0, ctrl, tMax, failTh, dt)) success++;
+    }
+    const V = success / nTrials;
+    const se = Math.sqrt(V * (1 - V) / nTrials);
+    data.push({ k, V, se });
+    setStatus(`k = ${k.toFixed(2)},  V = ${V.toFixed(3)}   (${i+1}/${nk}, ${((performance.now()-t0)/1000).toFixed(1)}s)`);
+    redraw(data, profile);
+    await yieldToUI();
+  }
+  if (!cancelled) fitAndReport(data, profile);
+  running = false;
+  $('run').disabled = false; $('cancel').disabled = true;
+  setStatus(cancelled ? 'Cancelled.' : `Done in ${((performance.now()-t0)/1000).toFixed(1)}s.`);
+}
+
+const yieldToUI = () => new Promise(r => requestAnimationFrame(() => r()));
+const setStatus = s => $('status').textContent = s;
+
+// ---- Critical-point estimation and exponent fit --------------------------
+function findKc(data) {
+  for (let i = 1; i < data.length; i++) {
+    if (data[i-1].V < 0.5 && data[i].V >= 0.5) {
+      const t = (0.5 - data[i-1].V) / (data[i].V - data[i-1].V);
+      return data[i-1].k + t * (data[i].k - data[i-1].k);
+    }
+  }
+  return null;
+}
+function fitBeta(data, kc) {
+  const pts = [];
+  for (const d of data) {
+    if (d.k > kc && d.V > 0.02 && d.V < 0.6) {
+      pts.push({ x: Math.log(d.k - kc), y: Math.log(d.V) });
+    }
+  }
+  if (pts.length < 3) return null;
+  let sx=0, sy=0, sxx=0, sxy=0; const n = pts.length;
+  for (const p of pts) { sx += p.x; sy += p.y; sxx += p.x*p.x; sxy += p.x*p.y; }
+  const slope = (n*sxy - sx*sy) / (n*sxx - sx*sx);
+  const intercept = (sy - slope*sx) / n;
+  const meanY = sy / n;
+  let sst = 0, ssr = 0;
+  for (const p of pts) {
+    const yhat = slope*p.x + intercept;
+    sst += (p.y - meanY)**2;
+    ssr += (p.y - yhat)**2;
+  }
+  return { beta: slope, intercept, r2: 1 - ssr/sst, nPts: n };
+}
+
+// Per-link diagonal stability boundary: k_i > scale_i · g/L / profile_i.
+function linearStabilityKc(profile) {
+  const gOverL = GRAVITY / LINK_LEN;
+  const scales = [1.5, 0.5];
+  const factors = profile === 'uniform' ? [1, 1] : [1, 1/3];
+  return Math.max(...scales.map((s, i) => s * gOverL / factors[i]));
+}
+
+function fitAndReport(data, profile) {
+  const kc = findKc(data);
+  $('kc').textContent = kc !== null ? kc.toFixed(2) : '—';
+  $('kc_lin').textContent = linearStabilityKc(profile).toFixed(2);
+  if (kc !== null) {
+    const fit = fitBeta(data, kc);
+    if (fit) {
+      $('beta').textContent = `${fit.beta.toFixed(3)}  (n=${fit.nPts})`;
+      $('r2').textContent = fit.r2.toFixed(3);
+      redraw(data, profile, kc, fit);
+    } else {
+      $('beta').textContent = '—';
+      $('r2').textContent = '—';
+    }
+  }
+}
+
+// ---- Plot ----------------------------------------------------------------
+const canvas = $('plot');
+const ctx = canvas.getContext('2d');
+let lastDraw = { data: [], profile: 'scaled', kc: null, fit: null };
+
+function resizeCanvas() {
+  const dpr = window.devicePixelRatio || 1;
+  const r = canvas.getBoundingClientRect();
+  canvas.width = Math.floor(r.width * dpr);
+  canvas.height = Math.floor(r.height * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+function redraw(data, profile, kc=null, fit=null) {
+  lastDraw = { data, profile, kc, fit };
+  const W = canvas.clientWidth, H = canvas.clientHeight;
+  ctx.fillStyle = '#14171f';
+  ctx.fillRect(0, 0, W, H);
+
+  const margin = { l: 64, r: 24, t: 28, b: 44 };
+  const plotW = W - margin.l - margin.r;
+  const plotH = H - margin.t - margin.b;
+  const xMin = +$('kmin').value, xMax = +$('kmax').value;
+  const x2px = x => margin.l + (x - xMin) / (xMax - xMin) * plotW;
+  const y2px = y => margin.t + (1 - y) * plotH;
+
+  ctx.strokeStyle = '#222630';
+  ctx.lineWidth = 1;
+  ctx.font = '11px ui-monospace, monospace';
+  ctx.fillStyle = '#778';
+  for (let v = 0; v <= 1.0001; v += 0.25) {
+    ctx.beginPath(); ctx.moveTo(margin.l, y2px(v)); ctx.lineTo(W - margin.r, y2px(v)); ctx.stroke();
+    ctx.fillText(v.toFixed(2), 12, y2px(v) + 4);
+  }
+  const xStep = (xMax - xMin) / 10;
+  for (let v = xMin; v <= xMax + 0.001; v += xStep) {
+    ctx.beginPath(); ctx.moveTo(x2px(v), margin.t); ctx.lineTo(x2px(v), H - margin.b); ctx.stroke();
+    ctx.fillText(v.toFixed(0), x2px(v) - 8, H - margin.b + 16);
+  }
+
+  const kcLin = linearStabilityKc(profile);
+  if (kcLin >= xMin && kcLin <= xMax) {
+    ctx.strokeStyle = '#446688';
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(x2px(kcLin), margin.t); ctx.lineTo(x2px(kcLin), H - margin.b); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#88aaff';
+    ctx.fillText(`k_c (linear) = ${kcLin.toFixed(2)}`, x2px(kcLin) + 4, margin.t + 14);
+  }
+
+  if (kc !== null && kc >= xMin && kc <= xMax) {
+    ctx.strokeStyle = '#ffaa00';
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(x2px(kc), margin.t); ctx.lineTo(x2px(kc), H - margin.b); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#ffaa00';
+    ctx.fillText(`k_c (V=0.5) = ${kc.toFixed(2)}`, x2px(kc) + 4, margin.t + 28);
+  }
+
+  ctx.strokeStyle = '#00ff88';
+  ctx.fillStyle = '#00ff88';
+  ctx.lineWidth = 1.5;
+  if (data.length > 0) {
+    ctx.beginPath();
+    data.forEach((d, i) => {
+      const x = x2px(d.k), y = y2px(d.V);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+    ctx.strokeStyle = 'rgba(0,255,136,0.4)';
+    ctx.lineWidth = 1;
+    data.forEach(d => {
+      if (d.se === undefined) return;
+      const x = x2px(d.k);
+      ctx.beginPath();
+      ctx.moveTo(x, y2px(Math.max(0, d.V - d.se)));
+      ctx.lineTo(x, y2px(Math.min(1, d.V + d.se)));
+      ctx.stroke();
+    });
+    data.forEach(d => {
+      ctx.beginPath(); ctx.arc(x2px(d.k), y2px(d.V), 2.5, 0, 2*Math.PI); ctx.fill();
+    });
+  }
+
+  if (fit && kc !== null) {
+    ctx.strokeStyle = '#ff8866';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([6, 3]);
+    ctx.beginPath();
+    let first = true;
+    const dk = (xMax - kc) / 200;
+    for (let kk = kc + dk; kk <= xMax; kk += dk) {
+      const Vfit = Math.exp(fit.intercept) * Math.pow(kk - kc, fit.beta);
+      if (Vfit < 0 || Vfit > 1.05) continue;
+      const x = x2px(kk), y = y2px(Math.min(1, Vfit));
+      first ? (ctx.moveTo(x, y), first = false) : ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#ff8866';
+    ctx.fillText(`V ~ (k − k_c)^β    β = ${fit.beta.toFixed(3)}    R² = ${fit.r2.toFixed(3)}`,
+      margin.l + 10, margin.t + 14);
+  }
+
+  ctx.fillStyle = '#aab';
+  ctx.font = '12px ui-monospace, monospace';
+  const xLabel = 'controller stiffness k';
+  ctx.fillText(xLabel, W/2 - ctx.measureText(xLabel).width/2, H - 10);
+  ctx.save();
+  ctx.translate(18, H/2);
+  ctx.rotate(-Math.PI/2);
+  const yLabel = 'basin volume V(k) — survival fraction';
+  ctx.fillText(yLabel, -ctx.measureText(yLabel).width/2, 0);
+  ctx.restore();
+}
+
+// ---- Wire up -------------------------------------------------------------
+$('run').addEventListener('click', runSweep);
+$('cancel').addEventListener('click', () => { cancelled = true; });
+window.addEventListener('resize', () => {
+  resizeCanvas();
+  redraw(lastDraw.data, lastDraw.profile, lastDraw.kc, lastDraw.fit);
+});
+resizeCanvas();
+redraw([], $('profile').value);
+</script>
+
+</div>

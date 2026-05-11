@@ -475,6 +475,40 @@ const pageMetaModule: Module = {
           };
           return { ...meta, tags: metaTagsHtml(meta, siteName) };
         }
+        // Visualize gallery — interactive simulations and probes.
+        const visualizePages: Record<string, { title: string; description: string }> = {
+          "": {
+            title: "Visualize — RESOLVE",
+            description: "Interactive simulations and probes that turn arguments from the corpus into instruments. Triple-pendulum controller styles, basin-volume sweeps, the grokking canonical ODE explorer.",
+          },
+          "triple-pendulum": {
+            title: "Triple pendulum — controller styles — RESOLVE",
+            description: "Three.js triple-link inverted pendulum. Switch between four controller styles (Weak PID, Standard LQR, Aggressive, Hierarchical), kick the chain, trigger each style's characteristic failure mode. ρ(C) readout reflects state-error scaling.",
+          },
+          "basin-volume": {
+            title: "Basin-volume sweep — triple pendulum — RESOLVE",
+            description: "Monte-Carlo basin-volume V(k) over random initial conditions across a one-parameter controller-stiffness sweep. Bernoulli error bars; critical-exponent fit V(k) ~ (k − k_c)^β on the rising shoulder.",
+          },
+          "basin-volume-double": {
+            title: "Basin-volume sweep — double pendulum — RESOLVE",
+            description: "Same basin-volume instrument on a mechanically dissimilar system. Compare β to the triple-pendulum result: agreement within noise is a data point toward SIPE-T universality; divergence falsifies it on first attempt.",
+          },
+        };
+        const vizMatch = path.match(/^\/visualize(?:\/([^/?#]+))?\/?$/);
+        if (vizMatch) {
+          const slug = vizMatch[1] || "";
+          if (Object.prototype.hasOwnProperty.call(visualizePages, slug)) {
+            const entry = visualizePages[slug];
+            const meta = {
+              title: entry.title,
+              description: entry.description,
+              url: `${urlPrefix}/visualize${slug ? "/" + slug : ""}`,
+              image: `${SITE_ORIGIN}/og/resolve.png`,
+              type: "website",
+            };
+            return { ...meta, tags: metaTagsHtml(meta, siteName) };
+          }
+        }
         // Fallback: the RESOLVE defaults inside the namespace, the personal defaults outside.
         const base = inResolve ? PAGE_META_DEFAULTS : PAGE_META_ROOT_DEFAULTS;
         const defaults = {

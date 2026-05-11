@@ -1,0 +1,562 @@
+<style>
+  html, body { margin: 0; height: 100%; background: #0b0d12; color: #ddd;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; overflow: hidden; }
+  #info {
+    position: absolute; top: 16px; left: 20px; padding: 10px 14px;
+    background: rgba(0,0,0,0.45); border: 1px solid #222; border-radius: 6px;
+    font-size: 13px; line-height: 1.5; pointer-events: none;
+  }
+  #rho {
+    position: absolute; top: 16px; right: 20px; padding: 10px 14px;
+    background: rgba(0,0,0,0.45); border: 1px solid #222; border-radius: 6px;
+    font-size: 13px; line-height: 1.5; min-width: 220px;
+  }
+  #style-info {
+    position: absolute; top: 130px; right: 20px; padding: 10px 14px;
+    background: rgba(0,0,0,0.45); border: 1px solid #222; border-radius: 6px;
+    font-size: 12px; line-height: 1.45; max-width: 280px;
+  }
+  #style-info .desc { color: #aab; }
+  #style-info .fail { color: #ffaa66; margin-top: 6px; }
+  #style-info .active-dist { color: #ff7777; margin-top: 6px; }
+  .panel button {
+    background: #1a1d24; color: #ddd; border: 1px solid #333;
+    padding: 8px 12px; margin-right: 8px; border-radius: 4px;
+    font: inherit; cursor: pointer;
+  }
+  .panel button:hover { background: #242833; }
+  .panel button.active { border-color: #ffaa00; color: #ffaa00; }
+  .panel button.danger { border-color: #884444; color: #ff9999; }
+  .panel button.danger:hover { background: #2a1a1a; }
+  #controls { position: absolute; bottom: 60px; left: 20px; }
+  #failure-controls { position: absolute; bottom: 20px; left: 20px; }
+  #right-controls { position: absolute; bottom: 20px; right: 20px; }
+  #site-link {
+    position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+    z-index: 20; padding: 6px 14px; background: rgba(0,0,0,0.55);
+    border: 1px solid #222; border-radius: 4px; font-size: 12px;
+  }
+  #site-link a { color: #88aaff; text-decoration: none; margin: 0 6px; }
+  #site-link a:hover { color: #aac4ff; }
+  #site-link .sep { color: #444; }
+
+  html, body { overflow: visible !important; height: auto !important; background: var(--bg) !important; }
+  body { margin: 0; }
+  .viz-stage {
+    position: fixed; inset: 0;
+    background: #0b0d12; color: #ddd;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    overflow: hidden; z-index: 1;
+  }
+  .viz-stage canvas { display: block; }
+</style>
+<div class="viz-stage">
+
+
+
+<div id="info">
+  Triple-link inverted pendulum<br>
+  Drag = rotate · scroll = zoom · K = kick · F = trigger failure · R = reset
+</div>
+<div id="rho">initializing…</div>
+<div id="style-info"></div>
+<div id="controls" class="panel"></div>
+<div id="failure-controls" class="panel"></div>
+<div id="right-controls" class="panel">
+  <button id="kick">Kick</button>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+let scene, camera, renderer, controls;
+let links = [];           // THREE.Mesh per link, anchored at its base
+let pivots = [];          // small spheres at each joint (visual)
+let rhoDisplay, styleInfoDiv;
+
+const LINK_LEN   = 1.2;
+const LINK_RAD   = 0.05;
+const LINK_MASS  = 1.0;
+const GRAVITY    = 9.81;
+const DAMPING    = 0.6;     // baseline viscous damping at each joint
+const DT         = 1 / 240; // physics substep
+const SUBSTEPS   = 4;
+const K_RHO      = 5;       // ρ readout sensitivity (style-independent)
+
+// Generalized coordinates: angle of each link from +Y (upright = 0).
+let angles = [0.05, -0.04, 0.03];
+let omegas = [0, 0, 0];
+let simTime = 0;
+
+let currentStyle = "hierarchical";
+
+// Each style is tuned to be linearly stable on its own. The `failure`
+// describes the disturbance class that exposes the style's weakness.
+//   kProfile   per-joint PD stiffness on absolute angle [link1, link2, link3]
+//   zeta       damping ratio used to derive d_i = 2·sqrt(k_i)·zeta
+//   tauMax     per-joint actuator saturation (in mL² units)
+//   failure    { label, detail, apply(d) } — mutates the disturbance state
+const styles = {
+  weak: {
+    color: 0x8888ff,
+    label: "Weak PID",
+    kProfile: [24, 16, 6],
+    zeta: 0.4,
+    tauMax: 200,
+    description: "Marginal gains: just above the linearized stability boundary. Slow response, narrow basin of attraction.",
+    failure: {
+      label: "Big shove",
+      detail: "Impulse that exceeds the basin. Aggressive recovers from the same kick; weak doesn't.",
+      apply(d) { d.pendingKick = [4.5, 4.5, 4.5]; }
+    }
+  },
+  standard: {
+    color: 0x44aa44,
+    label: "Standard LQR",
+    kProfile: [40, 24, 10],
+    zeta: 0.7,
+    tauMax: 200,
+    description: "Well-tuned PD: comfortable bandwidth, well-damped, no integral action.",
+    failure: {
+      label: "Steady wind",
+      detail: "Constant disturbance torque on link 2. Pure PD has no integrator → bias accumulates and the chain drifts out.",
+      apply(d) { d.wind = [0, 4.5, 0]; }
+    }
+  },
+  aggressive: {
+    color: 0xff4444,
+    label: "Aggressive",
+    kProfile: [90, 55, 22],
+    zeta: 0.4,
+    tauMax: 45,
+    description: "High gain, snappy response. Fastest recovery from clean inputs, but actuator-saturation- and noise-sensitive.",
+    failure: {
+      label: "Sensor noise",
+      detail: "Gaussian noise on angle measurements. High gain amplifies it; saturation chops it; chain chatters and destabilizes.",
+      apply(d) { d.noiseSigma = 0.06; }
+    }
+  },
+  hierarchical: {
+    color: 0xffaa00,
+    label: "Hierarchical",
+    kProfile: [60, 30, 12],
+    zeta: 0.6,
+    tauMax: 200,
+    description: "Cascaded gains: stiff outer joint, looser inner joints. Smooth, layered control of slow-varying targets.",
+    failure: {
+      label: "Tip buzz",
+      detail: "Sinusoidal disturbance localized to the bottom link. Inner-loop stiffness is low → the cascade can't track it and resonates.",
+      apply(d) { d.buzzAmp = 7; d.buzzFreq = 1.3; }
+    }
+  }
+};
+
+// Active disturbance state, mutated by the failure-trigger buttons.
+const disturbance = {
+  wind: [0, 0, 0],
+  buzzAmp: 0,
+  buzzFreq: 0,
+  noiseSigma: 0,
+  pendingKick: null,
+  noiseCache: [0, 0, 0]
+};
+
+function randn() {
+  // Box-Muller. Avoid log(0) for u = 0.
+  const u = Math.random() || 1e-9;
+  const v = Math.random();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
+
+init();
+addStyleControls();
+animate();
+
+function init() {
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0b0d12);
+  scene.fog = new THREE.Fog(0x0b0d12, 8, 18);
+
+  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.set(4, 3, 6);
+
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.shadowMap.enabled = true;
+  document.querySelector('.viz-stage').appendChild(renderer.domElement);
+
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 2, 0);
+  controls.enableDamping = true;
+
+  const hemi = new THREE.HemisphereLight(0xbcd4ff, 0x202028, 0.6);
+  scene.add(hemi);
+  const dir = new THREE.DirectionalLight(0xffffff, 0.9);
+  dir.position.set(5, 8, 4);
+  dir.castShadow = true;
+  dir.shadow.mapSize.set(1024, 1024);
+  scene.add(dir);
+
+  const ground = new THREE.Mesh(
+    new THREE.CircleGeometry(6, 64),
+    new THREE.MeshStandardMaterial({ color: 0x14171f, roughness: 0.95 })
+  );
+  ground.rotation.x = -Math.PI / 2;
+  ground.receiveShadow = true;
+  scene.add(ground);
+
+  const base = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.25, 0.3, 0.3, 32),
+    new THREE.MeshStandardMaterial({ color: 0x444a55, metalness: 0.4, roughness: 0.5 })
+  );
+  base.position.y = 0.15;
+  base.castShadow = true; base.receiveShadow = true;
+  scene.add(base);
+
+  // Build three pendulum links, each modeled as a cylinder anchored at its base.
+  // Geometry is shifted so the link grows in +Y from the local origin.
+  const linkGeom = new THREE.CylinderGeometry(LINK_RAD, LINK_RAD, LINK_LEN, 16);
+  linkGeom.translate(0, LINK_LEN / 2, 0);
+
+  for (let i = 0; i < 3; i++) {
+    const mat = new THREE.MeshStandardMaterial({
+      color: styles[currentStyle].color,
+      metalness: 0.3, roughness: 0.5
+    });
+    const link = new THREE.Mesh(linkGeom, mat);
+    link.castShadow = true;
+    scene.add(link);
+    links.push(link);
+
+    const pivot = new THREE.Mesh(
+      new THREE.SphereGeometry(LINK_RAD * 1.6, 16, 16),
+      new THREE.MeshStandardMaterial({ color: 0x222630, metalness: 0.6, roughness: 0.4 })
+    );
+    pivot.castShadow = true;
+    scene.add(pivot);
+    pivots.push(pivot);
+  }
+
+  rhoDisplay = document.getElementById('rho');
+  styleInfoDiv = document.getElementById('style-info');
+
+  window.addEventListener('resize', onResize);
+  window.addEventListener('keydown', e => {
+    if (e.key === 'k' || e.key === 'K') kick();
+    else if (e.key === 'f' || e.key === 'F') triggerFailure();
+    else if (e.key === 'r' || e.key === 'R') resetSim();
+  });
+  document.getElementById('kick').addEventListener('click', kick);
+}
+
+function onResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function setControllerStyle(styleName) {
+  currentStyle = styleName;
+  const style = styles[currentStyle];
+  links.forEach(link => link.material.color.setHex(style.color));
+  document.querySelectorAll('#controls button').forEach(b => {
+    b.classList.toggle('active', b.dataset.style === styleName);
+  });
+  document.querySelectorAll('#failure-controls button[data-action="trigger"]')
+    .forEach(b => b.textContent = `Trigger: ${style.failure.label}`);
+  updateStyleInfo();
+  console.log(`Switched to ${style.label} controller`);
+}
+
+function computeRho(angles) {
+  const totalError = angles[0] * angles[0]
+                   + angles[1] * angles[1]
+                   + angles[2] * angles[2];
+  return Math.exp(-K_RHO * totalError);
+}
+
+function activeDisturbanceLabel() {
+  const parts = [];
+  if (disturbance.wind.some(v => v !== 0)) parts.push("wind");
+  if (disturbance.buzzAmp !== 0)            parts.push("buzz");
+  if (disturbance.noiseSigma !== 0)         parts.push("noise");
+  return parts.length ? parts.join(" + ") : null;
+}
+
+function updateStyleInfo() {
+  const style = styles[currentStyle];
+  const k = style.kProfile.map(v => v.toFixed(0)).join(", ");
+  const dist = activeDisturbanceLabel();
+  styleInfoDiv.innerHTML =
+    `<b style="color:#${style.color.toString(16).padStart(6,'0')}">${style.label}</b><br>` +
+    `<span class="desc">k = [${k}], ζ = ${style.zeta}, τ_max = ${style.tauMax}</span><br>` +
+    `<span class="desc">${style.description}</span>` +
+    `<div class="fail">Failure mode — ${style.failure.label}: ${style.failure.detail}</div>` +
+    (dist ? `<div class="active-dist">Active disturbance: ${dist}</div>` : "");
+}
+
+// Place each link mesh in world space from the angle vector.
+function updatePendulum(angles) {
+  let currentPos = new THREE.Vector3(0, 0.3, 0);
+  const up = new THREE.Vector3(0, 0, 1);
+
+  for (let i = 0; i < 3; i++) {
+    links[i].position.copy(currentPos);
+    links[i].rotation.z = angles[i];
+    pivots[i].position.copy(currentPos);
+
+    const linkEnd = new THREE.Vector3(0, LINK_LEN, 0);
+    linkEnd.applyAxisAngle(up, angles[i]);
+    currentPos.add(linkEnd);
+  }
+
+  const rho = computeRho(angles);
+  const style = styles[currentStyle];
+  const stable = rho > 0.75;
+  rhoDisplay.innerHTML =
+    `Style: ${style.label}<br>` +
+    `θ = [${angles.map(a => a.toFixed(2)).join(", ")}] rad<br>` +
+    `ρ(C): ${rho.toFixed(3)}<br>` +
+    `Status: ${stable ? "✅ STABLE BASIN" : "❌ UNSTABLE"}`;
+  rhoDisplay.style.color = stable ? "#00ff88" : "#ff6666";
+}
+
+// ---------- Full coupled Lagrangian for three uniform rods --------------
+// Generalized coords: absolute angles θ_i from upright (+Y).
+// Equation of motion:  M(θ) θ̈ = (g/L) G_dim(θ) − C_dim(θ,ω) + τ_eff
+// where M, C are in units of mL² and G in units of mgL; τ_eff = τ/(mL²).
+// Mass and inertia of each rod cancel out of the dimensionless EOM, so we
+// don't need to pick m or L numerically beyond LINK_LEN for visuals.
+function massMatrix(th) {
+  const c12 = Math.cos(th[0] - th[1]);
+  const c13 = Math.cos(th[0] - th[2]);
+  const c23 = Math.cos(th[1] - th[2]);
+  return [
+    [ 7 / 3,         1.5 * c12,    0.5 * c13 ],
+    [ 1.5 * c12,     4 / 3,        0.5 * c23 ],
+    [ 0.5 * c13,     0.5 * c23,    1 / 3     ],
+  ];
+}
+
+function coriolisVec(th, om) {
+  const s12 = Math.sin(th[0] - th[1]);
+  const s13 = Math.sin(th[0] - th[2]);
+  const s23 = Math.sin(th[1] - th[2]);
+  return [
+     1.5 * om[1] * om[1] * s12 + 0.5 * om[2] * om[2] * s13,
+    -1.5 * om[0] * om[0] * s12 + 0.5 * om[2] * om[2] * s23,
+    -0.5 * om[0] * om[0] * s13 - 0.5 * om[1] * om[1] * s23,
+  ];
+}
+
+function gravityVec(th) {
+  return [
+    2.5 * Math.sin(th[0]),
+    1.5 * Math.sin(th[1]),
+    0.5 * Math.sin(th[2]),
+  ];
+}
+
+function invert3(M) {
+  const a = M[0][0], b = M[0][1], c = M[0][2];
+  const d = M[1][0], e = M[1][1], f = M[1][2];
+  const g = M[2][0], h = M[2][1], i = M[2][2];
+  const A =  (e * i - f * h);
+  const B = -(d * i - f * g);
+  const C =  (d * h - e * g);
+  const D = -(b * i - c * h);
+  const E =  (a * i - c * g);
+  const F = -(a * h - b * g);
+  const G =  (b * f - c * e);
+  const H = -(a * f - c * d);
+  const I =  (a * e - b * d);
+  const det = a * A + b * B + c * C;
+  const s = 1 / det;
+  return [
+    [A * s, D * s, G * s],
+    [B * s, E * s, H * s],
+    [C * s, F * s, I * s],
+  ];
+}
+
+function matVec3(M, v) {
+  return [
+    M[0][0] * v[0] + M[0][1] * v[1] + M[0][2] * v[2],
+    M[1][0] * v[0] + M[1][1] * v[1] + M[1][2] * v[2],
+    M[2][0] * v[0] + M[2][1] * v[1] + M[2][2] * v[2],
+  ];
+}
+
+// θ̈ given total external generalized force (controller + disturbance).
+function angularAccel(th, om, tauExt) {
+  const M  = massMatrix(th);
+  const Cv = coriolisVec(th, om);
+  const Gv = gravityVec(th);
+  const gOverL = GRAVITY / LINK_LEN;
+  const rhs = [
+    gOverL * Gv[0] - Cv[0] + tauExt[0],
+    gOverL * Gv[1] - Cv[1] + tauExt[1],
+    gOverL * Gv[2] - Cv[2] + tauExt[2],
+  ];
+  return matVec3(invert3(M), rhs);
+}
+
+const sat = (x, m) => Math.max(-m, Math.min(m, x));
+
+// Saturated PD on a noise-corrupted measurement, plus exogenous disturbances.
+function externalTorque(th, om, t, style, dProfile) {
+  const k = style.kProfile;
+  const d = dProfile;
+  const tm = style.tauMax;
+  const n = disturbance.noiseCache;
+  const ctrl0 = sat(-k[0] * (th[0] + n[0]) - d[0] * om[0], tm);
+  const ctrl1 = sat(-k[1] * (th[1] + n[1]) - d[1] * om[1], tm);
+  const ctrl2 = sat(-k[2] * (th[2] + n[2]) - d[2] * om[2], tm);
+  const buzz  = disturbance.buzzAmp * Math.sin(2 * Math.PI * disturbance.buzzFreq * t);
+  return [
+    ctrl0 + disturbance.wind[0],
+    ctrl1 + disturbance.wind[1],
+    ctrl2 + disturbance.wind[2] + buzz,
+  ];
+}
+
+// RK4 on (θ, ω). 4th-order keeps the chain energetically clean even near
+// the unstable upright where forward-Euler injects spurious energy.
+// Noise is sample-and-hold across one step (refreshed at the top), so all
+// four RK4 stages see the same measurement perturbation.
+function step(dt) {
+  const style = styles[currentStyle];
+  const dProfile = style.kProfile.map(g => 2 * Math.sqrt(g) * style.zeta + DAMPING);
+
+  if (disturbance.pendingKick) {
+    omegas[0] += disturbance.pendingKick[0];
+    omegas[1] += disturbance.pendingKick[1];
+    omegas[2] += disturbance.pendingKick[2];
+    disturbance.pendingKick = null;
+  }
+
+  if (disturbance.noiseSigma > 0) {
+    const s = disturbance.noiseSigma;
+    disturbance.noiseCache[0] = s * randn();
+    disturbance.noiseCache[1] = s * randn();
+    disturbance.noiseCache[2] = s * randn();
+  } else {
+    disturbance.noiseCache[0] = disturbance.noiseCache[1] = disturbance.noiseCache[2] = 0;
+  }
+
+  const th = angles, om = omegas, t = simTime;
+
+  const tau1 = externalTorque(th, om, t, style, dProfile);
+  const k1th = om.slice();
+  const k1om = angularAccel(th, om, tau1);
+
+  const th2 = [th[0]+0.5*dt*k1th[0], th[1]+0.5*dt*k1th[1], th[2]+0.5*dt*k1th[2]];
+  const om2 = [om[0]+0.5*dt*k1om[0], om[1]+0.5*dt*k1om[1], om[2]+0.5*dt*k1om[2]];
+  const tau2 = externalTorque(th2, om2, t + 0.5*dt, style, dProfile);
+  const k2th = om2.slice();
+  const k2om = angularAccel(th2, om2, tau2);
+
+  const th3 = [th[0]+0.5*dt*k2th[0], th[1]+0.5*dt*k2th[1], th[2]+0.5*dt*k2th[2]];
+  const om3 = [om[0]+0.5*dt*k2om[0], om[1]+0.5*dt*k2om[1], om[2]+0.5*dt*k2om[2]];
+  const tau3 = externalTorque(th3, om3, t + 0.5*dt, style, dProfile);
+  const k3th = om3.slice();
+  const k3om = angularAccel(th3, om3, tau3);
+
+  const th4 = [th[0]+dt*k3th[0], th[1]+dt*k3th[1], th[2]+dt*k3th[2]];
+  const om4 = [om[0]+dt*k3om[0], om[1]+dt*k3om[1], om[2]+dt*k3om[2]];
+  const tau4 = externalTorque(th4, om4, t + dt, style, dProfile);
+  const k4th = om4.slice();
+  const k4om = angularAccel(th4, om4, tau4);
+
+  const sixth = dt / 6;
+  for (let i = 0; i < 3; i++) {
+    angles[i] += sixth * (k1th[i] + 2 * k2th[i] + 2 * k3th[i] + k4th[i]);
+    omegas[i] += sixth * (k1om[i] + 2 * k2om[i] + 2 * k3om[i] + k4om[i]);
+  }
+  simTime += dt;
+
+  // Wrap absolute angles into (−π, π] so a full fall keeps integrating.
+  for (let i = 0; i < 3; i++) {
+    if (angles[i] >  Math.PI) angles[i] -= 2 * Math.PI;
+    if (angles[i] < -Math.PI) angles[i] += 2 * Math.PI;
+  }
+}
+
+function kick() {
+  // Small random impulse — all four styles handle this comfortably.
+  for (let i = 0; i < 3; i++) omegas[i] += (Math.random() - 0.5) * 2.0;
+}
+
+function triggerFailure() {
+  styles[currentStyle].failure.apply(disturbance);
+  updateStyleInfo();
+}
+
+function clearDisturbance() {
+  disturbance.wind[0] = disturbance.wind[1] = disturbance.wind[2] = 0;
+  disturbance.buzzAmp = 0;
+  disturbance.buzzFreq = 0;
+  disturbance.noiseSigma = 0;
+  disturbance.pendingKick = null;
+  updateStyleInfo();
+}
+
+function resetSim() {
+  angles[0] = 0.05; angles[1] = -0.04; angles[2] = 0.03;
+  omegas[0] = omegas[1] = omegas[2] = 0;
+  simTime = 0;
+  clearDisturbance();
+}
+
+function addStyleControls() {
+  const div = document.getElementById('controls');
+  Object.keys(styles).forEach(key => {
+    const btn = document.createElement('button');
+    btn.textContent = styles[key].label;
+    btn.dataset.style = key;
+    if (key === currentStyle) btn.classList.add('active');
+    btn.onclick = () => setControllerStyle(key);
+    div.appendChild(btn);
+  });
+
+  const failDiv = document.getElementById('failure-controls');
+  const trigger = document.createElement('button');
+  trigger.dataset.action = 'trigger';
+  trigger.className = 'danger';
+  trigger.textContent = `Trigger: ${styles[currentStyle].failure.label}`;
+  trigger.onclick = triggerFailure;
+  failDiv.appendChild(trigger);
+
+  const clear = document.createElement('button');
+  clear.textContent = 'Clear disturbance';
+  clear.onclick = clearDisturbance;
+  failDiv.appendChild(clear);
+
+  const reset = document.createElement('button');
+  reset.textContent = 'Reset chain';
+  reset.onclick = resetSim;
+  failDiv.appendChild(reset);
+
+  updateStyleInfo();
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  for (let s = 0; s < SUBSTEPS; s++) step(DT);
+  updatePendulum(angles);
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+</div>

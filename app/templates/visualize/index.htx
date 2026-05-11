@@ -1,0 +1,109 @@
+<style>
+  .viz-index {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 4rem;
+    color: var(--fg, #1a1a1f);
+    line-height: 1.55;
+  }
+  .viz-index h1 {
+    font-family: var(--font-serif, Georgia, serif);
+    font-size: 1.8rem;
+    line-height: 1.25;
+    margin: 0 0 0.6rem;
+  }
+  .viz-index .lede {
+    font-size: 1.02rem;
+    opacity: 0.85;
+    margin: 0 0 1.6rem;
+  }
+  .viz-index .lede a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; }
+
+  .viz-index h2 {
+    font-family: var(--font-serif, Georgia, serif);
+    font-size: 1.25rem;
+    margin: 2.2rem 0 0.6rem;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding-top: 1.4rem;
+  }
+  .theme-dark .viz-index h2 { border-top-color: rgba(255,255,255,0.1); }
+
+  .viz-card {
+    display: block;
+    padding: 1rem 1.2rem;
+    margin: 0.8rem 0;
+    background: rgba(0,0,0,0.025);
+    border-left: 3px solid #0e7490;
+    border-radius: 3px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s, border-left-color 0.15s;
+  }
+  .viz-card:hover {
+    background: rgba(14,116,144,0.08);
+    border-left-color: #0891b2;
+  }
+  .viz-card .title {
+    font-weight: 600;
+    font-size: 1.02rem;
+  }
+  .viz-card .blurb {
+    margin-top: 0.3rem;
+    font-size: 0.92rem;
+    opacity: 0.78;
+  }
+  .viz-index .missing {
+    font-size: 0.92rem;
+    margin-top: 0.6rem;
+    opacity: 0.78;
+  }
+  .viz-index .missing li { margin: 0.4rem 0; }
+</style>
+
+<div class="viz-index">
+  <h1>Visualize</h1>
+
+  <p class="lede">
+    Interactive simulations and probes that turn arguments from the corpus into instruments. Each is a self-contained page; physics, dynamics, and fitting code are inline. Open the page; mouse-and-keyboard your way around; watch the readouts.
+  </p>
+
+  <p>
+    These are not proofs. They are instruments — pins on the behavioral surface of dynamical systems, in the sense of <a href="/resolve/doc/707-pin-art-at-the-behavioral-surface-bidirectional-probes">Doc 707</a>. Forward, each candidate ρ(C) predicts a measurable; backward, what the system actually does surfaces whether the candidate is a real invariant or an accident of the demo. The point of the gallery is to provide a probe set dense enough to test SIPE-T's universality claims rather than to confirm them at one site.
+  </p>
+
+  <h2>Inverted-pendulum series</h2>
+
+  <p>
+    A three-link inverted pendulum hinged at the base, balanced by a per-joint PD controller. The full coupled Lagrangian is solved each step with RK4. Four named controller "styles" (Weak PID, Standard LQR, Aggressive, Hierarchical) each share a stable upright regime and a characteristic failure mode triggered on demand. The companion sweeps measure basin volume V(k) over random initial conditions and fit the critical exponent β.
+  </p>
+
+  <a class="viz-card" href="/resolve/visualize/triple-pendulum">
+    <div class="title">Triple pendulum — controller styles</div>
+    <div class="blurb">Three.js scene with orbit camera and physics loop. Switch controllers; kick the chain; trigger each style's failure mode. ρ(C) readout reflects state-error scaling.</div>
+  </a>
+
+  <a class="viz-card" href="/resolve/visualize/basin-volume">
+    <div class="title">Basin-volume sweep — triple pendulum</div>
+    <div class="blurb">Monte-Carlo over random ICs, sweep a one-parameter controller family, plot V(k) with Bernoulli error bars, fit V(k) ~ (k − k_c)^β on the rising shoulder.</div>
+  </a>
+
+  <a class="viz-card" href="/resolve/visualize/basin-volume-double">
+    <div class="title">Basin-volume sweep — double pendulum</div>
+    <div class="blurb">Same instrument on a mechanically dissimilar system (different mass matrix, gravity scales, Coriolis structure). Run both; compare β. Agreement within noise → one data point toward universality. Divergence → ρ(C) is system-specific and SIPE-T's universality framing falsifies on its first attempt.</div>
+  </a>
+
+  <h2>Training-time SIPE-T transition</h2>
+
+  <a class="viz-card" href="/resolve/visualize/grokking">
+    <div class="title">Grokking — canonical ODE explorer</div>
+    <div class="blurb">Interactive instantiation of the training-time SIPE-T formalization. Tune ρ*, α, s, I, τ; watch the order parameter cross threshold and the representational polytope snap.</div>
+  </a>
+
+  <h2>What's missing from the gallery</h2>
+
+  <ul class="missing">
+    <li>A third mechanically-dissimilar system (a 1-D N-link chain, or a multi-agent consensus net with redundant loops) to convert "two β values agreed" into a triangulation.</li>
+    <li>A scaling-collapse view: sweep two parameters and check whether (V, k) points collapse onto a single curve when re-plotted against a candidate ρ(C). Tests the form of ρ(C), not just the existence of a transition.</li>
+    <li>A nonlinear-fit form V(k) = 1 − exp(−A·(k − k_c)^β) (saturating, uses every point) replacing the heuristic shoulder-window log-log fit, for cases where the transition is narrow and the linear fit window is starved.</li>
+  </ul>
+</div>
