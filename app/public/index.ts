@@ -633,6 +633,9 @@ function cacheControlFor(method: string, path: string, status: number): string |
   // Endpoints that must never be cached
   if (path.startsWith("/api/")) return "no-store";
   if (path === "/chat" || path.startsWith("/chat/")) return "no-store";
+  // Visualize gallery — under active iteration; keep cache short so
+  // fixes propagate to mobile clients without manual hard-reload.
+  if (path === "/visualize" || path.startsWith("/visualize/")) return "no-store";
   // Long-lived immutable assets (filenames are versioned/stable)
   if (path.startsWith("/og/") || path.startsWith("/images/") || path.startsWith("/fonts/")) {
     return "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400";
