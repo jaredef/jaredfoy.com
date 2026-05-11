@@ -48,7 +48,43 @@
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     overflow: hidden; z-index: 1;
   }
-  .viz-stage canvas { display: block; }
+  .viz-stage canvas { display: block; touch-action: none; }
+
+  /* Mobile portrait — narrow viewports (~phone) — flatten panels into a
+     vertical stack so they don't crowd over each other or shrink the 3D
+     view to nothing. */
+  @media (max-width: 720px) {
+    #info {
+      top: 8px; left: 8px; right: 8px; padding: 6px 10px;
+      font-size: 11px; line-height: 1.35;
+    }
+    #controls {
+      bottom: auto; top: 60px; left: 8px; right: 8px;
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    #failure-controls {
+      bottom: auto; top: 108px; left: 8px; right: 80px;
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    #right-controls {
+      bottom: auto; top: 108px; right: 8px; left: auto;
+    }
+    /* style-info + rho live above the bottom edge stacked vertically. */
+    #style-info {
+      top: auto; bottom: 92px; left: 8px; right: 8px;
+      padding: 6px 10px; font-size: 11px; line-height: 1.35; max-width: none;
+      max-height: 18vh; overflow-y: auto;
+    }
+    #rho {
+      top: auto; bottom: 8px; left: 8px; right: 8px; padding: 6px 10px;
+      font-size: 11px; line-height: 1.35; min-width: 0;
+      max-height: 22vh; overflow-y: auto;
+    }
+    .panel button {
+      padding: 6px 10px; margin-right: 0;
+      font-size: 12px;
+    }
+  }
 </style>
 <div class="viz-stage">
 

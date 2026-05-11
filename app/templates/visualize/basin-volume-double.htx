@@ -1,39 +1,37 @@
 <style>
-  body { margin: 0; height: 100vh; background: #0b0d12; color: #ddd;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    display: flex; flex-direction: column; overflow: hidden; }
-  header { padding: 12px 20px; border-bottom: 1px solid #222;
+  /* Scoped under .viz-stage to avoid collision with site layout. */
+  .viz-stage header { padding: 12px 20px; border-bottom: 1px solid #222;
     display: flex; gap: 16px; align-items: baseline; flex-wrap: wrap; }
-  header h1 { margin: 0; font-size: 14px; font-weight: normal; }
-  header a { color: #88aaff; text-decoration: none; font-size: 12px; }
-  .crumbs { font-size: 12px; color: #667; margin-right: auto; }
-  .crumbs a { color: #88aaff; margin: 0 6px; }
-  .crumbs .sep { color: #444; }
-  main { flex: 1; display: grid; grid-template-columns: 1fr 320px;
+  .viz-stage header h1 { margin: 0; font-size: 14px; font-weight: normal; }
+  .viz-stage header a { color: #88aaff; text-decoration: none; font-size: 12px; }
+  .viz-stage .crumbs { font-size: 12px; color: #667; margin-right: auto; }
+  .viz-stage .crumbs a { color: #88aaff; margin: 0 6px; }
+  .viz-stage .crumbs .sep { color: #444; }
+  .viz-stage main { flex: 1; display: grid; grid-template-columns: 1fr 320px;
     overflow: hidden; min-height: 0; }
-  #plot-wrap { padding: 16px; overflow: hidden; min-height: 0;
+  .viz-stage #plot-wrap { padding: 16px; overflow: hidden; min-height: 0;
     display: flex; align-items: stretch; justify-content: stretch; }
-  canvas { background: #14171f; border-radius: 6px; width: 100%; height: 100%; }
-  aside { padding: 14px 16px; border-left: 1px solid #222;
+  .viz-stage #plot-wrap canvas { background: #14171f; border-radius: 6px; width: 100%; height: 100%; }
+  .viz-stage aside { padding: 14px 16px; border-left: 1px solid #222;
     overflow-y: auto; font-size: 12px; line-height: 1.5; min-height: 0; }
-  fieldset { border: 1px solid #2a2e38; border-radius: 6px;
+  .viz-stage fieldset { border: 1px solid #2a2e38; border-radius: 6px;
     margin: 0 0 12px; padding: 8px 12px; }
-  fieldset legend { color: #8a92a8; padding: 0 6px; font-size: 10px;
+  .viz-stage fieldset legend { color: #8a92a8; padding: 0 6px; font-size: 10px;
     text-transform: uppercase; letter-spacing: 0.5px; }
-  label { display: flex; justify-content: space-between; align-items: center;
+  .viz-stage label { display: flex; justify-content: space-between; align-items: center;
     margin: 4px 0; gap: 12px; }
-  input[type=number], select { background: #1a1d24; color: #ddd; border: 1px solid #333;
+  .viz-stage input[type=number], .viz-stage select { background: #1a1d24; color: #ddd; border: 1px solid #333;
     border-radius: 3px; padding: 3px 6px; width: 90px; font: inherit; font-size: 12px; }
-  button { background: #1a1d24; color: #ddd; border: 1px solid #444;
+  .viz-stage button { background: #1a1d24; color: #ddd; border: 1px solid #444;
     padding: 7px 14px; border-radius: 4px; font: inherit; font-size: 12px;
     cursor: pointer; width: 100%; margin-top: 6px; }
-  button:hover:enabled { background: #242833; }
-  button:disabled { opacity: 0.4; cursor: not-allowed; }
-  button.primary { border-color: #ffaa00; color: #ffaa00; }
-  #status { color: #aab; min-height: 1.4em; margin: 6px 0 12px; font-size: 11px; }
-  .stat { display: flex; justify-content: space-between; padding: 2px 0; }
-  .stat .v { color: #ffaa00; }
-  p.note { color: #778; font-size: 11px; line-height: 1.5; margin: 8px 0 0; }
+  .viz-stage button:hover:enabled { background: #242833; }
+  .viz-stage button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .viz-stage button.primary { border-color: #ffaa00; color: #ffaa00; }
+  .viz-stage #status { color: #aab; min-height: 1.4em; margin: 6px 0 12px; font-size: 11px; }
+  .viz-stage .stat { display: flex; justify-content: space-between; padding: 2px 0; }
+  .viz-stage .stat .v { color: #ffaa00; }
+  .viz-stage p.note { color: #778; font-size: 11px; line-height: 1.5; margin: 8px 0 0; }
 
   html, body { overflow: visible !important; height: auto !important; background: var(--bg) !important; }
   body { margin: 0; }
@@ -42,8 +40,26 @@
     background: #0b0d12; color: #ddd;
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     overflow: hidden; z-index: 1;
+    display: flex; flex-direction: column;
   }
-  .viz-stage canvas { display: block; }
+  .viz-stage canvas { display: block; touch-action: none; }
+
+  @media (max-width: 720px) {
+    .viz-stage header { padding: 8px 12px; gap: 8px; }
+    .viz-stage header h1 { font-size: 13px; }
+    .viz-stage main {
+      grid-template-columns: 1fr !important;
+      grid-template-rows: 45vh 1fr !important;
+    }
+    .viz-stage #plot-wrap { padding: 8px; }
+    .viz-stage aside {
+      border-left: none;
+      border-top: 1px solid #222;
+      padding: 10px 12px;
+    }
+    .viz-stage fieldset { padding: 6px 10px; margin-bottom: 8px; }
+    .viz-stage input[type=number], .viz-stage select { width: 80px; }
+  }
 </style>
 <div class="viz-stage">
 
@@ -52,13 +68,13 @@
 
 <header>
   <span class="crumbs">
-    <a href="../index.html">Resolve</a><span class="sep">/</span>
-    <a href="./index.html">Visualize</a><span class="sep">/</span>
+    <a href="/resolve">Resolve</a><span class="sep">/</span>
+    <a href="/resolve/visualize">Visualize</a><span class="sep">/</span>
     <span>Basin-volume (double)</span>
   </span>
   <h1>V(k) on the inverted double pendulum</h1>
-  <a href="./basin-volume.html">← triple-pendulum probe</a>
-  <a href="./triple-pendulum.html">interactive demo</a>
+  <a href="/resolve/visualize/basin-volume">← triple-pendulum probe</a>
+  <a href="/resolve/visualize/triple-pendulum">interactive demo</a>
 </header>
 
 <main>
