@@ -102,18 +102,11 @@
   <button id="kick">Kick</button>
 </div>
 
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-  }
-}
-</script>
-
 <script type="module">
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+// Direct ESM URLs (not importmap) — importmap requires iOS Safari 16.4+;
+// direct ESM URLs work on iOS Safari 11+ and all evergreen browsers.
+import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+import { OrbitControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js';
 
 let scene, camera, renderer, controls;
 let links = [];           // THREE.Mesh per link, anchored at its base
@@ -223,14 +216,31 @@ function init() {
   scene.background = new THREE.Color(0x0b0d12);
   scene.fog = new THREE.Fog(0x0b0d12, 8, 18);
 
-  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+  const stage = document.querySelector('.viz-stage');
+  const stageRect = () => {
+    const r = stage.getBoundingClientRect();
+    return { w: Math.max(1, r.width), h: Math.max(1, r.height) };
+  };
+  const r0 = stageRect();
+  camera = new THREE.PerspectiveCamera(50, r0.w / r0.h, 0.1, 100);
   camera.position.set(4, 3, 6);
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(r0.w, r0.h);
   renderer.shadowMap.enabled = true;
-  document.querySelector('.viz-stage').appendChild(renderer.domElement);
+  stage.appendChild(renderer.domElement);
+
+  // ResizeObserver keeps the canvas matching the stage box across mobile
+  // chrome show/hide, orientation change, etc.
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(() => {
+      const r = stageRect();
+      camera.aspect = r.w / r.h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(r.w, r.h);
+    }).observe(stage);
+  }
 
   controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(0, 2, 0);
@@ -297,9 +307,12 @@ function init() {
 }
 
 function onResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
+  const stage = document.querySelector('.viz-stage');
+  const r = stage.getBoundingClientRect();
+  const w = Math.max(1, r.width), h = Math.max(1, r.height);
+  camera.aspect = w / h;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(w, h);
 }
 
 function setControllerStyle(styleName) {
