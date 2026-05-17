@@ -8,7 +8,7 @@
     "seed": "bun app/seed-corpus.ts"
   },
   "dependencies": {
-    "@htx/engine": "file:../hypermedia-app/hypermedia-app-ts/packages/htx-engine",
-    "@htx/adapter-sqlite": "file:../hypermedia-app/hypermedia-app-ts/packages/htx-adapter-sqlite"
+    "@htx/engine": "file:./packages/htx-engine",
+    "@htx/adapter-sqlite": "file:./packages/htx-adapter-sqlite"
   }
 }
