@@ -89,6 +89,12 @@ function ensureSchema(db: Database) {
   // via the IF NOT EXISTS guard.
   try { db.exec(`ALTER TABLE caacp_messages ADD COLUMN body TEXT`); } catch { /* already exists */ }
   try { db.exec(`ALTER TABLE caacp_acknowledgments ADD COLUMN body TEXT`); } catch { /* already exists */ }
+  // target_instance_id additive column: NULL means role-broadcast (visible to
+  // all instances of recipient role); non-NULL means single-instance targeting
+  // (visible only to matching instance_id, enforces matching ack_author on
+  // terminal state transitions). Per rusty-bun apparatus/docs/agent-init-protocol.md §V.7
+  // structural fix superseding the body-level targeting + bounce-ack interim discipline.
+  try { db.exec(`ALTER TABLE caacp_messages ADD COLUMN target_instance_id TEXT`); } catch { /* already exists */ }
 }
 
 type JsonBody = Record<string, unknown>;
@@ -139,8 +145,8 @@ export const caacpModule: Module = {
     ensureSchema(db);
 
     const insertMsg = db.prepare(`
-      INSERT INTO caacp_messages (message_id, sender, recipient, intent, slug, related_to, content_sha, related_artifacts, expires_at, state, body)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', ?)
+      INSERT INTO caacp_messages (message_id, sender, recipient, intent, slug, related_to, content_sha, related_artifacts, expires_at, state, body, target_instance_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', ?, ?)
     `);
     const getMsg = db.prepare(`SELECT * FROM caacp_messages WHERE message_id = ?`);
     const insertAck = db.prepare(`
@@ -244,6 +250,14 @@ export const caacpModule: Module = {
           const related_artifacts_str = Array.isArray(related_artifacts)
             ? JSON.stringify(related_artifacts)
             : null;
+          // target_instance_id: NULL → role-broadcast; non-NULL → exact-instance targeting.
+          // Per §V.7 structural fix. Non-admin senders MAY only set a target_instance_id
+          // belonging to the same role they are targeting (broadcast is always allowed).
+          const target_instance_id_raw = (body as any).target_instance_id;
+          const target_instance_id: string | null =
+            typeof target_instance_id_raw === "string" && target_instance_id_raw.length > 0
+              ? target_instance_id_raw
+              : null;
           insertMsg.run(
             message_id,
             sender,
@@ -255,6 +269,7 @@ export const caacpModule: Module = {
             related_artifacts_str,
             (body as any).expires_at ?? null,
             typeof (body as any).body === "string" ? (body as any).body : null,
+            target_instance_id,
           );
           return json(201, {
             message_id,
@@ -264,13 +279,25 @@ export const caacpModule: Module = {
         }
 
         // GET /inbox/{role}?state=PENDING
+        // Per §V.7: returns role-broadcast messages (target_instance_id IS NULL)
+        // plus exact-instance messages where target_instance_id matches the
+        // authenticated principal's instance_id. Admin tokens (no principal)
+        // see all messages for the role (broadcasts + every targeted message).
         if (method === "GET" && sub.startsWith("/inbox/")) {
           const role = sub.slice("/inbox/".length).replace(/\/$/, "");
           if (!VALID_ROLES.includes(role)) return bad(400, "invalid role");
           const stateFilter = request.query?.state;
-          const rows = stateFilter
-            ? db.query(`SELECT * FROM caacp_messages WHERE recipient = ? AND state = ? ORDER BY created_at ASC`).all(role, stateFilter)
-            : db.query(`SELECT * FROM caacp_messages WHERE recipient = ? ORDER BY created_at ASC`).all(role);
+          const principalInstanceId: string | null = auth.isAdmin ? null : (auth.principal?.instance_id ?? null);
+          const instanceFilter = auth.isAdmin
+            ? "" // admin sees all
+            : " AND (target_instance_id IS NULL OR target_instance_id = ?)";
+          let sqlText = `SELECT * FROM caacp_messages WHERE recipient = ?${instanceFilter}`;
+          if (stateFilter) sqlText += ` AND state = ?`;
+          sqlText += ` ORDER BY created_at ASC`;
+          const args: any[] = [role];
+          if (!auth.isAdmin) args.push(principalInstanceId);
+          if (stateFilter) args.push(stateFilter);
+          const rows = db.query(sqlText).all(...args);
           return json(200, { messages: rows });
         }
 
@@ -302,8 +329,23 @@ export const caacpModule: Module = {
           if (!auth.isAdmin && auth.principal?.role !== ack_author) {
             return bad(403, `token role (${auth.principal?.role}) does not match ack_author (${ack_author})`);
           }
-          const original = getMsg.get(message_id);
+          const original = getMsg.get(message_id) as any;
           if (!original) return bad(404, "message not found");
+          // Per §V.7: if the original message has a non-NULL target_instance_id,
+          // terminal state transitions (RESOLVED) are accepted only from the matching
+          // instance. ACKNOWLEDGED + IN-FLIGHT (non-terminal) are still accepted from
+          // any instance of the recipient role so non-targets can log observations.
+          if (
+            !auth.isAdmin &&
+            original.target_instance_id &&
+            ack_intent === "RESOLVED" &&
+            auth.principal?.instance_id !== original.target_instance_id
+          ) {
+            return bad(
+              403,
+              `terminal ack on instance-targeted message requires matching instance_id (target=${original.target_instance_id}, acker=${auth.principal?.instance_id ?? "null"})`,
+            );
+          }
           const ack_id = randomUUID();
           insertAck.run(
             ack_id, message_id, ack_author, ack_intent, ack_slug, content_sha,
