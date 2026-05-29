@@ -84,6 +84,11 @@ function ensureSchema(db: Database) {
     CREATE INDEX IF NOT EXISTS idx_ack_message
       ON caacp_acknowledgments(message_id);
   `);
+  // Body-storage extension (additive; safe across restarts; backwards-compat
+  // for rows that predate the column). SQLite ignores duplicate ADD COLUMN
+  // via the IF NOT EXISTS guard.
+  try { db.exec(`ALTER TABLE caacp_messages ADD COLUMN body TEXT`); } catch { /* already exists */ }
+  try { db.exec(`ALTER TABLE caacp_acknowledgments ADD COLUMN body TEXT`); } catch { /* already exists */ }
 }
 
 type JsonBody = Record<string, unknown>;
@@ -134,13 +139,13 @@ export const caacpModule: Module = {
     ensureSchema(db);
 
     const insertMsg = db.prepare(`
-      INSERT INTO caacp_messages (message_id, sender, recipient, intent, slug, related_to, content_sha, related_artifacts, expires_at, state)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING')
+      INSERT INTO caacp_messages (message_id, sender, recipient, intent, slug, related_to, content_sha, related_artifacts, expires_at, state, body)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', ?)
     `);
     const getMsg = db.prepare(`SELECT * FROM caacp_messages WHERE message_id = ?`);
     const insertAck = db.prepare(`
-      INSERT INTO caacp_acknowledgments (ack_id, message_id, ack_author, ack_intent, ack_slug, content_sha)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO caacp_acknowledgments (ack_id, message_id, ack_author, ack_intent, ack_slug, content_sha, body)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
     `);
     const updateMsgState = db.prepare(`
       UPDATE caacp_messages SET state = ? WHERE message_id = ?
@@ -249,6 +254,7 @@ export const caacpModule: Module = {
             content_sha,
             related_artifacts_str,
             (body as any).expires_at ?? null,
+            typeof (body as any).body === "string" ? (body as any).body : null,
           );
           return json(201, {
             message_id,
@@ -299,7 +305,10 @@ export const caacpModule: Module = {
           const original = getMsg.get(message_id);
           if (!original) return bad(404, "message not found");
           const ack_id = randomUUID();
-          insertAck.run(ack_id, message_id, ack_author, ack_intent, ack_slug, content_sha);
+          insertAck.run(
+            ack_id, message_id, ack_author, ack_intent, ack_slug, content_sha,
+            typeof (body as any).body === "string" ? (body as any).body : null,
+          );
           updateMsgState.run(ack_intent, message_id);
           return json(201, {
             ack_id,
