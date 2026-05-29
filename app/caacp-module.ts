@@ -27,7 +27,7 @@ const CAACP_DB_PATH =
 
 const CAACP_PATH_PREFIX = process.env.CAACP_PATH_PREFIX ?? "/api/caacp/v1";
 
-const VALID_ROLES = ["helmsman", "arbiter", "watcher", "deputy", "keeper"];
+const VALID_ROLES = ["helmsman", "arbiter", "watcher", "deputy", "keeper", "substrate-resolver"];
 const VALID_INTENTS = [
   "request",
   "notification",
@@ -58,6 +58,17 @@ function ensureSchema(db: Database) {
       ON caacp_messages(recipient, state);
     CREATE INDEX IF NOT EXISTS idx_msg_sender
       ON caacp_messages(sender);
+
+    CREATE TABLE IF NOT EXISTS caacp_tokens (
+      token          TEXT PRIMARY KEY,
+      role           TEXT NOT NULL,
+      instance_id    TEXT,
+      callback_url   TEXT,
+      registered_at  TEXT NOT NULL DEFAULT (datetime('now')),
+      registered_by  TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_token_role
+      ON caacp_tokens(role);
 
     CREATE TABLE IF NOT EXISTS caacp_acknowledgments (
       ack_id         TEXT PRIMARY KEY,
@@ -137,6 +148,25 @@ export const caacpModule: Module = {
     const listAcks = db.prepare(`
       SELECT * FROM caacp_acknowledgments WHERE message_id = ? ORDER BY server_timestamp ASC
     `);
+    const insertToken = db.prepare(`
+      INSERT INTO caacp_tokens (token, role, instance_id, callback_url, registered_by)
+      VALUES (?, ?, ?, ?, ?)
+    `);
+    const getTokenRow = db.prepare(`SELECT * FROM caacp_tokens WHERE token = ?`);
+    const listTokensByRole = db.prepare(`SELECT * FROM caacp_tokens WHERE role = ?`);
+
+    // Auth resolution: returns {ok, principal: {role, instance_id?} | null, isAdmin}.
+    // Admin token = the legacy shared CAACP_TOKEN_VERIFIER; per-role/per-instance
+    // tokens registered via /register also accepted; messages-tier endpoints
+    // verify token-role binding.
+    function resolveAuth(request: any, adminToken: string): { ok: boolean; principal: any; isAdmin: boolean } {
+      const presented = tokenHeader(request);
+      if (!presented) return { ok: false, principal: null, isAdmin: false };
+      if (presented === adminToken) return { ok: true, principal: null, isAdmin: true };
+      const row = getTokenRow.get(presented) as any;
+      if (row) return { ok: true, principal: { role: row.role, instance_id: row.instance_id }, isAdmin: false };
+      return { ok: false, principal: null, isAdmin: false };
+    }
 
     reg.registerMiddleware({
       handle(request, next) {
@@ -151,12 +181,44 @@ export const caacpModule: Module = {
         if (!expectedToken) {
           return bad(503, "CAACP endpoint unconfigured (CAACP_TOKEN_VERIFIER unset)");
         }
-        const presented = tokenHeader(request);
-        if (!presented || presented !== expectedToken) {
-          return unauthorized();
-        }
+        const auth = resolveAuth(request, expectedToken);
+        if (!auth.ok) return unauthorized();
 
         const sub = p.slice(CAACP_PATH_PREFIX.length);
+
+        // POST /register — admin-only. Body: {role, instance_id?, callback_url?}.
+        // Returns: {token, role, instance_id, registered_at}.
+        if (method === "POST" && sub === "/register") {
+          if (!auth.isAdmin) return bad(403, "registration requires admin token");
+          const body = parseBody(request);
+          if (!body) return bad(400, "invalid JSON body");
+          const { role, instance_id, callback_url } = body as any;
+          const VALID_REGISTRABLE_ROLES = [...VALID_ROLES];
+          if (!role || !VALID_REGISTRABLE_ROLES.includes(role)) return bad(400, "invalid role");
+          // Substrate-resolver roles SHOULD include an instance_id; appointed roles MAY include one.
+          if (role === "substrate-resolver" && !instance_id) {
+            return bad(400, "substrate-resolver registration requires instance_id");
+          }
+          const token = `caacp-${role}-${randomUUID()}`;
+          insertToken.run(token, role, instance_id ?? null, callback_url ?? null, "admin");
+          return json(201, {
+            token,
+            role,
+            instance_id: instance_id ?? null,
+            callback_url: callback_url ?? null,
+            registered_at: new Date().toISOString(),
+          });
+        }
+
+        // GET /tokens?role=<role> — admin-only. Lists registered tokens for a role.
+        // Used by the local sidecar to discover registered substrate-resolver instances.
+        if (method === "GET" && sub === "/tokens") {
+          if (!auth.isAdmin) return bad(403, "token listing requires admin token");
+          const role = request.query?.role;
+          if (!role) return bad(400, "missing role query param");
+          const rows = listTokensByRole.all(role);
+          return json(200, { tokens: rows });
+        }
 
         // POST /messages
         if (method === "POST" && sub === "/messages") {
@@ -168,6 +230,11 @@ export const caacpModule: Module = {
           if (!intent || !VALID_INTENTS.includes(intent)) return bad(400, "invalid intent");
           if (!slug || typeof slug !== "string") return bad(400, "missing slug");
           if (!content_sha || typeof content_sha !== "string") return bad(400, "missing content_sha");
+          // Token-role binding check: if authenticated via per-agent token,
+          // the sender field MUST match the token's role.
+          if (!auth.isAdmin && auth.principal?.role !== sender) {
+            return bad(403, `token role (${auth.principal?.role}) does not match sender (${sender})`);
+          }
           const message_id = randomUUID();
           const related_artifacts_str = Array.isArray(related_artifacts)
             ? JSON.stringify(related_artifacts)
@@ -226,6 +293,9 @@ export const caacpModule: Module = {
           if (!ack_intent || !VALID_ACK_STATES.includes(ack_intent)) return bad(400, "invalid ack_intent");
           if (!ack_slug || typeof ack_slug !== "string") return bad(400, "missing ack_slug");
           if (!content_sha || typeof content_sha !== "string") return bad(400, "missing content_sha");
+          if (!auth.isAdmin && auth.principal?.role !== ack_author) {
+            return bad(403, `token role (${auth.principal?.role}) does not match ack_author (${ack_author})`);
+          }
           const original = getMsg.get(message_id);
           if (!original) return bad(404, "message not found");
           const ack_id = randomUUID();
