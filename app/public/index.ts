@@ -35,6 +35,7 @@ const registry = new AdapterRegistry({ default: adapter });
 const getExecutor = new GetContentExecutor(parser, registry, hydrator, expressionEngine, { dev: false });
 
 import { createResolveModule } from "./resolve-module";
+import { caacpModule } from "../caacp-module";
 import Database from "bun:sqlite";
 
 const SITE_ORIGIN = process.env.JAREDFOY_ORIGIN ?? "https://jaredfoy.com";
@@ -613,7 +614,7 @@ const handler = new RequestHandler(
   templatesDir,
   undefined, // no set executor (read-only site)
   undefined, // no delete executor
-  { dev: false, modules: [corpusStatsModule, sitemapModule, pageMetaModule, searchModule, createResolveModule()] },
+  { dev: false, modules: [corpusStatsModule, sitemapModule, pageMetaModule, searchModule, createResolveModule(), caacpModule] },
 );
 
 const host = new HttpHost(handler, publicDir);
