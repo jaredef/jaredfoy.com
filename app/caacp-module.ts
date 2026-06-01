@@ -125,6 +125,24 @@ function ensureSchema(db: Database) {
     );
     CREATE INDEX IF NOT EXISTS idx_wake_acks_recipient
       ON caacp_wake_acks(recipient_role, recipient_instance_id, created_at);
+
+    -- Rung-2 reliable-notification: bridge registry + heartbeat tracking
+    -- for C5 (liveness) and the watchdog daemon. bridge_id is host-stable
+    -- (events-<role>-<instance_id>); the same bridge restarting writes the
+    -- same row, which is what the watchdog uses to detect a restart vs a
+    -- dead link.
+    CREATE TABLE IF NOT EXISTS caacp_bridges (
+      bridge_id              TEXT PRIMARY KEY,
+      role                   TEXT NOT NULL,
+      instance_id            TEXT NOT NULL,
+      pid                    INTEGER,
+      tmux_target            TEXT,
+      host                   TEXT,
+      last_heartbeat_at      TEXT NOT NULL DEFAULT (datetime('now')),
+      registered_at          TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_bridges_heartbeat
+      ON caacp_bridges(last_heartbeat_at);
   `);
   // Body-storage extension (additive; safe across restarts; backwards-compat
   // for rows that predate the column). SQLite ignores duplicate ADD COLUMN
@@ -236,6 +254,16 @@ export const caacpModule: Module = {
       ORDER BY seq ASC
       LIMIT 200
     `);
+    const upsertBridge = db.prepare(`
+      INSERT INTO caacp_bridges (bridge_id, role, instance_id, pid, tmux_target, host, last_heartbeat_at, registered_at)
+      VALUES (?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+      ON CONFLICT(bridge_id) DO UPDATE
+        SET pid = excluded.pid,
+            tmux_target = excluded.tmux_target,
+            host = excluded.host,
+            last_heartbeat_at = datetime('now')
+    `);
+    const listBridges = db.prepare(`SELECT * FROM caacp_bridges ORDER BY last_heartbeat_at DESC`);
 
     // Emit an event for the given recipient + transition. Fans out the row
     // per-recipient: each instance-targeted row exists exactly once at the
@@ -573,6 +601,54 @@ export const caacpModule: Module = {
             last_seen_seq,
             updated_at: new Date().toISOString(),
           });
+        }
+
+        // POST /bridge_heartbeat — bridge registers liveness. Per C5 (rung 2),
+        // bridges emit a heartbeat every N seconds (default 30). The
+        // watchdog daemon (apparatus/scripts/caacp-watchdog.sh) consults
+        // GET /bridges and restarts bridges whose last_heartbeat_at is older
+        // than 3× their configured heartbeat-interval.
+        if (method === "POST" && sub === "/bridge_heartbeat") {
+          const body = parseBody(request);
+          if (!body) return bad(400, "invalid JSON body");
+          const { bridge_id, role, instance_id, pid, tmux_target, host } = body as any;
+          if (!bridge_id || typeof bridge_id !== "string") return bad(400, "missing bridge_id");
+          if (!role || !VALID_ROLES.includes(role)) return bad(400, "invalid role");
+          if (!instance_id || typeof instance_id !== "string") return bad(400, "missing instance_id");
+          if (!auth.isAdmin && auth.principal?.role !== role) {
+            return bad(403, `token role (${auth.principal?.role}) does not match heartbeat role (${role})`);
+          }
+          if (!auth.isAdmin && auth.principal?.instance_id && auth.principal.instance_id !== instance_id) {
+            return bad(403, `token instance_id (${auth.principal.instance_id}) does not match heartbeat instance_id (${instance_id})`);
+          }
+          upsertBridge.run(
+            bridge_id,
+            role,
+            instance_id,
+            typeof pid === "number" ? pid : null,
+            typeof tmux_target === "string" ? tmux_target : null,
+            typeof host === "string" ? host : null,
+          );
+          return json(200, {
+            bridge_id,
+            role,
+            instance_id,
+            heartbeat_at: new Date().toISOString(),
+          });
+        }
+
+        // GET /bridges — admin-only enumeration of registered bridges with
+        // freshness annotation. The watchdog calls this each cycle.
+        if (method === "GET" && sub === "/bridges") {
+          if (!auth.isAdmin) return bad(403, "bridge enumeration requires admin token");
+          const rows = listBridges.all() as any[];
+          const now = Date.now();
+          const annotated = rows.map((r) => {
+            const hb = new Date(r.last_heartbeat_at + "Z").getTime();
+            const age_s = Math.floor((now - hb) / 1000);
+            return { ...r, age_seconds: age_s };
+          });
+          return json(200, { bridges: annotated });
         }
 
         // POST /wake_ack — confirm bridge wake landed.
