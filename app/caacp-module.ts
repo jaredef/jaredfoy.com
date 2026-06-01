@@ -83,6 +83,48 @@ function ensureSchema(db: Database) {
     );
     CREATE INDEX IF NOT EXISTS idx_ack_message
       ON caacp_acknowledgments(message_id);
+
+    -- Reliable-notification scaffolding per rusty-bun proposal
+    -- 2026-06-01T013400Z-caacp-reliable-notification-constraints. C1+C3+C4.
+    -- Append-only event stream; one row per recipient-relevant state
+    -- transition. Recipient = (recipient_role, recipient_instance_id);
+    -- NULL instance_id means role-broadcast event fan-out (delivered to
+    -- every live instance of the role).
+    CREATE TABLE IF NOT EXISTS caacp_events (
+      seq                    INTEGER PRIMARY KEY AUTOINCREMENT,
+      recipient_role         TEXT NOT NULL,
+      recipient_instance_id  TEXT,
+      event_type             TEXT NOT NULL,
+      message_id             TEXT,
+      ack_id                 TEXT,
+      source                 TEXT NOT NULL DEFAULT 'caacp',
+      created_at             TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_events_recipient_seq
+      ON caacp_events(recipient_role, recipient_instance_id, seq);
+
+    -- Per-recipient cursor. last_seen_seq advances only on agent ack
+    -- (POST /cursor), not on bridge inject. Enables at-least-once delivery.
+    CREATE TABLE IF NOT EXISTS caacp_cursors (
+      recipient_role         TEXT NOT NULL,
+      recipient_instance_id  TEXT NOT NULL,
+      last_seen_seq          INTEGER NOT NULL DEFAULT 0,
+      updated_at             TEXT NOT NULL DEFAULT (datetime('now')),
+      PRIMARY KEY (recipient_role, recipient_instance_id)
+    );
+
+    -- Wake-ack observability. The bridge issues a wake_id with each inject;
+    -- the agent POSTs /wake_ack with that wake_id to confirm receipt. Used
+    -- by the bridge supervision loop and the watchdog daemon.
+    CREATE TABLE IF NOT EXISTS caacp_wake_acks (
+      wake_id                TEXT PRIMARY KEY,
+      recipient_role         TEXT NOT NULL,
+      recipient_instance_id  TEXT NOT NULL,
+      seq_consumed           INTEGER NOT NULL,
+      created_at             TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_wake_acks_recipient
+      ON caacp_wake_acks(recipient_role, recipient_instance_id, created_at);
   `);
   // Body-storage extension (additive; safe across restarts; backwards-compat
   // for rows that predate the column). SQLite ignores duplicate ADD COLUMN
@@ -165,6 +207,58 @@ export const caacpModule: Module = {
     `);
     const getTokenRow = db.prepare(`SELECT * FROM caacp_tokens WHERE token = ?`);
     const listTokensByRole = db.prepare(`SELECT * FROM caacp_tokens WHERE role = ?`);
+
+    // Reliable-notification rung-1 prepared statements (C1+C3+C4).
+    const insertEvent = db.prepare(`
+      INSERT INTO caacp_events (recipient_role, recipient_instance_id, event_type, message_id, ack_id, source)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `);
+    const getCursor = db.prepare(`
+      SELECT last_seen_seq FROM caacp_cursors
+      WHERE recipient_role = ? AND recipient_instance_id = ?
+    `);
+    const upsertCursor = db.prepare(`
+      INSERT INTO caacp_cursors (recipient_role, recipient_instance_id, last_seen_seq, updated_at)
+      VALUES (?, ?, ?, datetime('now'))
+      ON CONFLICT(recipient_role, recipient_instance_id) DO UPDATE
+        SET last_seen_seq = excluded.last_seen_seq, updated_at = datetime('now')
+    `);
+    const insertWakeAck = db.prepare(`
+      INSERT INTO caacp_wake_acks (wake_id, recipient_role, recipient_instance_id, seq_consumed)
+      VALUES (?, ?, ?, ?)
+    `);
+    const selectEventsSince = db.prepare(`
+      SELECT seq, recipient_role, recipient_instance_id, event_type, message_id, ack_id, source, created_at
+      FROM caacp_events
+      WHERE recipient_role = ?
+        AND (recipient_instance_id IS NULL OR recipient_instance_id = ?)
+        AND seq > ?
+      ORDER BY seq ASC
+      LIMIT 200
+    `);
+
+    // Emit an event for the given recipient + transition. Fans out the row
+    // per-recipient: each instance-targeted row exists exactly once at the
+    // recipient (role, instance_id) coordinate; role-broadcast rows are stored
+    // once with NULL instance_id and the SELECT in /events surfaces them to
+    // every live instance polling.
+    function emitEvent(args: {
+      recipient_role: string;
+      recipient_instance_id: string | null;
+      event_type: "message_arrived" | "ack_added" | "message_state_changed" | "response_arrived";
+      message_id?: string | null;
+      ack_id?: string | null;
+      source?: string;
+    }) {
+      insertEvent.run(
+        args.recipient_role,
+        args.recipient_instance_id ?? null,
+        args.event_type,
+        args.message_id ?? null,
+        args.ack_id ?? null,
+        args.source ?? "caacp",
+      );
+    }
 
     // Auth resolution: returns {ok, principal: {role, instance_id?} | null, isAdmin}.
     // Admin token = the legacy shared CAACP_TOKEN_VERIFIER; per-role/per-instance
@@ -271,6 +365,28 @@ export const caacpModule: Module = {
             typeof (body as any).body === "string" ? (body as any).body : null,
             target_instance_id,
           );
+          // C1 event-completeness: emit message_arrived for the recipient.
+          emitEvent({
+            recipient_role: recipient,
+            recipient_instance_id: target_instance_id,
+            event_type: "message_arrived",
+            message_id,
+          });
+          // If this is a response (related_to set), also emit response_arrived
+          // for the original author so cursors advance on chain progress.
+          if (related_to) {
+            const original = getMsg.get(related_to) as any;
+            if (original) {
+              emitEvent({
+                recipient_role: original.sender,
+                recipient_instance_id: null, // role-broadcast — the sender is
+                                              // identified by role, may have
+                                              // multiple live instances.
+                event_type: "response_arrived",
+                message_id,
+              });
+            }
+          }
           return json(201, {
             message_id,
             state: "PENDING",
@@ -352,11 +468,121 @@ export const caacpModule: Module = {
             typeof (body as any).body === "string" ? (body as any).body : null,
           );
           updateMsgState.run(ack_intent, message_id);
+          // C1 event-completeness: ack-as-silent-resolution was the resolver2/3/4
+          // failure mode. Emit ack_added for the original message's author (so
+          // the author sees the ack happened) AND message_state_changed (so any
+          // listener tracking state transitions sees the flip).
+          emitEvent({
+            recipient_role: original.sender,
+            recipient_instance_id: null,
+            event_type: "ack_added",
+            message_id,
+            ack_id,
+          });
+          if (ack_intent === "RESOLVED" || ack_intent === "IN-FLIGHT") {
+            emitEvent({
+              recipient_role: original.sender,
+              recipient_instance_id: null,
+              event_type: "message_state_changed",
+              message_id,
+            });
+          }
           return json(201, {
             ack_id,
             message_id,
             state: ack_intent,
             server_timestamp: new Date().toISOString(),
+          });
+        }
+
+        // Reliable-notification rung-1 endpoints (C1+C3+C4).
+        // See rusty-bun:apparatus/proposals/decided/2026-06-01T013400Z-
+        // caacp-reliable-notification-constraints/proposal.md.
+
+        // GET /events?role=<role>&instance_id=<id>&since_seq=<n>
+        // Returns events strictly greater than since_seq for the given
+        // recipient (role + optional instance_id). Role-broadcast events
+        // (recipient_instance_id IS NULL) surface to every instance. Auth
+        // is the per-agent token; admin sees all instances.
+        if (method === "GET" && sub === "/events") {
+          const role = request.query?.role;
+          const instance_id = request.query?.instance_id ?? null;
+          const since_seq = parseInt(request.query?.since_seq ?? "0", 10);
+          if (!role || !VALID_ROLES.includes(role)) return bad(400, "invalid role");
+          if (!auth.isAdmin && auth.principal?.role !== role) {
+            return bad(403, `token role (${auth.principal?.role}) does not match query role (${role})`);
+          }
+          if (!auth.isAdmin && auth.principal?.instance_id && auth.principal.instance_id !== instance_id) {
+            return bad(403, `token instance_id (${auth.principal.instance_id}) does not match query instance_id (${instance_id})`);
+          }
+          const rows = selectEventsSince.all(role, instance_id, isNaN(since_seq) ? 0 : since_seq);
+          return json(200, { events: rows });
+        }
+
+        // POST /cursor — advance per-recipient last_seen_seq.
+        // Body: {role, instance_id, last_seen_seq}.
+        // The agent (NOT the bridge) calls this after processing events up
+        // to the given seq. Cursor advancement is what closes the at-least-
+        // once delivery loop (C3); bridge-side seen-cache is only a hint.
+        if (method === "POST" && sub === "/cursor") {
+          const body = parseBody(request);
+          if (!body) return bad(400, "invalid JSON body");
+          const { role, instance_id, last_seen_seq } = body as any;
+          if (!role || !VALID_ROLES.includes(role)) return bad(400, "invalid role");
+          if (!instance_id || typeof instance_id !== "string") return bad(400, "missing instance_id");
+          if (typeof last_seen_seq !== "number" || last_seen_seq < 0) return bad(400, "invalid last_seen_seq");
+          if (!auth.isAdmin && auth.principal?.role !== role) {
+            return bad(403, `token role (${auth.principal?.role}) does not match cursor role (${role})`);
+          }
+          if (!auth.isAdmin && auth.principal?.instance_id && auth.principal.instance_id !== instance_id) {
+            return bad(403, `token instance_id (${auth.principal.instance_id}) does not match cursor instance_id (${instance_id})`);
+          }
+          // Cursor MUST be monotonic. Reject regressions; clamp ahead-of-
+          // current-max is permitted (covers race where caller has read
+          // events with a higher seq than this writer has observed yet).
+          const existing = getCursor.get(role, instance_id) as any;
+          if (existing && existing.last_seen_seq > last_seen_seq) {
+            return bad(409, `cursor regression rejected: existing=${existing.last_seen_seq} attempted=${last_seen_seq}`);
+          }
+          upsertCursor.run(role, instance_id, last_seen_seq);
+          return json(200, {
+            role,
+            instance_id,
+            last_seen_seq,
+            updated_at: new Date().toISOString(),
+          });
+        }
+
+        // POST /wake_ack — confirm bridge wake landed.
+        // Body: {role, instance_id, wake_id, seq_consumed}.
+        // Per-decision: wake-acks go directly to the endpoint (not via
+        // sidecar). Provides observability for the bridge supervision loop
+        // and the watchdog daemon to detect inject-without-delivery.
+        if (method === "POST" && sub === "/wake_ack") {
+          const body = parseBody(request);
+          if (!body) return bad(400, "invalid JSON body");
+          const { role, instance_id, wake_id, seq_consumed } = body as any;
+          if (!role || !VALID_ROLES.includes(role)) return bad(400, "invalid role");
+          if (!instance_id || typeof instance_id !== "string") return bad(400, "missing instance_id");
+          if (!wake_id || typeof wake_id !== "string") return bad(400, "missing wake_id");
+          if (typeof seq_consumed !== "number") return bad(400, "invalid seq_consumed");
+          if (!auth.isAdmin && auth.principal?.role !== role) {
+            return bad(403, `token role (${auth.principal?.role}) does not match wake_ack role (${role})`);
+          }
+          if (!auth.isAdmin && auth.principal?.instance_id && auth.principal.instance_id !== instance_id) {
+            return bad(403, `token instance_id (${auth.principal.instance_id}) does not match wake_ack instance_id (${instance_id})`);
+          }
+          try {
+            insertWakeAck.run(wake_id, role, instance_id, seq_consumed);
+          } catch {
+            // Duplicate wake_ack — idempotent, return success.
+          }
+          return json(200, {
+            wake_id,
+            role,
+            instance_id,
+            seq_consumed,
+            received_at: new Date().toISOString(),
           });
         }
 
