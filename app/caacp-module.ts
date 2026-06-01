@@ -651,6 +651,64 @@ export const caacpModule: Module = {
           });
         }
 
+        // POST /admin/prune_stale — admin only. Implements C6 stale-instance
+        // event pruning (keeper decision: events for stale instances are
+        // DROPPED, not held). Stale = no /cursor advance within
+        // older_than_minutes AND no bridge heartbeat in same window. Events
+        // older than older_than_minutes with no cursor reaching their seq
+        // are removed. The watchdog calls this periodically; the operator
+        // can also call it manually with dry_run=true to preview.
+        if (method === "POST" && sub === "/admin/prune_stale") {
+          if (!auth.isAdmin) return bad(403, "prune requires admin token");
+          const body = parseBody(request);
+          const older = (body as any)?.older_than_minutes ?? 60;
+          const dry = (body as any)?.dry_run === true;
+          if (typeof older !== "number" || older < 1) return bad(400, "invalid older_than_minutes");
+          // Candidates: events older than older_than_minutes that have not been
+          // crossed by any cursor (i.e., recipient has no cursor row, OR the
+          // cursor's last_seen_seq is less than the event's seq).
+          const candidates = db.query(`
+            SELECT e.seq, e.recipient_role, e.recipient_instance_id, e.created_at
+            FROM caacp_events e
+            LEFT JOIN caacp_cursors c
+              ON c.recipient_role = e.recipient_role
+              AND c.recipient_instance_id = COALESCE(e.recipient_instance_id, c.recipient_instance_id)
+            WHERE (julianday('now') - julianday(e.created_at)) * 24 * 60 > ?
+              AND (c.last_seen_seq IS NULL OR c.last_seen_seq < e.seq)
+            ORDER BY e.seq ASC
+            LIMIT 1000
+          `).all(older) as any[];
+          if (dry) {
+            return json(200, {
+              dry_run: true,
+              candidate_count: candidates.length,
+              candidates: candidates.slice(0, 50),
+            });
+          }
+          let pruned = 0;
+          const del = db.prepare(`DELETE FROM caacp_events WHERE seq = ?`);
+          for (const c of candidates) {
+            del.run(c.seq);
+            pruned++;
+          }
+          return json(200, {
+            dry_run: false,
+            pruned_count: pruned,
+            older_than_minutes: older,
+            pruned_at: new Date().toISOString(),
+          });
+        }
+
+        // DELETE /admin/bridges/{bridge_id} — admin only. Removes a bridge
+        // row (used to clean up smoke-test artifacts and orphan registrations).
+        if (method === "DELETE" && sub.startsWith("/admin/bridges/")) {
+          if (!auth.isAdmin) return bad(403, "bridge delete requires admin token");
+          const bridge_id = sub.slice("/admin/bridges/".length).replace(/\/$/, "");
+          if (!bridge_id) return bad(400, "missing bridge_id");
+          db.prepare(`DELETE FROM caacp_bridges WHERE bridge_id = ?`).run(bridge_id);
+          return json(200, { bridge_id, deleted_at: new Date().toISOString() });
+        }
+
         // GET /bridges — admin-only enumeration of registered bridges with
         // freshness annotation. The watchdog calls this each cycle.
         if (method === "GET" && sub === "/bridges") {
