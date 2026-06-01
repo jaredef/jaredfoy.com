@@ -519,6 +519,28 @@ export const caacpModule: Module = {
           return json(200, { events: rows });
         }
 
+        // GET /cursor?role=&instance_id= — read current per-recipient cursor.
+        // Used by the bridge to determine what to poll for. Returns 0 if no
+        // cursor row exists yet.
+        if (method === "GET" && sub === "/cursor") {
+          const role = request.query?.role;
+          const instance_id = request.query?.instance_id;
+          if (!role || !VALID_ROLES.includes(role)) return bad(400, "invalid role");
+          if (!instance_id || typeof instance_id !== "string") return bad(400, "missing instance_id");
+          if (!auth.isAdmin && auth.principal?.role !== role) {
+            return bad(403, `token role (${auth.principal?.role}) does not match cursor role (${role})`);
+          }
+          if (!auth.isAdmin && auth.principal?.instance_id && auth.principal.instance_id !== instance_id) {
+            return bad(403, `token instance_id (${auth.principal.instance_id}) does not match cursor instance_id (${instance_id})`);
+          }
+          const row = getCursor.get(role, instance_id) as any;
+          return json(200, {
+            role,
+            instance_id,
+            last_seen_seq: row?.last_seen_seq ?? 0,
+          });
+        }
+
         // POST /cursor — advance per-recipient last_seen_seq.
         // Body: {role, instance_id, last_seen_seq}.
         // The agent (NOT the bridge) calls this after processing events up
