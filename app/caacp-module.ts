@@ -397,7 +397,7 @@ export const caacpModule: Module = {
           // not create duplicate CAACP messages/events. Same (sender, slug) → return
           // the existing row's message_id with state=200 (not 201).
           const idempotency_key = (body as any).idempotency_key;
-          if (idempotency_key && typeof idempotency_key === "string") {
+          if (idempotency_key) {
             const existing = db.query(`SELECT message_id, state FROM caacp_messages WHERE sender = ? AND slug = ? LIMIT 1`).get(sender, slug) as any;
             if (existing) {
               return json(200, {
