@@ -392,6 +392,21 @@ export const caacpModule: Module = {
             ? source_raw
             : "caacp";
           if (!VALID_SOURCES.includes(source)) return bad(400, `invalid source: ${source}`);
+          // C8 idempotency on (sender, slug): when source=telegram, slug should be
+          // telegram-<tg_msg_id>. Repeated relays of the same Telegram message must
+          // not create duplicate CAACP messages/events. Same (sender, slug) → return
+          // the existing row's message_id with state=200 (not 201).
+          const idempotency_key = (body as any).idempotency_key;
+          if (idempotency_key && typeof idempotency_key === "string") {
+            const existing = db.query(`SELECT message_id, state FROM caacp_messages WHERE sender = ? AND slug = ? LIMIT 1`).get(sender, slug) as any;
+            if (existing) {
+              return json(200, {
+                message_id: existing.message_id,
+                state: existing.state,
+                idempotent_hit: true,
+              });
+            }
+          }
           insertMsg.run(
             message_id,
             sender,
