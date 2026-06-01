@@ -155,7 +155,13 @@ function ensureSchema(db: Database) {
   // terminal state transitions). Per rusty-bun apparatus/docs/agent-init-protocol.md §V.7
   // structural fix superseding the body-level targeting + bounce-ack interim discipline.
   try { db.exec(`ALTER TABLE caacp_messages ADD COLUMN target_instance_id TEXT`); } catch { /* already exists */ }
+  // Rung-3 reliable-notification (C7): source column on messages to mirror the
+  // events table. Default 'caacp'; 'telegram' for messages relayed by the
+  // caacp-telegram-bridge daemon. Other sources may be added per future rungs.
+  try { db.exec(`ALTER TABLE caacp_messages ADD COLUMN source TEXT NOT NULL DEFAULT 'caacp'`); } catch { /* already exists */ }
 }
+
+const VALID_SOURCES = ["caacp", "telegram"];
 
 type JsonBody = Record<string, unknown>;
 
@@ -205,8 +211,8 @@ export const caacpModule: Module = {
     ensureSchema(db);
 
     const insertMsg = db.prepare(`
-      INSERT INTO caacp_messages (message_id, sender, recipient, intent, slug, related_to, content_sha, related_artifacts, expires_at, state, body, target_instance_id)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', ?, ?)
+      INSERT INTO caacp_messages (message_id, sender, recipient, intent, slug, related_to, content_sha, related_artifacts, expires_at, state, body, target_instance_id, source)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', ?, ?, ?)
     `);
     const getMsg = db.prepare(`SELECT * FROM caacp_messages WHERE message_id = ?`);
     const insertAck = db.prepare(`
@@ -380,6 +386,12 @@ export const caacpModule: Module = {
             typeof target_instance_id_raw === "string" && target_instance_id_raw.length > 0
               ? target_instance_id_raw
               : null;
+          // C7 source passthrough: default 'caacp'; reject unrecognized values.
+          const source_raw = (body as any).source;
+          const source: string = typeof source_raw === "string" && source_raw.length > 0
+            ? source_raw
+            : "caacp";
+          if (!VALID_SOURCES.includes(source)) return bad(400, `invalid source: ${source}`);
           insertMsg.run(
             message_id,
             sender,
@@ -392,6 +404,7 @@ export const caacpModule: Module = {
             (body as any).expires_at ?? null,
             typeof (body as any).body === "string" ? (body as any).body : null,
             target_instance_id,
+            source,
           );
           // C1 event-completeness: emit message_arrived for the recipient.
           emitEvent({
@@ -399,6 +412,7 @@ export const caacpModule: Module = {
             recipient_instance_id: target_instance_id,
             event_type: "message_arrived",
             message_id,
+            source,
           });
           // If this is a response (related_to set), also emit response_arrived
           // for the original author so cursors advance on chain progress.
