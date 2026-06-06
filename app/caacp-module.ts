@@ -444,6 +444,28 @@ export const caacpModule: Module = {
               });
             }
           }
+          // D97 α (CAACP hardening arc 2026-06-06): observer fan-out for
+          // sibling-role broadcasts. When a substrate-resolver broadcasts to
+          // substrate-resolver (or vice versa), helmsman is interested as
+          // fleet steward even though it is neither sender nor recipient.
+          // Emit message_arrived for helmsman with recipient_instance_id=NULL
+          // so the helmsman events-bridge picks it up alongside its own
+          // recipient events. Scoped to substrate-resolver→substrate-resolver
+          // broadcasts (the case where helmsman has no direct event signal
+          // today) to keep the observer fan-out narrow.
+          if (
+            sender === "substrate-resolver" &&
+            recipient === "substrate-resolver" &&
+            target_instance_id == null
+          ) {
+            emitEvent({
+              recipient_role: "helmsman",
+              recipient_instance_id: null,
+              event_type: "message_arrived",
+              message_id,
+              source: "observer-fan-out",
+            });
+          }
           return json(201, {
             message_id,
             state: "PENDING",
