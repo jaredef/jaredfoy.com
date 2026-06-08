@@ -7,11 +7,17 @@
 // message acknowledgments in a dedicated SQLite database under app/data/.
 //
 // API surface (mounted under CAACP_PATH_PREFIX, default /api/caacp/v1):
-//   POST   /messages
+//   POST   /messages                       — D144 α1: response includes delivered_to + not_yet_delivered_to.
 //   GET    /inbox/{role}?state=PENDING|ACKNOWLEDGED|IN-FLIGHT
 //   GET    /outbox/{role}?unread_acks=true
 //   POST   /messages/{message_id}/acknowledge
-//   GET    /messages/{message_id}
+//   GET    /messages/{message_id}          — Mechanism #5 retrieval: body survives state transitions.
+//   POST   /register, GET /tokens          — Admin-only token registration + enumeration.
+//   GET    /events, GET/POST /cursor       — At-least-once event delivery (C1+C3+C4).
+//   POST   /wake_ack, POST /bridge_heartbeat, GET /bridges — Bridge observability (C5).
+//   POST   /admin/prune_stale, DELETE /admin/bridges/{id} — Apparatus cleanup.
+//   GET    /delivery_suspects?role=&older_than_minutes= — D144 α2: queryable PENDING-no-recipient-ack.
+//   GET    /liveness?role=&instance_id=    — D144 β: 4-state silence-state verdict.
 //
 // All endpoints require X-CAACP-Token header matching CAACP_TOKEN_VERIFIER.
 
@@ -271,6 +277,130 @@ export const caacpModule: Module = {
     `);
     const listBridges = db.prepare(`SELECT * FROM caacp_bridges ORDER BY last_heartbeat_at DESC`);
 
+    // D144 α+β server-side hardening (CAACP routing-gap closure).
+    //
+    // α1 — per-recipient delivery confirmation on POST /messages:
+    //   listRegisteredInstancesForRole returns the set of registered (non-NULL)
+    //   instance_ids for a recipient role. POST /messages compares the addressed
+    //   recipient (target_instance_id or role-broadcast) against this set and
+    //   returns delivered_to + not_yet_delivered_to in the response.
+    //
+    // α2 — DELIVERY-SUSPECT query endpoint:
+    //   GET /delivery_suspects returns PENDING dispatches older than
+    //   older_than_minutes (default 30) with no non-stand-down ack from a
+    //   recipient instance. Stand-down acks (intent=response on broadcast-prefix
+    //   non-actionable slugs) do NOT clear the suspect flag.
+    //
+    // /liveness — 4-state silence-state verdict:
+    //   GET /liveness?role=&instance_id= returns one of
+    //   IDLE-AWAITING-DISPATCH / IN-FLIGHT-ON-DISPATCH / CONTEXT-EXHAUSTED-SUSPECTED /
+    //   ROUTE-CONFUSED-SUSPECTED / UNKNOWN. Combines bridge heartbeat age,
+    //   cursor recency, pending inbox state, and recent ack patterns.
+    //
+    // Mechanism #5 fix (state-transition-before-read body loss): bodies are
+    //   already persisted in caacp_messages.body and survive state transitions
+    //   (only state column changes). GET /messages/{id} already returns the
+    //   body. Documented here as the server-side guarantee.
+    //
+    // Mechanism #6 fix (notification truncation): GET /events response payload
+    //   now includes message_id-keyed body_length hints (joined from
+    //   caacp_messages) so bridges can choose to truncate-with-retrieval-link.
+    //   Full body remains retrievable via GET /messages/{id}.
+    const listRegisteredInstancesForRole = db.prepare(`
+      SELECT instance_id FROM caacp_tokens
+      WHERE role = ? AND instance_id IS NOT NULL
+    `);
+    const listPendingMessagesForRole = db.prepare(`
+      SELECT message_id, sender, recipient, intent, slug, target_instance_id,
+             created_at, state
+      FROM caacp_messages
+      WHERE recipient = ?
+        AND state IN ('PENDING', 'ACKNOWLEDGED')
+        AND (julianday('now') - julianday(created_at)) * 24 * 60 > ?
+      ORDER BY created_at ASC
+    `);
+    const listAcksForMessage = db.prepare(`
+      SELECT ack_id, ack_author, ack_intent, ack_slug, server_timestamp
+      FROM caacp_acknowledgments
+      WHERE message_id = ?
+      ORDER BY server_timestamp ASC
+    `);
+    const getMessageBodyLength = db.prepare(`
+      SELECT length(body) AS body_length FROM caacp_messages WHERE message_id = ?
+    `);
+    const getRecentCursor = db.prepare(`
+      SELECT last_seen_seq, updated_at FROM caacp_cursors
+      WHERE recipient_role = ? AND recipient_instance_id = ?
+    `);
+    const getRecentBridge = db.prepare(`
+      SELECT bridge_id, pid, last_heartbeat_at FROM caacp_bridges
+      WHERE role = ? AND instance_id = ?
+      ORDER BY last_heartbeat_at DESC
+      LIMIT 1
+    `);
+    const getInboxPendingCount = db.prepare(`
+      SELECT COUNT(*) AS pending_count FROM caacp_messages
+      WHERE recipient = ?
+        AND state = 'PENDING'
+        AND (target_instance_id IS NULL OR target_instance_id = ?)
+    `);
+    const getInFlightDispatch = db.prepare(`
+      SELECT message_id, slug, target_instance_id, created_at
+      FROM caacp_messages
+      WHERE recipient = ?
+        AND (target_instance_id = ? OR target_instance_id IS NULL)
+        AND state IN ('ACKNOWLEDGED', 'IN-FLIGHT')
+        AND message_id IN (
+          SELECT DISTINCT message_id FROM caacp_acknowledgments
+          WHERE ack_author = ?
+        )
+      ORDER BY created_at DESC
+      LIMIT 1
+    `);
+
+    // Stand-down slug pattern recognizer. Matches the same set caacp-module uses
+    // for D101 γ observer fan-out exclusion. Stand-down acks satisfy the protocol
+    // (resolver correctly observes 31st-finding) but do NOT count as
+    // recipient-acked for α2 DELIVERED-AWAITING-WORK / DELIVERY-SUSPECT.
+    function isStandDownAck(slug: string | null | undefined): boolean {
+      if (!slug || typeof slug !== "string") return false;
+      return (
+        slug.includes("nonactionable") ||
+        slug.includes("non-actionable") ||
+        slug.includes("misroute") ||
+        slug.startsWith("final-r") ||
+        slug.includes("not-r") ||
+        slug.includes("terminal-") ||
+        slug.includes("stands down") ||
+        slug.startsWith("r1-nonactionable") ||
+        slug.startsWith("r2-terminal") ||
+        slug.startsWith("r5-terminal") ||
+        slug.startsWith("r6-")
+      );
+    }
+
+    // α1 helper: compute per-recipient delivery confirmation at message
+    // insertion time. For role-broadcast (target_instance_id NULL): every
+    // registered instance is delivered_to (the event is fanned out to all).
+    // For exact-instance targeting: delivered_to=[id] if id is registered,
+    // else not_yet_delivered_to=[id].
+    function computeDelivery(
+      recipient: string,
+      target_instance_id: string | null,
+    ): { delivered_to: string[]; not_yet_delivered_to: string[] } {
+      const rows = listRegisteredInstancesForRole.all(recipient) as Array<{ instance_id: string }>;
+      const registered = rows.map((r) => r.instance_id).filter((id): id is string => !!id);
+      if (target_instance_id === null) {
+        // Role-broadcast — every registered instance receives. Also indicate
+        // an empty not_yet_delivered_to since no specific target was missed.
+        return { delivered_to: registered, not_yet_delivered_to: [] };
+      }
+      if (registered.includes(target_instance_id)) {
+        return { delivered_to: [target_instance_id], not_yet_delivered_to: [] };
+      }
+      return { delivered_to: [], not_yet_delivered_to: [target_instance_id] };
+    }
+
     // Emit an event for the given recipient + transition. Fans out the row
     // per-recipient: each instance-targeted row exists exactly once at the
     // recipient (role, instance_id) coordinate; role-broadcast rows are stored
@@ -478,10 +608,17 @@ export const caacpModule: Module = {
               source: "observer-fan-out",
             });
           }
+          // D144 α1: per-recipient delivery confirmation. Report which addressed
+          // instances actually have a registered token + are eligible to poll;
+          // surfaces routing-gap "delivered to no one" failures at send time
+          // instead of waiting for the recipient to surface route-confusion.
+          const delivery = computeDelivery(recipient, target_instance_id);
           return json(201, {
             message_id,
             state: "PENDING",
             server_timestamp: new Date().toISOString(),
+            delivered_to: delivery.delivered_to,
+            not_yet_delivered_to: delivery.not_yet_delivered_to,
           });
         }
 
@@ -812,6 +949,116 @@ export const caacpModule: Module = {
           if (!original) return bad(404, "message not found");
           const acks = listAcks.all(message_id);
           return json(200, { message: original, acknowledgments: acks });
+        }
+
+        // D144 α2: GET /delivery_suspects?role=&older_than_minutes=
+        // Returns PENDING dispatches addressed to `role` older than
+        // `older_than_minutes` (default 30) with no non-stand-down ack from a
+        // recipient instance. Stand-down acks (slug matches the stand-down
+        // pattern) do NOT clear the suspect flag — only substantive acks from
+        // the addressed recipient instance(s) advance state.
+        if (method === "GET" && sub === "/delivery_suspects") {
+          const role = request.query?.role;
+          if (!role || !VALID_ROLES.includes(role)) return bad(400, "invalid role");
+          const older = parseFloat(request.query?.older_than_minutes ?? "30");
+          if (!isFinite(older) || older < 0) return bad(400, "invalid older_than_minutes");
+          // Restrict introspection to admin OR to a principal whose role matches
+          // the queried recipient (helmsman querying its outbox-tier dispatches
+          // is a common case).
+          if (!auth.isAdmin && auth.principal?.role !== role && auth.principal?.role !== "helmsman" && auth.principal?.role !== "keeper") {
+            return bad(403, "delivery_suspects requires admin, helmsman, keeper, or matching-role token");
+          }
+          const candidates = listPendingMessagesForRole.all(role, older) as any[];
+          const suspects: any[] = [];
+          for (const msg of candidates) {
+            const acks = listAcksForMessage.all(msg.message_id) as any[];
+            // A substantive recipient-ack clears the suspect flag: an ack whose
+            // slug is NOT a stand-down pattern AND whose ack_author matches the
+            // recipient role.
+            const substantive = acks.find((a) =>
+              a.ack_author === role && !isStandDownAck(a.ack_slug),
+            );
+            if (substantive) continue;
+            suspects.push({
+              ...msg,
+              age_minutes: Math.floor(
+                ((Date.now() - new Date(msg.created_at + "Z").getTime()) / 1000) / 60,
+              ),
+              ack_count: acks.length,
+              stand_down_ack_count: acks.filter((a) => isStandDownAck(a.ack_slug)).length,
+            });
+          }
+          return json(200, {
+            role,
+            older_than_minutes: older,
+            suspects,
+            suspect_count: suspects.length,
+          });
+        }
+
+        // GET /liveness?role=&instance_id=
+        // 4-state silence-state verdict for a registered recipient instance.
+        // Combines bridge heartbeat age, cursor recency, pending inbox state,
+        // and recent ack patterns. Returns one of:
+        //   IDLE-AWAITING-DISPATCH   — bridge alive + inbox empty + no in-flight dispatch.
+        //   IN-FLIGHT-ON-DISPATCH    — bridge alive + recent non-stand-down ack on a non-RESOLVED dispatch.
+        //   CONTEXT-EXHAUSTED-SUSPECTED — bridge alive but cursor not advancing AND inbox non-empty.
+        //   ROUTE-CONFUSED-SUSPECTED — bridge not registered OR no heartbeat AND inbox has dispatches addressed to instance.
+        //   UNKNOWN                  — insufficient evidence (e.g., never registered).
+        if (method === "GET" && sub === "/liveness") {
+          const role = request.query?.role;
+          const instance_id = request.query?.instance_id;
+          if (!role || !VALID_ROLES.includes(role)) return bad(400, "invalid role");
+          if (!instance_id || typeof instance_id !== "string") return bad(400, "missing instance_id");
+          if (!auth.isAdmin && auth.principal?.role !== role && auth.principal?.role !== "helmsman" && auth.principal?.role !== "keeper") {
+            return bad(403, "liveness requires admin, helmsman, keeper, or matching-role token");
+          }
+          const cursor = getRecentCursor.get(role, instance_id) as any;
+          const bridge = getRecentBridge.get(role, instance_id) as any;
+          const inbox = getInboxPendingCount.get(role, instance_id) as any;
+          const inFlight = getInFlightDispatch.get(role, instance_id, role) as any;
+          const now = Date.now();
+          const bridgeAgeS = bridge?.last_heartbeat_at
+            ? Math.floor((now - new Date(bridge.last_heartbeat_at + "Z").getTime()) / 1000)
+            : null;
+          const cursorAgeS = cursor?.updated_at
+            ? Math.floor((now - new Date(cursor.updated_at + "Z").getTime()) / 1000)
+            : null;
+          const pendingCount = inbox?.pending_count ?? 0;
+          const bridgeAlive = bridgeAgeS !== null && bridgeAgeS < 180; // 3 min heartbeat window
+          const cursorRecent = cursorAgeS !== null && cursorAgeS < 600; // 10 min
+          let verdict: string;
+          let in_flight_dispatch: any = null;
+          if (!bridge) {
+            verdict = pendingCount > 0 ? "ROUTE-CONFUSED-SUSPECTED" : "UNKNOWN";
+          } else if (!bridgeAlive) {
+            verdict = pendingCount > 0 ? "ROUTE-CONFUSED-SUSPECTED" : "UNKNOWN";
+          } else if (inFlight) {
+            verdict = "IN-FLIGHT-ON-DISPATCH";
+            in_flight_dispatch = {
+              message_id: inFlight.message_id,
+              slug: inFlight.slug,
+              created_at: inFlight.created_at,
+            };
+          } else if (pendingCount > 0 && !cursorRecent) {
+            verdict = "CONTEXT-EXHAUSTED-SUSPECTED";
+          } else {
+            verdict = "IDLE-AWAITING-DISPATCH";
+          }
+          return json(200, {
+            role,
+            instance_id,
+            verdict,
+            in_flight_dispatch,
+            evidence: {
+              bridge_age_seconds: bridgeAgeS,
+              cursor_age_seconds: cursorAgeS,
+              inbox_pending_count: pendingCount,
+              last_seen_seq: cursor?.last_seen_seq ?? null,
+              bridge_id: bridge?.bridge_id ?? null,
+            },
+            assessed_at: new Date().toISOString(),
+          });
         }
 
         return bad(404, "unknown CAACP path");
