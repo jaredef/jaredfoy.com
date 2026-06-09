@@ -228,6 +228,41 @@ assert(
   liveness2.body.evidence.bridge_age_seconds !== null && liveness2.body.evidence.bridge_age_seconds < 60,
 );
 
+// ─── /events slug_preview enrichment (Telegram 12535) ───────────────────
+console.log("");
+console.log("/events enrichment — slug_preview + message_intent + message_sender");
+
+// Use the existing test instance for the events poll.
+const events = call("GET", "/api/caacp/v1/events", undefined, "test-admin-token", {
+  role: "substrate-resolver",
+  instance_id: "test-r1-canonical",
+  since_seq: "0",
+});
+assert(
+  "events: response includes events array",
+  events.status === 200 && Array.isArray(events.body.events),
+);
+const eventWithMessage = events.body.events.find((e: any) => e.message_id);
+assert(
+  "events: rows with a message_id carry slug_preview",
+  eventWithMessage && typeof eventWithMessage.slug_preview === "string" && eventWithMessage.slug_preview.length > 0,
+  eventWithMessage,
+);
+assert(
+  "events: rows with a message_id carry message_intent",
+  eventWithMessage && typeof eventWithMessage.message_intent === "string" && eventWithMessage.message_intent.length > 0,
+  eventWithMessage,
+);
+assert(
+  "events: rows with a message_id carry message_sender",
+  eventWithMessage && typeof eventWithMessage.message_sender === "string" && eventWithMessage.message_sender.length > 0,
+  eventWithMessage,
+);
+assert(
+  "events: slug_preview is at most 60 chars",
+  events.body.events.every((e: any) => !e.slug_preview || e.slug_preview.length <= 60),
+);
+
 // ─── Mechanism #5: body persistence ──────────────────────────────────────
 console.log("");
 console.log("Mechanism #5 — body persistence beyond state transitions");

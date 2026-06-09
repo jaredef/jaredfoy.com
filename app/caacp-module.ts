@@ -257,13 +257,31 @@ export const caacpModule: Module = {
       INSERT INTO caacp_wake_acks (wake_id, recipient_role, recipient_instance_id, seq_consumed)
       VALUES (?, ?, ?, ?)
     `);
+    // /events response enrichment (helmsman discrimination): LEFT JOIN
+    // caacp_messages to surface the message's slug_preview (first 60 chars),
+    // intent, and sender alongside the event row. Lets pollers tell a
+    // stand-down ack ("r2-terminal-nonactionable-...") from a substantive
+    // landing report ("landing-d162-buffer-rung3" / "*-LANDED") without a
+    // second HTTP roundtrip to GET /messages/<id>. Keeper Telegram 12535.
     const selectEventsSince = db.prepare(`
-      SELECT seq, recipient_role, recipient_instance_id, event_type, message_id, ack_id, source, created_at
-      FROM caacp_events
-      WHERE recipient_role = ?
-        AND (recipient_instance_id IS NULL OR recipient_instance_id = ?)
-        AND seq > ?
-      ORDER BY seq ASC
+      SELECT e.seq,
+             e.recipient_role,
+             e.recipient_instance_id,
+             e.event_type,
+             e.message_id,
+             e.ack_id,
+             e.source,
+             e.created_at,
+             SUBSTR(m.slug, 1, 60) AS slug_preview,
+             m.intent              AS message_intent,
+             m.sender              AS message_sender
+      FROM caacp_events e
+      LEFT JOIN caacp_messages m
+        ON m.message_id = e.message_id
+      WHERE e.recipient_role = ?
+        AND (e.recipient_instance_id IS NULL OR e.recipient_instance_id = ?)
+        AND e.seq > ?
+      ORDER BY e.seq ASC
       LIMIT 200
     `);
     const upsertBridge = db.prepare(`
